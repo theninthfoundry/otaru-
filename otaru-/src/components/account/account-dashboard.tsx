@@ -6,10 +6,18 @@ import { OrderHistory } from '@/components/account/order-history';
 import { SavedAddresses } from '@/components/account/saved-addresses';
 import { useWishlist } from '@/components/wishlist/wishlist-context';
 import { ArtifactCard } from '@/components/artifact/artifact-card';
+import { logoutPatron } from '@/actions/auth';
 
 type Tab = 'overview' | 'orders' | 'addresses' | 'wishlist';
 
-export function AccountDashboard() {
+interface AccountDashboardProps {
+  session: {
+    email: string;
+    memberId: string;
+  };
+}
+
+export function AccountDashboard({ session }: AccountDashboardProps) {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const { wishlist, wishlistCount } = useWishlist();
 
@@ -25,13 +33,15 @@ export function AccountDashboard() {
             Private Account Registry
           </h1>
           <p className="text-body-sm text-otaru-ink-muted font-light mt-1">
-            Authenticated Session &bull; patron@otaru.in
+            Authenticated Session &bull; {session.email}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => alert('Signing out of private registry session.')}
+            onClick={async () => {
+              await logoutPatron();
+            }}
             className="px-5 py-2.5 border border-otaru-border text-otaru-ink text-caption text-xs font-medium rounded-full hover:border-otaru-ink transition-colors"
           >
             Sign Out
@@ -64,7 +74,7 @@ export function AccountDashboard() {
         {activeTab === 'overview' && (
           <div className="space-y-8 animate-fadeIn">
             <section aria-label="Membership Status">
-              <MembershipBadge tier="Archival" memberId="OTR-MEM-00492" />
+              <MembershipBadge tier="Archival" memberId={session.memberId} />
             </section>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
