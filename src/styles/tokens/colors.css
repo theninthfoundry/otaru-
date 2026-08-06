@@ -1,0 +1,48 @@
+/**
+ * Otaru — Color Tokens
+ * Zero hardcoded hex values allowed outside this file.
+ */
+:root {
+  --color-ink: #0a0a0a;
+  --color-chalk: #fcfcfc;
+  --color-cream: #f5f4f0;
+  --color-stone: #e5e3dc;
+
+  --color-ink-80: rgba(10, 10, 10, 0.8);
+  --color-ink-60: rgba(10, 10, 10, 0.6);
+  --color-ink-40: rgba(10, 10, 10, 0.4);
+  --color-ink-20: rgba(10, 10, 10, 0.2);
+  --color-ink-10: rgba(10, 10, 10, 0.1);
+  --color-chalk-80: rgba(252, 252, 252, 0.8);
+  --color-chalk-60: rgba(252, 252, 252, 0.6);
+  --color-chalk-40: rgba(252, 252, 252, 0.4);
+
+  --color-border: var(--color-stone);
+  --color-border-strong: var(--color-ink-20);
+  --color-surface: var(--color-chalk);
+  --color-surface-alt: var(--color-cream);
+  --color-foreground: var(--color-ink);
+  --color-foreground-muted: var(--color-ink-60);
+  --color-background: var(--color-chalk);
+  --color-background-inverse: var(--color-ink);
+
+  --color-success: #3f5f4a;
+  --color-error: #7a2e26;
+  --color-warning: #8a6d3b;
+
+  --color-glass-fill: rgba(252, 252, 252, 0.65);
+  --color-glass-border: rgba(10, 10, 10, 0.08);
+}
+
+[data-theme="dark"] {
+  --color-surface: var(--color-ink);
+  --color-surface-alt: #141412;
+  --color-foreground: var(--color-chalk);
+  --color-foreground-muted: var(--color-chalk-60);
+  --color-background: var(--color-ink);
+  --color-background-inverse: var(--color-chalk);
+  --color-border: rgba(252, 252, 252, 0.12);
+  --color-border-strong: rgba(252, 252, 252, 0.24);
+  --color-glass-fill: rgba(10, 10, 10, 0.65);
+  --color-glass-border: rgba(252, 252, 252, 0.08);
+}

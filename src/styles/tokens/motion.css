@@ -1,0 +1,25 @@
+/**
+ * Otaru — Motion Tokens — 4-Tier Motion System
+ * L0 Instant (0ms): form inputs, size selection, toggles
+ * L1 Subtle (150–300ms): card hover, nav links, dropdowns
+ * L2 Editorial (600–900ms): scroll reveals, split-text, section entrances
+ * L3 Immersive (1200ms+): camera paths, 3D fabric rotations
+ */
+:root {
+  --motion-0: 0ms;
+  --motion-1: 220ms;
+  --motion-2: 750ms;
+  --motion-3: 1400ms;
+
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-1: 0ms;
+    --motion-2: 0ms;
+    --motion-3: 0ms;
+  }
+}

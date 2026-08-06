@@ -1,0 +1,6 @@
+:root {
+  --grid-columns: 12;
+  --grid-gutter: clamp(16px, 2vw, 32px);
+  --grid-margin: clamp(20px, 5vw, 80px);
+  --container-max: 1800px;
+}
