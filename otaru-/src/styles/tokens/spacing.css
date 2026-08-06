@@ -1,0 +1,30 @@
+/* ============================================================
+   OTARU — Spacing Tokens
+   8px baseline grid. Consistent, intentional whitespace.
+   ============================================================ */
+
+:root {
+  --space-unit: 8px;
+
+  --space-0: 0;
+  --space-1: 4px;        /* 0.5 units */
+  --space-2: 8px;        /* 1 unit */
+  --space-3: 12px;       /* 1.5 units */
+  --space-4: 16px;       /* 2 units */
+  --space-5: 20px;       /* 2.5 units */
+  --space-6: 24px;       /* 3 units */
+  --space-8: 32px;       /* 4 units */
+  --space-10: 40px;      /* 5 units */
+  --space-12: 48px;      /* 6 units */
+  --space-16: 64px;      /* 8 units */
+  --space-20: 80px;      /* 10 units */
+  --space-24: 96px;      /* 12 units */
+  --space-32: 128px;     /* 16 units */
+  --space-40: 160px;     /* 20 units */
+  --space-48: 192px;     /* 24 units */
+
+  /* ── Section Spacing ── */
+  --section-gap-sm: var(--space-16);   /* 64px */
+  --section-gap-md: var(--space-24);   /* 96px */
+  --section-gap-lg: var(--space-32);   /* 128px */
+}

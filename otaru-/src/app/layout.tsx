@@ -1,0 +1,86 @@
+import type { Metadata } from 'next';
+import { Inter, Instrument_Serif } from 'next/font/google';
+import { CartProvider } from '@/components/cart/cart-provider';
+import { WishlistProvider } from '@/components/wishlist/wishlist-context';
+import { AnalyticsProvider } from '@/lib/analytics/provider';
+import { LenisProvider } from '@/components/common/lenis-provider';
+import { Header } from '@/components/layout/header';
+import { Footer } from '@/components/layout/footer';
+import '@/styles/globals.css';
+import '@/lib/env'; // Validate environment variables at runtime
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sans',
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
+  variable: '--font-display',
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://otaru.in',
+  ),
+  title: {
+    default: 'Otaru — Garments Worth Keeping',
+    template: '%s | Otaru',
+  },
+  description:
+    'Craftsmanship outlasts trends. Limited-run, design-led garments built from exceptional fabric and invisible construction quality.',
+  keywords: [
+    'Otaru',
+    'garments',
+    'craftsmanship',
+    'streetwear',
+    'limited edition',
+    'design house',
+  ],
+  openGraph: {
+    type: 'website',
+    siteName: 'Otaru',
+    locale: 'en_IN',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable}`}>
+      <body>
+        <a href="#main-content" className="skip-to-content">
+          Skip to main content
+        </a>
+        <LenisProvider>
+          <AnalyticsProvider>
+            <WishlistProvider>
+              <CartProvider>
+                <Header />
+                <main id="main-content" tabIndex={-1}>{children}</main>
+                <Footer />
+              </CartProvider>
+            </WishlistProvider>
+          </AnalyticsProvider>
+        </LenisProvider>
+      </body>
+    </html>
+  );
+}

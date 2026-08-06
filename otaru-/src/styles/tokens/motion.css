@@ -1,0 +1,54 @@
+/* ============================================================
+   OTARU — Motion Tokens
+   Motion Levels 0–3 per §2.3.
+   Every animation must map to one of these levels.
+   ============================================================ */
+
+:root {
+  /* ── Level 0 — Instant ──
+     Buttons, forms, checkout, size selector.
+     No animation delay, immediate feedback. */
+  --motion-duration-instant: 0ms;
+  --motion-easing-instant: linear;
+
+  /* ── Level 1 — Subtle ──
+     Cards, images, navigation.
+     Fade/settle, 150–300ms. */
+  --motion-duration-subtle: 200ms;
+  --motion-duration-subtle-slow: 300ms;
+  --motion-easing-settle: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* ── Level 2 — Editorial ──
+     Home, Journal, Chapter story.
+     Scroll-linked reveal, weighted easing, 600ms+. */
+  --motion-duration-editorial: 600ms;
+  --motion-duration-editorial-slow: 900ms;
+  --motion-easing-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Level 3 — Immersive ──
+     Flagship-only (V2).
+     Camera choreography, R3F scenes.
+     Defined here for completeness, not used in V1. */
+  --motion-duration-immersive: 1200ms;
+  --motion-easing-immersive: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ── Shared ── */
+  --motion-easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --motion-easing-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --motion-easing-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --motion-easing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Reduced motion ── */
+  --motion-reduce-factor: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-subtle: 0ms;
+    --motion-duration-subtle-slow: 0ms;
+    --motion-duration-editorial: 0ms;
+    --motion-duration-editorial-slow: 0ms;
+    --motion-duration-immersive: 0ms;
+    --motion-reduce-factor: 0;
+  }
+}

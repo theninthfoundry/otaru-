@@ -1,0 +1,24 @@
+/* ============================================================
+   OTARU — Breakpoint Tokens
+   Desktop / Tablet / Mobile from §2.2
+   ============================================================ */
+
+:root {
+  --breakpoint-mobile: 480px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+  --breakpoint-wide: 1440px;
+}
+
+/*
+  Usage in media queries (CSS custom properties can't be used
+  directly in @media, so these values are documented here
+  and used as literal values in other token files):
+
+  Mobile:    max-width: 479px
+  Tablet:    min-width: 480px and max-width: 767px
+  Desktop:   min-width: 768px and max-width: 1023px
+  Wide:      min-width: 1024px
+
+  Tailwind breakpoints are configured separately in tailwind.config.ts.
+*/

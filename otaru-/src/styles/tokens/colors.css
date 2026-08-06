@@ -1,0 +1,56 @@
+/* ============================================================
+   OTARU — Color Tokens
+   Muted, editorial palette. No visual noise.
+   ============================================================ */
+
+:root {
+  /* ── Ink (text / foreground) ── */
+  --color-ink: #1a1a1a;
+  --color-ink-muted: #4a4a4a;
+  --color-ink-subtle: #8a8a8a;
+  --color-ink-inverted: #fafaf8;
+
+  /* ── Chalk (background / surface) ── */
+  --color-chalk: #fafaf8;
+  --color-chalk-warm: #f5f3ef;
+  --color-chalk-cool: #f0f0ee;
+
+  /* ── Cream (secondary surface) ── */
+  --color-cream: #edeae4;
+  --color-cream-deep: #e0dcd4;
+
+  /* ── Stone (neutral mid-range) ── */
+  --color-stone: #b8b3aa;
+  --color-stone-light: #d4d0c8;
+  --color-stone-dark: #6e6a63;
+
+  /* ── Chapter Accent (set per chapter, default to origin) ── */
+  --color-chapter-accent: #2c2c2c;
+  --color-chapter-accent-muted: #4a4a4a;
+
+  /* ── Functional ── */
+  --color-error: #a33b3b;
+  --color-error-muted: #d4a0a0;
+  --color-success: #3b6b4a;
+  --color-success-muted: #a0c4a8;
+  --color-warning: #b38a2e;
+
+  /* ── Border ── */
+  --color-border: #e0dcd4;
+  --color-border-strong: #b8b3aa;
+  --color-border-subtle: #edeae4;
+
+  /* ── Accent (used extremely sparingly) ── */
+  --color-deep-blue: #2a3a5c;
+  --color-warm-gold: #b8964e;
+  --color-warm-gold-muted: #d4c4a0;
+  --color-muted-silver: #c0bdb8;
+
+  /* ── Focus ring ── */
+  --color-focus: #2c2c2c;
+
+  /* ── Overlay ── */
+  --color-overlay: rgba(26, 26, 26, 0.5);
+  --color-overlay-light: rgba(26, 26, 26, 0.15);
+  --color-overlay-heavy: rgba(26, 26, 26, 0.75);
+}
