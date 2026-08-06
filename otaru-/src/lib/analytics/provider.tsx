@@ -9,7 +9,12 @@ const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID;
 const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID;
 
-export function AnalyticsProvider({ children }: { children: ReactNode }) {
+interface AnalyticsProviderProps {
+  children: ReactNode;
+  nonce?: string;
+}
+
+export function AnalyticsProvider({ children, nonce }: AnalyticsProviderProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -26,8 +31,9 @@ export function AnalyticsProvider({ children }: { children: ReactNode }) {
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}
             strategy="afterInteractive"
+            nonce={nonce}
           />
-          <Script id="ga4-init" strategy="afterInteractive">
+          <Script id="ga4-init" strategy="afterInteractive" nonce={nonce}>
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
@@ -42,7 +48,7 @@ export function AnalyticsProvider({ children }: { children: ReactNode }) {
 
       {/* 2. Meta Pixel */}
       {META_PIXEL_ID && (
-        <Script id="meta-pixel-init" strategy="afterInteractive">
+        <Script id="meta-pixel-init" strategy="afterInteractive" nonce={nonce}>
           {`
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -60,7 +66,7 @@ export function AnalyticsProvider({ children }: { children: ReactNode }) {
 
       {/* 3. Microsoft Clarity Heatmaps */}
       {CLARITY_ID && (
-        <Script id="clarity-init" strategy="afterInteractive">
+        <Script id="clarity-init" strategy="afterInteractive" nonce={nonce}>
           {`
             (function(c,l,a,r,i,t,y){
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
