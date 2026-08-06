@@ -78,7 +78,7 @@ export default async function ArtifactPage({ params }: ArtifactPageProps) {
             />
 
             {/* 3D WebGL Material Specimen Canvas */}
-            <Artifact3DViewer title={artifact.artifactName || artifact.title} />
+            <Artifact3DViewer title={artifact.artifactName || artifact.title} tags={artifact.tags} />
           </section>
 
           {/* Right Column: Details & Purchase Form (Span 5) */}

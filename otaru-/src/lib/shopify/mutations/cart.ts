@@ -114,7 +114,7 @@ export async function createCart(
     return data?.cartCreate?.cart ?? { id: 'mock-cart-id', lines: [], totalQuantity: 0 };
   } catch (error) {
     console.warn('[Shopify API] Falling back to local mock cart creation:', (error as Error).message);
-    return { id: 'mock-cart-id', lines: [], totalQuantity: 0, checkoutUrl: '/archive' };
+    return { id: 'mock-cart-id', lines: [], totalQuantity: 0, checkoutUrl: '/checkout' };
   }
 }
 

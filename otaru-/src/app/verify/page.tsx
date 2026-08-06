@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: 'Verify the authenticity, serial number, and textile provenance of your Otaru garments.',
 };
 
+import { getProducts } from '@/lib/shopify/queries/products';
+
 interface VerifyPageProps {
   searchParams: Promise<{ serial?: string }>;
 }
@@ -14,6 +16,41 @@ interface VerifyPageProps {
 export default async function VerifyPage({ searchParams }: VerifyPageProps) {
   const { serial } = await searchParams;
   const serialQuery = serial?.trim() || '';
+
+  // 1. Fetch active artifacts (automatically falls back to mocks if Shopify is offline)
+  const { artifacts } = await getProducts({ first: 50 }).catch(() => ({ artifacts: [], pageInfo: { hasNextPage: false, endCursor: null } }));
+
+  let matchedArtifact = null;
+  let unitNumber = '';
+  let isValidFormat = false;
+  let artifactNumStr = '';
+
+  const match = serialQuery.match(/^OTARU-(\d{3})-(\d{1,4})$/i);
+  if (match) {
+    isValidFormat = true;
+    artifactNumStr = match[1];
+    unitNumber = parseInt(match[2], 10).toString();
+
+    const targetNum = parseInt(artifactNumStr, 10);
+
+    matchedArtifact = artifacts.find(art => {
+      // Check ID segment
+      const idPart = art.id.split('/').pop() || '';
+      const cleanId = idPart.replace(/\D/g, '');
+      const cleanIdNum = parseInt(cleanId, 10);
+
+      // Check pattern in title or handle
+      const hasNumberInHandle = art.handle.includes(`-${artifactNumStr}-`) || art.handle.endsWith(`-${artifactNumStr}`);
+      const hasNumberInTitle = art.title.includes(`#${artifactNumStr}`) || art.title.includes(`#${targetNum}`);
+
+      return cleanIdNum === targetNum || hasNumberInHandle || hasNumberInTitle;
+    });
+  }
+
+  // Helper to clean up titles for the certificate
+  const getCleanTitle = (title: string) => {
+    return title.replace(/^Artifact\s+#\d+\s+—\s+/i, '');
+  };
 
   return (
     <section id="verify" aria-label="Authenticity Verification" className="py-12 md:py-20">
@@ -54,16 +91,27 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
 
         {/* Certificate Result */}
         {serialQuery ? (
-          <AuthenticityCard
-            serialNumber={serialQuery.toUpperCase()}
-            artifactName="&ldquo;The Observer&rdquo; Heavy Hoodie"
-            artifactNumber="007"
-            gsm="420 GSM French Terry"
-            wash="Reactive Garment Dye · Silicone Wash"
-            construction="Triple Needle Construction"
-            productionBatch="Batch 01 of 150 Units"
-            issuedDate="2026"
-          />
+          isValidFormat && matchedArtifact ? (
+            <AuthenticityCard
+              serialNumber={serialQuery.toUpperCase()}
+              artifactName={getCleanTitle(matchedArtifact.title)}
+              artifactNumber={artifactNumStr}
+              gsm={matchedArtifact.metafields?.materialComposition || 'Premium Textile Blend'}
+              wash={matchedArtifact.metafields?.careInstructions || 'Dry Clean Suggested'}
+              construction={matchedArtifact.metafields?.provenanceCountry || 'Handcrafted Design'}
+              productionBatch={`Unit ${unitNumber.padStart(3, '0')} of ${matchedArtifact.metafields?.editionSize || 100} (Chapter ${matchedArtifact.metafields?.chapterNumber || '01'})`}
+              issuedDate={new Date(matchedArtifact.createdAt || '2026-01-01').getFullYear().toString()}
+            />
+          ) : (
+            <div className="p-8 bg-red-50/50 border border-red-200 rounded-sm text-center space-y-3 animate-fadeIn">
+              <span className="text-body-sm font-semibold text-red-800 block">
+                Unverified Serial Document
+              </span>
+              <p className="text-caption text-xs text-red-700 max-w-md mx-auto">
+                The serial number <code className="font-mono bg-red-100/50 px-1 py-0.5 rounded-xs font-bold text-red-900">{serialQuery.toUpperCase()}</code> could not be located in Otaru&rsquo;s official registry. Please confirm the code printed on the care tag inside the garment.
+              </p>
+            </div>
+          )
         ) : (
           <div className="p-8 bg-otaru-cream/30 border border-otaru-border/40 rounded-sm text-center space-y-2">
             <span className="text-caption text-xs font-medium text-otaru-ink block">

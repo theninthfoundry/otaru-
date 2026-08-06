@@ -54,7 +54,7 @@ export function HeaderActions() {
         <div className="relative inline-block text-left">
           <select
             value={currency}
-            onChange={(e) => setCurrency(e.target.value as any)}
+            onChange={(e: any) => setCurrency(e.target.value as any)}
             className="bg-transparent text-caption text-[11px] font-mono uppercase tracking-wider text-otaru-ink-muted hover:text-otaru-ink cursor-pointer focus:outline-none py-1 pr-1"
             aria-label="Select Currency"
           >

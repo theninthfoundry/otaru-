@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import React, { Children, cloneElement, useEffect, useMemo, useRef, useState, ReactNode } from 'react';
 
-import './Dock.css';
+import './dock.css';
 
 interface DockItemProps {
   children: ReactNode;
@@ -15,9 +15,20 @@ interface DockItemProps {
   magnification?: number;
   baseItemSize?: number;
   label?: string;
+  key?: React.Key;
 }
 
-function DockItem({ children, className = '', onClick, mouseX, spring, distance, magnification, baseItemSize, label }: DockItemProps) {
+function DockItem({
+  children,
+  className = '',
+  onClick,
+  mouseX,
+  spring,
+  distance = 150,
+  magnification = 60,
+  baseItemSize = 40,
+  label
+}: DockItemProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isHovered = useMotionValue(0);
 
@@ -26,10 +37,14 @@ function DockItem({ children, className = '', onClick, mouseX, spring, distance,
       x: 0,
       width: baseItemSize
     };
-    return val - rect.x - (baseItemSize ?? 0) / 2;
+    return val - rect.x - baseItemSize / 2;
   });
 
-  const targetSize = useTransform(mouseDistance, [-(distance ?? 0), 0, (distance ?? 0)], [baseItemSize, magnification, baseItemSize]);
+  const targetSize = useTransform(
+    mouseDistance,
+    [-distance, 0, distance],
+    [baseItemSize, magnification, baseItemSize]
+  );
   const size = useSpring(targetSize, spring);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -58,7 +73,7 @@ function DockItem({ children, className = '', onClick, mouseX, spring, distance,
       aria-label={label}
       onKeyDown={handleKeyDown}
     >
-      {Children.map(children, child => {
+      {Children.map(children, (child: any) => {
         if (React.isValidElement(child)) {
           return cloneElement(child as React.ReactElement, { isHovered });
         }
@@ -98,7 +113,7 @@ function DockLabel({ children, className = '', ...rest }: any) {
   );
 }
 
-export function DockIcon({ children, className = '' }: { children: ReactNode, className?: string }) {
+export function DockIcon({ children, className = '' }: { children?: ReactNode, className?: string }) {
   return <div className={`dock-icon ${className}`}>{children}</div>;
 }
 
@@ -141,9 +156,9 @@ export default function Dock({
   return (
     <motion.div style={{ height, scrollbarWidth: 'none' }} className="dock-outer">
       <motion.div
-        onMouseMove={({ pageX }) => {
+        onMouseMove={(e: React.MouseEvent) => {
           isHovered.set(1);
-          mouseX.set(pageX);
+          mouseX.set(e.pageX);
         }}
         onMouseLeave={() => {
           isHovered.set(0);

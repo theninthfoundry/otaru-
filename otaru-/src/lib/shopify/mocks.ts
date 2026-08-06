@@ -175,4 +175,76 @@ export const MOCK_ARTIFACTS: Artifact[] = [
       description: 'Double-faced virgin wool overcoat with drop-shoulder silhouette.',
     },
   },
+  {
+    id: 'gid://shopify/Product/007',
+    handle: 'artifact-007-heavy-hoodie',
+    title: 'Artifact #007 — "The Observer" Heavy Hoodie',
+    description:
+      'Crafted from 420 GSM heavy French Terry with reactive garment dye, silicone wash, and triple needle flatlock construction.',
+    descriptionHtml:
+      '<p>Crafted from 420 GSM heavy French Terry with reactive garment dye, silicone wash, and triple needle flatlock construction.</p>',
+    price: {
+      amount: '180.00',
+      currencyCode: 'USD',
+      formatted: '$180',
+    },
+    compareAtPrice: null,
+    images: [
+      {
+        url: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1200&q=85',
+        altText: 'Heavy Hoodie front view',
+        width: 1200,
+        height: 1600,
+      },
+    ],
+    featuredImage: {
+      url: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1200&q=85',
+      altText: 'Heavy Hoodie front view',
+      width: 1200,
+      height: 1600,
+    },
+    variants: [
+      {
+        id: 'gid://shopify/ProductVariant/007-1',
+        title: 'Medium / Vintage Black',
+        price: { amount: '180.00', currencyCode: 'USD', formatted: '$180' },
+        availableForSale: true,
+        selectedOptions: [
+          { name: 'Size', value: 'M' },
+          { name: 'Color', value: 'Vintage Black' },
+        ],
+      },
+      {
+        id: 'gid://shopify/ProductVariant/007-2',
+        title: 'Large / Vintage Black',
+        price: { amount: '180.00', currencyCode: 'USD', formatted: '$180' },
+        availableForSale: true,
+        selectedOptions: [
+          { name: 'Size', value: 'L' },
+          { name: 'Color', value: 'Vintage Black' },
+        ],
+      },
+    ],
+    options: [
+      { id: 'opt-size', name: 'Size', values: ['M', 'L'] },
+      { id: 'opt-color', name: 'Color', values: ['Vintage Black'] },
+    ],
+    availableForSale: true,
+    totalInventory: 24,
+    tags: ['Chapter 01', 'Hoodies', 'Cotton'],
+    createdAt: '2026-01-18T00:00:00Z',
+    updatedAt: '2026-02-01T00:00:00Z',
+    metafields: {
+      chapterNumber: 1,
+      editionSize: 150,
+      materialComposition: '420 GSM French Terry (100% Organic Cotton)',
+      careInstructions: 'Reactive Garment Dye · Silicone Wash. Cold wash.',
+      provenanceCountry: 'Made in India',
+      serialPrefix: 'OTR-CH1-007',
+    },
+    seo: {
+      title: 'Artifact #007 — "The Observer" Heavy Hoodie | Otaru',
+      description: 'Heavyweight organic cotton French Terry hoodie with reactive dye wash.',
+    },
+  },
 ];
