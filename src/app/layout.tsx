@@ -1,37 +1,93 @@
-import type { Metadata } from "next";
-import "@/styles/globals.css";
-import { LenisProvider } from "@/components/common/LenisProvider";
-import { CartProvider } from "@/components/cart/CartContext";
-import { WishlistProvider } from "@/components/wishlist/WishlistContext";
-import { CartDrawer } from "@/components/cart/CartDrawer";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import type { Metadata } from 'next';
+import { Inter, Instrument_Serif } from 'next/font/google';
+import { headers } from 'next/headers';
+import { CartProvider } from '@/components/cart/cart-provider';
+import { WishlistProvider } from '@/components/wishlist/wishlist-context';
+import { AnalyticsProvider } from '@/lib/analytics/provider';
+import { LenisProvider } from '@/components/common/lenis-provider';
+import { CursorProvider } from '@/hooks/use-cursor';
+import { CustomCursor } from '@/components/ui/custom-cursor';
+import { Header } from '@/components/layout/header';
+import { Footer } from '@/components/layout/footer';
+import '@/styles/globals.css';
+import '@/lib/env';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sans',
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
+  variable: '--font-display',
+});
 
 export const metadata: Metadata = {
-  title: "Otaru — Garments worth keeping",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://otaru.in',
+  ),
+  title: {
+    default: 'Otaru — Garments Worth Keeping',
+    template: '%s | Otaru',
+  },
   description:
-    "Otaru is an editorial luxury garment archive. Numbered Chapters, not seasonal collections. Craftsmanship outlasts trends.",
-  metadataBase: new URL("https://otaru.example.com"),
+    'Craftsmanship outlasts trends. Limited-run, design-led garments built from exceptional fabric and invisible construction quality.',
+  keywords: [
+    'Otaru',
+    'garments',
+    'craftsmanship',
+    'streetwear',
+    'limited edition',
+    'design house',
+  ],
   openGraph: {
-    title: "Otaru — Garments worth keeping",
-    description: "An editorial, story-driven luxury garment archive.",
-    type: "website",
+    type: 'website',
+    siteName: 'Otaru',
+    locale: 'en_IN',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const headersList = await headers();
+  const nonce = headersList.get('x-nonce') || undefined;
+
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable} cursor-hidden`}>
       <body>
+        <a href="#main-content" className="skip-to-content">
+          Skip to main content
+        </a>
         <LenisProvider>
-          <CartProvider>
+          <AnalyticsProvider nonce={nonce}>
             <WishlistProvider>
-              <Header />
-              <main>{children}</main>
-              <Footer />
-              <CartDrawer />
+              <CartProvider>
+                <CursorProvider>
+                  <Header />
+                  <main id="main-content" tabIndex={-1}>{children}</main>
+                  <Footer />
+                  <CustomCursor />
+                </CursorProvider>
+              </CartProvider>
             </WishlistProvider>
-          </CartProvider>
+          </AnalyticsProvider>
         </LenisProvider>
       </body>
     </html>

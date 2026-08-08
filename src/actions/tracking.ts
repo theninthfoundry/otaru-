@@ -1,36 +1,41 @@
-"use server";
+'use server';
 
-interface TrackingResult {
-  success: boolean;
-  status?: string;
-  awb?: string;
-  history?: { status: string; timestamp: string; location?: string }[];
-  error?: string;
-}
+export async function trackOrder(orderId: string) {
+  const token = process.env.SHIPROCKET_API_TOKEN;
 
-/** Polls Shiprocket for live order status by order ID or AWB. */
-export async function trackOrderAction(orderIdOrAwb: string): Promise<TrackingResult> {
-  if (!orderIdOrAwb.trim()) {
-    return { success: false, error: "Enter an order ID or tracking number." };
+  if (!token) {
+    return { success: false, error: 'Tracking service not configured.' };
   }
 
-  const email = process.env.SHIPROCKET_EMAIL;
-  const password = process.env.SHIPROCKET_PASSWORD;
+  try {
+    const response = await fetch(
+      `https://apiv2.shiprocket.in/v1/external/courier/track?order_id=${encodeURIComponent(orderId)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
 
-  if (!email || !password) {
-    console.warn("[tracking] Shiprocket credentials not set — returning mock status.");
+    if (!response.ok) {
+      throw new Error(`Shiprocket API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
     return {
       success: true,
-      status: "In Transit",
-      awb: orderIdOrAwb,
-      history: [
-        { status: "Order Placed", timestamp: "2026-07-28T10:00:00Z" },
-        { status: "Dispatched from Atelier", timestamp: "2026-07-29T14:00:00Z", location: "Mumbai, IN" },
-        { status: "In Transit", timestamp: "2026-08-01T09:00:00Z", location: "Regional Hub" },
-      ],
+      tracking: {
+        status: data.tracking_data?.track_status ?? 'Unknown',
+        activities: data.tracking_data?.shipment_track_activities ?? [],
+        estimatedDelivery: data.tracking_data?.etd ?? null,
+        courierName: data.tracking_data?.courier_name ?? null,
+        awbCode: data.tracking_data?.awb_code ?? null,
+      },
     };
+  } catch (error) {
+    console.error('[Tracking] Error:', error);
+    return { success: false, error: 'Unable to fetch tracking information.' };
   }
-
-  // TODO: real Shiprocket auth token exchange + /v1/external/courier/track call.
-  return { success: false, error: "Live tracking integration not yet connected." };
 }

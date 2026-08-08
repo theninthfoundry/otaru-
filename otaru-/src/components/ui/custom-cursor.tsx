@@ -24,7 +24,7 @@ const cursorSizes = {
  * Only renders on pointer:fine devices (desktop with mouse).
  */
 export function CustomCursor() {
-  const { cursor } = useCursor();
+  const { cursor, setCursor, resetCursor } = useCursor();
   const cursorRef = useRef<HTMLDivElement>(null);
 
   const mouseX = useMotionValue(-100);
@@ -45,9 +45,37 @@ export function CustomCursor() {
       mouseY.set(e.clientY);
     };
 
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target) return;
+
+      const interactiveEl = target.closest<HTMLElement>(
+        'a, button, [role="button"], [data-cursor]'
+      );
+
+      if (interactiveEl) {
+        const customMode = interactiveEl.getAttribute('data-cursor');
+        const customLabel = interactiveEl.getAttribute('data-cursor-label') || undefined;
+        setCursor((customMode as any) || 'hover', customLabel);
+      } else {
+        resetCursor();
+      }
+    };
+
+    const handleMouseLeave = () => {
+      resetCursor();
+    };
+
     window.addEventListener('mousemove', moveCursor, { passive: true });
-    return () => window.removeEventListener('mousemove', moveCursor);
-  }, [mouseX, mouseY]);
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
+    document.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+
+    return () => {
+      window.removeEventListener('mousemove', moveCursor);
+      window.removeEventListener('mouseover', handleMouseOver);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [mouseX, mouseY, setCursor, resetCursor]);
 
   // Don't render on touch devices
   if (typeof window !== 'undefined' && !window.matchMedia('(pointer: fine)').matches) {
@@ -71,7 +99,7 @@ export function CustomCursor() {
     >
       <motion.div
         className={cn(
-          'rounded-full',
+          'rounded-full flex items-center justify-center overflow-hidden',
           cursor.mode === 'default' && 'bg-otaru-chalk',
           cursor.mode === 'hover' && 'border border-otaru-chalk/80 bg-transparent',
           cursor.mode === 'text' && 'bg-otaru-chalk',
@@ -89,7 +117,7 @@ export function CustomCursor() {
         }}
       >
         {cursor.mode === 'view' && cursor.label && (
-          <span className="text-[10px] font-medium tracking-wider uppercase text-otaru-chalk">
+          <span className="text-[10px] font-medium tracking-wider uppercase text-otaru-chalk px-2 select-none">
             {cursor.label}
           </span>
         )}

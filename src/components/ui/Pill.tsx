@@ -1,14 +1,30 @@
-import { cn } from "@/lib/utils";
-import type { HTMLAttributes } from "react";
+import { cn } from '@/lib/utils';
 
-export function Pill({ className, ...props }: HTMLAttributes<HTMLSpanElement>) {
+interface PillProps {
+  children: React.ReactNode;
+  variant?: 'default' | 'accent' | 'muted' | 'outline';
+  className?: string;
+}
+
+const pillVariants = {
+  default: 'bg-otaru-cream text-otaru-ink',
+  accent: 'bg-otaru-ink text-otaru-chalk',
+  muted: 'bg-otaru-cream-deep/50 text-otaru-ink-muted',
+  outline: 'bg-transparent border border-otaru-border text-otaru-ink-muted',
+};
+
+export function Pill({ children, variant = 'default', className }: PillProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border border-border px-3 py-1 text-caption tracking-widest uppercase text-foreground-muted",
-        className
+        'inline-flex items-center px-3 py-1',
+        'text-[11px] font-medium tracking-wide uppercase',
+        'rounded-[2px] select-none',
+        pillVariants[variant],
+        className,
       )}
-      {...props}
-    />
+    >
+      {children}
+    </span>
   );
 }

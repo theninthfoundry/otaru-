@@ -1,47 +1,90 @@
-"use client";
+'use client';
 
-import { AnimatePresence, motion } from "framer-motion";
-import { type ReactNode, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface ModalProps {
-  open: boolean;
+  isOpen: boolean;
   onClose: () => void;
-  children: ReactNode;
+  children: React.ReactNode;
+  title: string;
   className?: string;
 }
 
-export function Modal({ open, onClose, children, className }: ModalProps) {
+export function Modal({
+  isOpen,
+  onClose,
+  children,
+  title,
+  className,
+}: ModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    },
+    [onClose],
+  );
+
   useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+      modalRef.current?.focus();
     }
-    if (open) document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, handleKeyDown]);
 
   return (
     <AnimatePresence>
-      {open && (
-        <motion.div
-          className="fixed inset-0 z-50 flex items-start justify-center bg-otaru-ink/40 backdrop-blur-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.22 }}
-          onClick={onClose}
-        >
+      {isOpen && (
+        <>
           <motion.div
-            className={cn("mt-24 w-full max-w-2xl rounded-lg bg-surface shadow-xl", className)}
-            initial={{ opacity: 0, y: 16, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.98 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-[60] bg-otaru-overlay backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={onClose}
+            aria-hidden="true"
+          />
+
+          <motion.div
+            ref={modalRef}
+            className={cn(
+              'fixed inset-0 z-[61] flex items-center justify-center p-6',
+              'pointer-events-none',
+            )}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            {children}
+            <motion.div
+              className={cn(
+                'pointer-events-auto relative w-full max-w-lg',
+                'bg-otaru-chalk border border-otaru-border/30',
+                'rounded-[3px] shadow-otaru-lg',
+                'max-h-[85vh] overflow-y-auto',
+                className,
+              )}
+              initial={{ scale: 0.96, y: 12 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.96, y: 12 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              role="dialog"
+              aria-modal="true"
+              aria-label={title}
+              tabIndex={-1}
+            >
+              {children}
+            </motion.div>
           </motion.div>
-        </motion.div>
+        </>
       )}
     </AnimatePresence>
   );

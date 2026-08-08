@@ -29,6 +29,8 @@ export function ArtifactCard({ artifact, priority = false }: ArtifactCardProps) 
         <Link
           href={`/artifact/${artifact.handle}`}
           aria-label={displayName}
+          data-cursor="view"
+          data-cursor-label="View"
           className="block h-full w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-otaru-ink rounded-sm"
         >
           {primaryImage ? (

@@ -1,28 +1,57 @@
-"use server";
+'use server';
 
-interface ReturnResult {
-  success: boolean;
-  ticketId?: string;
-  error?: string;
-}
+import { z } from 'zod';
+import { createShiprocketReturn } from '@/lib/shiprocket';
 
-/** Submits a return request and (once configured) opens a Shiprocket return AWB. */
-export async function submitReturnAction(input: {
-  orderId: string;
+const returnSchema = z.object({
+  orderNumber: z.string().min(1, 'Order number is required.'),
+  email: z.string().email('Please enter a valid email address.'),
+  reason: z.string().min(1, 'Please select a reason.'),
+  notes: z.string().optional(),
+});
+
+export async function submitReturnRequest(formData: {
+  orderNumber: string;
   email: string;
   reason: string;
-  itemHandles: string[];
-}): Promise<ReturnResult> {
-  if (!input.orderId || !input.email || !input.reason) {
-    return { success: false, error: "Order ID, email, and reason are required." };
+  notes?: string;
+}) {
+  const parsed = returnSchema.safeParse(formData);
+
+  if (!parsed.success) {
+    return {
+      success: false,
+      error: parsed.error.issues[0]?.message ?? 'Invalid return request input.',
+    };
   }
 
-  const email = process.env.SHIPROCKET_EMAIL;
-  if (!email) {
-    console.warn("[returns] Shiprocket not configured — simulating ticket creation.");
-    return { success: true, ticketId: `RET-${Date.now().toString().slice(-6)}` };
-  }
+  try {
+    const { orderNumber, reason } = parsed.data;
 
-  // TODO: real Shiprocket return-order creation call.
-  return { success: true, ticketId: `RET-${Date.now().toString().slice(-6)}` };
+    const result = await createShiprocketReturn({
+      orderId: orderNumber,
+      reason,
+    });
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error ?? 'Failed to submit return request.',
+      };
+    }
+
+    console.log(`[Return Requested] Order #${orderNumber}, Reason: ${reason}`);
+
+    return {
+      success: true,
+      returnId: result.returnId,
+      message: `Return request submitted successfully for Order #${orderNumber}.`,
+    };
+  } catch (error) {
+    console.error('[Return Request Exception]:', error);
+    return {
+      success: false,
+      error: 'An error occurred while submitting your return. Please try again.',
+    };
+  }
 }

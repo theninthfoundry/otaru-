@@ -1,50 +1,107 @@
-"use client";
+'use client';
 
-import { AnimatePresence, motion } from "framer-motion";
-import { type ReactNode, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface DrawerProps {
-  open: boolean;
+  isOpen: boolean;
   onClose: () => void;
-  children: ReactNode;
-  side?: "right" | "left";
+  children: React.ReactNode;
+  title: string;
+  side?: 'left' | 'right';
   className?: string;
 }
 
-export function Drawer({ open, onClose, children, side = "right", className }: DrawerProps) {
+const slideVariants = {
+  left: {
+    initial: { x: '-100%' },
+    animate: { x: 0 },
+    exit: { x: '-100%' },
+  },
+  right: {
+    initial: { x: '100%' },
+    animate: { x: 0 },
+    exit: { x: '100%' },
+  },
+};
+
+export function Drawer({
+  isOpen,
+  onClose,
+  children,
+  title,
+  side = 'right',
+  className,
+}: DrawerProps) {
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    },
+    [onClose],
+  );
+
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    }
     return () => {
-      document.body.style.overflow = "";
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
     };
-  }, [open]);
+  }, [isOpen, handleKeyDown]);
+
+  const variants = slideVariants[side];
 
   return (
     <AnimatePresence>
-      {open && (
+      {isOpen && (
         <>
           <motion.div
-            className="fixed inset-0 z-40 bg-otaru-ink/40"
+            className="fixed inset-0 z-[50] bg-otaru-overlay backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.22 }}
+            transition={{ duration: 0.3 }}
             onClick={onClose}
+            aria-hidden="true"
           />
-          <motion.div
+
+          <motion.aside
             className={cn(
-              "fixed top-0 z-50 h-full w-full max-w-md bg-surface shadow-xl",
-              side === "right" ? "right-0" : "left-0",
-              className
+              'fixed inset-y-0 z-[51] w-full max-w-md',
+              'bg-otaru-chalk border-otaru-border/30',
+              'shadow-otaru-lg',
+              'flex flex-col',
+              side === 'right'
+                ? 'right-0 border-l'
+                : 'left-0 border-r',
+              className,
             )}
-            initial={{ x: side === "right" ? "100%" : "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: side === "right" ? "100%" : "-100%" }}
-            transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
+            initial={variants.initial}
+            animate={variants.animate}
+            exit={variants.exit}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            role="dialog"
+            aria-modal="true"
+            aria-label={title}
           >
-            {children}
-          </motion.div>
+            <div className="flex items-center justify-between border-b border-otaru-border/40 px-6 py-5">
+              <h2 className="text-heading-sm font-semibold tracking-tight">
+                {title}
+              </h2>
+              <button
+                onClick={onClose}
+                className="text-body-sm text-otaru-ink-muted hover:text-otaru-ink transition-colors"
+                aria-label={`Close ${title}`}
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6">{children}</div>
+          </motion.aside>
         </>
       )}
     </AnimatePresence>

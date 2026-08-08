@@ -11,7 +11,7 @@ interface JournalCardProps {
 export function JournalCard({ entry }: JournalCardProps) {
   return (
     <article id={`journal-card-${entry.slug}`} className="group">
-      <Link href={`/journal/${entry.slug}`}>
+      <Link href={`/journal/${entry.slug}`} data-cursor="view" data-cursor-label="Read">
         {entry.coverImage && (
           <div className="aspect-[16/9] overflow-hidden bg-otaru-cream">
             {/* Sanity image will render here */}

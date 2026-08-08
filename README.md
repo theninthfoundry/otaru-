@@ -1,4 +1,4 @@
-# Otaru — *Garments worth keeping.*
+# Otaru 
 
 Otaru is a headless, luxury digital fashion archive and storefront built with Next.js 15, Shopify Storefront API, and Sanity CMS. It is designed to bridge tactile physical garments with an immersive, high-performance digital narrative.
 

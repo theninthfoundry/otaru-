@@ -19,6 +19,7 @@
 
 /* ── Base Reset ── */
 @layer base {
+
   *,
   *::before,
   *::after {
@@ -106,6 +107,7 @@
 
 /* ── Accessibility & Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -159,13 +161,23 @@
 
 /* ── Marquee Animation ── */
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @keyframes marquee-reverse {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
 
 .animate-marquee {

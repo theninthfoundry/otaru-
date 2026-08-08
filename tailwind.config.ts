@@ -1,90 +1,105 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
-/**
- * All values here proxy CSS custom properties defined in
- * src/styles/tokens/*.css — never hardcode raw values in components.
- */
 const config: Config = {
-  darkMode: ["class", '[data-theme="dark"]'],
-  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
+  content: [
+    './src/app/**/*.{ts,tsx}',
+    './src/components/**/*.{ts,tsx}',
+    './src/lib/**/*.{ts,tsx}',
+  ],
   theme: {
     extend: {
       colors: {
-        "otaru-ink": "var(--color-ink)",
-        "otaru-chalk": "var(--color-chalk)",
-        "otaru-cream": "var(--color-cream)",
-        "otaru-stone": "var(--color-stone)",
-        border: "var(--color-border)",
-        "border-strong": "var(--color-border-strong)",
-        surface: "var(--color-surface)",
-        "surface-alt": "var(--color-surface-alt)",
-        foreground: "var(--color-foreground)",
-        "foreground-muted": "var(--color-foreground-muted)",
-        background: "var(--color-background)",
-        success: "var(--color-success)",
-        error: "var(--color-error)",
-        warning: "var(--color-warning)",
+        otaru: {
+          ink: 'var(--color-ink)',
+          'ink-muted': 'var(--color-ink-muted)',
+          'ink-subtle': 'var(--color-ink-subtle)',
+          chalk: 'var(--color-chalk)',
+          'chalk-warm': 'var(--color-chalk-warm)',
+          cream: 'var(--color-cream)',
+          stone: 'var(--color-stone)',
+          'stone-light': 'var(--color-stone-light)',
+          'stone-dark': 'var(--color-stone-dark)',
+          accent: 'var(--color-chapter-accent)',
+          error: 'var(--color-error)',
+          success: 'var(--color-success)',
+        },
       },
       fontFamily: {
-        display: ["var(--font-display)"],
-        body: ["var(--font-body)"],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
       },
       fontSize: {
-        "display-xl": "var(--text-display-xl)",
-        "display-lg": "var(--text-display-lg)",
-        "display-md": "var(--text-display-md)",
-        "display-sm": "var(--text-display-sm)",
-        "body-lg": "var(--text-body-lg)",
-        "body-md": "var(--text-body-md)",
-        "body-sm": "var(--text-body-sm)",
-        caption: "var(--text-caption)",
-      },
-      letterSpacing: {
-        tighter: "var(--tracking-tighter)",
-        tight: "var(--tracking-tight)",
-        wide: "var(--tracking-wide)",
-        widest: "var(--tracking-widest)",
+        'display-xl': [
+          'var(--text-display-xl)',
+          { lineHeight: 'var(--leading-display-xl)' },
+        ],
+        'display-lg': [
+          'var(--text-display-lg)',
+          { lineHeight: 'var(--leading-display-lg)' },
+        ],
+        'display-md': [
+          'var(--text-display-md)',
+          { lineHeight: 'var(--leading-display-md)' },
+        ],
+        'heading-lg': [
+          'var(--text-heading-lg)',
+          { lineHeight: 'var(--leading-heading-lg)' },
+        ],
+        'heading-md': [
+          'var(--text-heading-md)',
+          { lineHeight: 'var(--leading-heading-md)' },
+        ],
+        'heading-sm': [
+          'var(--text-heading-sm)',
+          { lineHeight: 'var(--leading-heading-sm)' },
+        ],
+        'body-lg': [
+          'var(--text-body-lg)',
+          { lineHeight: 'var(--leading-body-lg)' },
+        ],
+        'body-md': [
+          'var(--text-body-md)',
+          { lineHeight: 'var(--leading-body-md)' },
+        ],
+        'body-sm': [
+          'var(--text-body-sm)',
+          { lineHeight: 'var(--leading-body-sm)' },
+        ],
+        caption: [
+          'var(--text-caption)',
+          { lineHeight: 'var(--leading-caption)' },
+        ],
+        overline: [
+          'var(--text-overline)',
+          { lineHeight: 'var(--leading-overline)' },
+        ],
       },
       spacing: {
-        "1": "var(--spacing-1)",
-        "2": "var(--spacing-2)",
-        "3": "var(--spacing-3)",
-        "4": "var(--spacing-4)",
-        "5": "var(--spacing-5)",
-        "6": "var(--spacing-6)",
-        "8": "var(--spacing-8)",
-        "10": "var(--spacing-10)",
-        "12": "var(--spacing-12)",
-        "16": "var(--spacing-16)",
-        "20": "var(--spacing-20)",
-        "24": "var(--spacing-24)",
-        "32": "var(--spacing-32)",
-      },
-      transitionDuration: {
-        "0": "var(--motion-0)",
-        "1": "var(--motion-1)",
-        "2": "var(--motion-2)",
-        "3": "var(--motion-3)",
-      },
-      transitionTimingFunction: {
-        standard: "var(--ease-standard)",
-        "out-expo": "var(--ease-out-expo)",
-        "in-out-quart": "var(--ease-in-out-quart)",
-      },
-      boxShadow: {
-        sm: "var(--shadow-sm)",
-        md: "var(--shadow-md)",
-        lg: "var(--shadow-lg)",
-        xl: "var(--shadow-xl)",
-      },
-      borderRadius: {
-        sm: "var(--radius-sm)",
-        md: "var(--radius-md)",
-        lg: "var(--radius-lg)",
-        full: "var(--radius-full)",
+        'grid-margin': 'var(--grid-margin)',
+        'grid-gutter': 'var(--grid-gutter)',
       },
       maxWidth: {
-        container: "var(--container-max)",
+        grid: 'var(--grid-max-width)',
+      },
+      transitionDuration: {
+        instant: 'var(--motion-duration-instant)',
+        subtle: 'var(--motion-duration-subtle)',
+        editorial: 'var(--motion-duration-editorial)',
+      },
+      transitionTimingFunction: {
+        settle: 'var(--motion-easing-settle)',
+        editorial: 'var(--motion-easing-editorial)',
+        spring: 'var(--motion-easing-spring)',
+      },
+      boxShadow: {
+        'otaru-sm': 'var(--elevation-sm)',
+        'otaru-md': 'var(--elevation-md)',
+        'otaru-lg': 'var(--elevation-lg)',
+      },
+      letterSpacing: {
+        editorial: 'var(--tracking-editorial)',
+        overline: 'var(--tracking-overline)',
       },
     },
   },

@@ -1,22 +1,29 @@
-import { cn } from "@/lib/utils";
-import type { HTMLAttributes } from "react";
+import { cn } from '@/lib/utils';
 
-interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  tone?: "default" | "sold" | "new";
+interface BadgeProps {
+  count: number;
+  max?: number;
+  className?: string;
 }
 
-/** Used for "Archive Sold" / "Latest Chapter" style status labels. */
-export function Badge({ className, tone = "default", ...props }: BadgeProps) {
+export function Badge({ count, max = 9, className }: BadgeProps) {
+  if (count <= 0) return null;
+
+  const displayCount = count > max ? `${max}+` : count.toString();
+
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-sm px-2 py-1 text-caption tracking-wide uppercase",
-        tone === "default" && "bg-surface-alt text-foreground-muted",
-        tone === "sold" && "bg-otaru-ink text-otaru-chalk",
-        tone === "new" && "bg-otaru-chalk text-otaru-ink border border-otaru-ink",
-        className
+        'inline-flex items-center justify-center',
+        'min-w-[18px] h-[18px] px-1',
+        'bg-otaru-ink text-otaru-chalk',
+        'text-[10px] font-bold leading-none',
+        'rounded-full',
+        className,
       )}
-      {...props}
-    />
+      aria-label={`${count} items`}
+    >
+      {displayCount}
+    </span>
   );
 }

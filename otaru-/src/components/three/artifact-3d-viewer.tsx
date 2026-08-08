@@ -46,7 +46,11 @@ export function Artifact3DViewer({
   const activePreset = FABRIC_PRESETS[fabricType];
 
   return (
-    <div className={`relative rounded-sm border border-otaru-border/50 bg-otaru-chalk-warm/40 overflow-hidden ${className}`}>
+    <div
+      className={`relative rounded-sm border border-otaru-border/50 bg-otaru-chalk-warm/40 overflow-hidden ${className}`}
+      data-cursor="view"
+      data-cursor-label="Tactile"
+    >
       {/* 3D WebGL Scene */}
       <CanvasWrapper
         className="w-full h-full"

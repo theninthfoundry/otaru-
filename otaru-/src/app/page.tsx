@@ -152,7 +152,12 @@ export default async function HomePage() {
             </div>
 
             <article className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-7 aspect-[16/10] bg-otaru-cream overflow-hidden rounded-sm group">
+              <Link
+                href={`/journal/${leadJournal.slug}`}
+                className="lg:col-span-7 aspect-[16/10] bg-otaru-cream overflow-hidden rounded-sm group block focus:outline-none focus-visible:ring-2 focus-visible:ring-otaru-ink"
+                data-cursor="view"
+                data-cursor-label="Read"
+              >
                 {leadJournal.coverImage?.asset?.url && (
                   <img
                     src={leadJournal.coverImage.asset.url}
@@ -160,7 +165,7 @@ export default async function HomePage() {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                 )}
-              </div>
+              </Link>
               <div className="lg:col-span-5 space-y-4">
                 <span className="text-overline uppercase tracking-widest text-otaru-ink-subtle text-[10px] font-semibold">
                   Featured Story

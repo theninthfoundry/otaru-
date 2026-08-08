@@ -1,24 +1,62 @@
-"use client";
+'use client';
 
-export function Marquee({ text, speedSeconds = 22 }: { text: string; speedSeconds?: number }) {
+import { useRef, useEffect, type ReactNode } from 'react';
+import { cn } from '@/lib/utils';
+
+interface MarqueeProps {
+  children: ReactNode;
+  speed?: number;
+  direction?: 'left' | 'right';
+  pauseOnHover?: boolean;
+  gap?: string;
+  className?: string;
+}
+
+export function Marquee({
+  children,
+  speed = 50,
+  direction = 'left',
+  pauseOnHover = true,
+  gap = '2rem',
+  className,
+}: MarqueeProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const contentWidth = el.scrollWidth / 2;
+    const duration = contentWidth / speed;
+    el.style.setProperty('--marquee-duration', `${duration}s`);
+  }, [speed, children]);
+
   return (
-    <div className="overflow-hidden whitespace-nowrap border-y border-border py-4">
+    <div
+      className={cn(
+        'overflow-hidden select-none',
+        pauseOnHover && 'group',
+        className,
+      )}
+    >
       <div
-        className="inline-block animate-[otaru-marquee_var(--marquee-duration)_linear_infinite]"
-        style={{ ["--marquee-duration" as string]: `${speedSeconds}s` }}
+        ref={containerRef}
+        className={cn(
+          'flex w-max',
+          'animate-marquee',
+          direction === 'right' && 'animate-marquee-reverse',
+          pauseOnHover && 'group-hover:[animation-play-state:paused]',
+        )}
+        style={{ gap }}
+        aria-hidden="true"
       >
-        {Array.from({ length: 8 }).map((_, i) => (
-          <span key={i} className="mx-8 font-display text-display-sm">
-            {text}
-          </span>
-        ))}
+        <div className="flex shrink-0 items-center" style={{ gap }}>
+          {children}
+        </div>
+        <div className="flex shrink-0 items-center" style={{ gap }}>
+          {children}
+        </div>
       </div>
-      <style jsx global>{`
-        @keyframes otaru-marquee {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-      `}</style>
     </div>
   );
 }

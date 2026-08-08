@@ -1,40 +1,43 @@
-"use server";
+'use server';
 
-interface NewsletterResult {
-  success: boolean;
-  error?: string;
-}
+import { z } from 'zod';
+import { subscribeProfileToList } from '@/lib/klaviyo';
 
-/** Registers an email with Klaviyo. Requires KLAVIYO_PRIVATE_KEY. */
-export async function subscribeNewsletterAction(email: string): Promise<NewsletterResult> {
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { success: false, error: "Enter a valid email address." };
-  }
+const emailSchema = z.string().email('Please enter a valid email address.');
 
-  const apiKey = process.env.KLAVIYO_PRIVATE_KEY;
-  if (!apiKey) {
-    console.warn("[newsletter] KLAVIYO_PRIVATE_KEY not set — simulating success in dev.");
-    return { success: true };
+export async function subscribeToNewsletter(email: string) {
+  const parsed = emailSchema.safeParse(email);
+
+  if (!parsed.success) {
+    return {
+      success: false,
+      error: parsed.error.issues[0]?.message ?? 'Invalid email address.',
+    };
   }
 
   try {
-    const res = await fetch("https://a.klaviyo.com/api/profile-subscription-bulk-create-jobs/", {
-      method: "POST",
-      headers: {
-        Authorization: `Klaviyo-API-Key ${apiKey}`,
-        "Content-Type": "application/json",
-        revision: "2024-10-15",
+    const result = await subscribeProfileToList({
+      email: parsed.data,
+      customProperties: {
+        source: 'Footer / Home Newsletter Form',
+        subscribedAt: new Date().toISOString(),
       },
-      body: JSON.stringify({
-        data: {
-          type: "profile-subscription-bulk-create-job",
-          attributes: { profiles: { data: [{ type: "profile", attributes: { email } }] } },
-        },
-      }),
     });
-    if (!res.ok) throw new Error(`Klaviyo error: ${res.status}`);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error ?? 'Subscription failed. Please try again.',
+      };
+    }
+
+    console.log(`[Newsletter Action] Subscribed: ${parsed.data}`);
     return { success: true };
-  } catch (err) {
-    return { success: false, error: "Could not subscribe right now. Please try again." };
+  } catch (error) {
+    console.error('[Newsletter Action Error]:', error);
+    return {
+      success: false,
+      error: 'Subscription failed. Please try again later.',
+    };
   }
 }

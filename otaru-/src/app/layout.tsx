@@ -5,6 +5,8 @@ import { CartProvider } from '@/components/cart/cart-provider';
 import { WishlistProvider } from '@/components/wishlist/wishlist-context';
 import { AnalyticsProvider } from '@/lib/analytics/provider';
 import { LenisProvider } from '@/components/common/lenis-provider';
+import { CursorProvider } from '@/hooks/use-cursor';
+import { CustomCursor } from '@/components/ui/custom-cursor';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import '@/styles/globals.css';
@@ -69,7 +71,7 @@ export default async function RootLayout({
   const nonce = headersList.get('x-nonce') || undefined;
 
   return (
-    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable}`}>
+    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable} cursor-hidden`}>
       <body>
         <a href="#main-content" className="skip-to-content">
           Skip to main content
@@ -78,9 +80,12 @@ export default async function RootLayout({
           <AnalyticsProvider nonce={nonce}>
             <WishlistProvider>
               <CartProvider>
-                <Header />
-                <main id="main-content" tabIndex={-1}>{children}</main>
-                <Footer />
+                <CursorProvider>
+                  <Header />
+                  <main id="main-content" tabIndex={-1}>{children}</main>
+                  <Footer />
+                  <CustomCursor />
+                </CursorProvider>
               </CartProvider>
             </WishlistProvider>
           </AnalyticsProvider>
