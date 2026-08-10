@@ -1,3 +1,4 @@
-export { shopifyFetch } from './client';
-export type * from './types';
-export { reshapeProduct, reshapeProducts, reshapeCart } from './mappers';
+/**
+ * Otaru — Shopify Storefront API Integration Wrapper
+ */
+export * from '../integrations/shopify';

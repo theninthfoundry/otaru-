@@ -158,7 +158,7 @@ export async function removeFromCart(cartId: string, lineIds: string[]) {
 
 export async function updateCart(
   cartId: string,
-  lines: { id: string; merchandiseId: string; quantity: number }[],
+  lines: { id: string; merchandiseId?: string; quantity: number }[],
 ) {
   try {
     const data = await shopifyFetch<{
