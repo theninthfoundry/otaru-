@@ -1,0 +1,210 @@
+// Prisma Schema for Otaru Production-Grade Commerce Engine
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+
+enum OrderStatus {
+  CREATED
+  PAYMENT_PENDING
+  PAID
+  CONFIRMED
+  FULFILLMENT_PENDING
+  FULFILLING
+  SHIPPED
+  DELIVERED
+  FAILED
+  CANCELLED
+  REFUND_PENDING
+  REFUNDED
+}
+
+enum PaymentStatus {
+  CREATED
+  CAPTURED
+  FAILED
+  REFUNDED
+}
+
+enum WebhookStatus {
+  PENDING
+  PROCESSED
+  FAILED
+}
+
+enum IdempotencyStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum OutboxStatus {
+  PENDING
+  PROCESSING
+  PUBLISHED
+  FAILED
+}
+
+model User {
+  id            String      @id @default(uuid())
+  email         String      @unique
+  name          String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  orders        Order[]
+  nfcScans      NfcScan[]
+
+  @@map("users")
+}
+
+model Order {
+  id            String          @id @default(uuid())
+  internalId    String          @unique // e.g. OTARU-REG-104921
+  userId        String?
+  user          User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  customerEmail String
+  customerName  String
+  shopifyId     String?         @unique
+  status        OrderStatus     @default(CREATED)
+  
+  // Monetary values stored as INTEGER MINOR UNITS (paise / cents)
+  subtotalMinor Int
+  shippingMinor Int
+  totalMinor    Int
+  currency      String          @default("USD")
+  
+  items         OrderItem[]
+  payments      Payment[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@index([customerEmail])
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id             String      @id @default(uuid())
+  orderId        String
+  order          Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  artifactHandle String
+  variantId      String
+  quantity       Int
+  unitPriceMinor Int
+
+  @@map("order_items")
+}
+
+model Payment {
+  id               String         @id @default(uuid())
+  orderId          String
+  order            Order          @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  gateway          String
+  gatewayOrderId   String         @unique
+  gatewayPaymentId String?        @unique
+  amountMinor      Int
+  currency         String
+  status           PaymentStatus  @default(CREATED)
+  signature        String?
+  fraudScore       Int            @default(0)
+  details          String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([gatewayOrderId])
+  @@index([orderId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("payments")
+}
+
+model WebhookEvent {
+  id            String        @id @default(uuid())
+  eventId       String        @unique
+  source        String
+  eventType     String
+  payload       Json
+  status        WebhookStatus @default(PENDING)
+  error         String?
+  attempts      Int           @default(0)
+  processedAt   DateTime?
+  createdAt     DateTime      @default(now())
+
+  @@index([source, eventId])
+  @@index([status])
+  @@map("webhook_events")
+}
+
+model OutboxEvent {
+  id            String       @id @default(uuid())
+  eventId       String       @unique
+  type          String       // e.g. "PaymentCaptured", "OrderCreated"
+  aggregateType String?      // e.g. "Order", "Payment"
+  aggregateId   String?
+  payload       Json
+  status        OutboxStatus @default(PENDING)
+  attempts      Int          @default(0)
+  lastError     String?
+  lockedAt      DateTime?
+  lockedBy      String?
+  publishedAt   DateTime?
+  createdAt     DateTime     @default(now())
+
+  @@index([status, createdAt])
+  @@index([lockedAt])
+  @@map("outbox_events")
+}
+
+model AuditEvent {
+  id            String      @id @default(uuid())
+  seq           BigInt      @default(autoincrement())
+  timestamp     DateTime    @default(now())
+  type          String
+  ref           String?
+  ip            String?
+  email         String?
+  details       String
+  meta          Json?
+  prevHash      String
+  hash          String
+
+  @@index([seq])
+  @@index([createdAt])
+  @@map("audit_events")
+}
+
+model NfcScan {
+  id            String      @id @default(uuid())
+  serialNumber  String
+  userId        String?
+  user          User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  ip            String
+  scannedAt     DateTime    @default(now())
+
+  @@index([serialNumber])
+  @@index([scannedAt])
+  @@map("nfc_scans")
+}
+
+model IdempotencyRecord {
+  id             String            @id @default(uuid())
+  key            String            @unique
+  email          String
+  orderId        String?
+  status         IdempotencyStatus @default(PROCESSING)
+  requestHash    String?
+  responseStatus Int?
+  responseBody   Json?
+  createdAt      DateTime          @default(now())
+  expiresAt      DateTime
+
+  @@index([key, email])
+  @@map("idempotency_records")
+}
