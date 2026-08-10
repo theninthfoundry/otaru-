@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Dock from '@/components/ui/Dock';
+import Dock from '@/components/ui/dock';
 import {
   HomeIcon,
   ArchiveIcon,
