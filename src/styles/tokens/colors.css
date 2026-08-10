@@ -4,9 +4,15 @@
  */
 :root {
   --color-ink: #0a0a0a;
+  --color-ink-muted: #525252;
+  --color-ink-subtle: #8a8a8a;
   --color-chalk: #fcfcfc;
+  --color-chalk-warm: #f7f6f2;
   --color-cream: #f5f4f0;
   --color-stone: #e5e3dc;
+  --color-stone-light: #f0eee8;
+  --color-stone-dark: #c8c5bb;
+  --color-chapter-accent: #1a1a1a;
 
   --color-ink-80: rgba(10, 10, 10, 0.8);
   --color-ink-60: rgba(10, 10, 10, 0.6);
@@ -35,6 +41,8 @@
 }
 
 [data-theme="dark"] {
+  --color-ink-muted: #a3a3a3;
+  --color-ink-subtle: #737373;
   --color-surface: var(--color-ink);
   --color-surface-alt: #141412;
   --color-foreground: var(--color-chalk);

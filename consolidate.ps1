@@ -16,9 +16,14 @@ if (Test-Path $stagingDir) {
 }
 New-Item -ItemType Directory -Path $stagingDir | Out-Null
 
-# 2. Copy the canonical otaru-/ codebase to the staging folder
-Write-Host "[1/7] Copying canonical codebase to staging..." -ForegroundColor Cyan
-Copy-Item -Path "otaru-\*" -Destination $stagingDir -Recurse -Force
+# 2. Copy the combined root codebase to the staging folder
+Write-Host "[1/7] Copying unified root codebase to staging..." -ForegroundColor Cyan
+Get-ChildItem -Path $currentDir.Path -Force | ForEach-Object {
+    $name = $_.Name
+    if ($name -ne ".git" -and $name -ne "consolidate.ps1" -and $name -ne "staging_surgery" -and $name -ne "otaru-" -and $name -ne "otaru-v2") {
+        Copy-Item -Path $_.FullName -Destination $stagingDir -Recurse -Force
+    }
+}
 
 # 3. Restructure lib/ inside the staging directory to match architectural boundaries
 Write-Host "[2/7] Reorganizing lib/ folder boundaries..." -ForegroundColor Cyan
@@ -43,6 +48,15 @@ Move-Item -Path (Join-Path $libDir "sanity\*") -Destination (Join-Path $libDir "
 Move-Item -Path (Join-Path $libDir "klaviyo.ts") -Destination (Join-Path $libDir "integrations\klaviyo.ts") -Force -ErrorAction SilentlyContinue
 Move-Item -Path (Join-Path $libDir "interakt.ts") -Destination (Join-Path $libDir "integrations\interakt.ts") -Force -ErrorAction SilentlyContinue
 Move-Item -Path (Join-Path $libDir "shiprocket.ts") -Destination (Join-Path $libDir "integrations\shiprocket.ts") -Force -ErrorAction SilentlyContinue
+
+# Clean up legacy duplicates inside staging lib/ and components/
+Write-Host "Removing legacy duplicates..." -ForegroundColor Yellow
+Remove-Item -Path (Join-Path $libDir "sanity.ts") -Force -ErrorAction SilentlyContinue
+Remove-Item -Path (Join-Path $libDir "shopify.ts") -Force -ErrorAction SilentlyContinue
+Remove-Item -Path (Join-Path $libDir "shopify-queries.ts") -Force -ErrorAction SilentlyContinue
+Remove-Item -Path (Join-Path $stagingDir "src\components\three\Artifact3DViewer.tsx") -Force -ErrorAction SilentlyContinue
+Remove-Item -Path (Join-Path $stagingDir "src\components\three\CanvasWrapper.tsx") -Force -ErrorAction SilentlyContinue
+Remove-Item -Path (Join-Path $stagingDir "src\components\three\FabricSphere.tsx") -Force -ErrorAction SilentlyContinue
 
 # Delete redundant shipping folder
 if (Test-Path (Join-Path $libDir "shipping")) {

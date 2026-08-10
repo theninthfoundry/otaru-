@@ -41,3 +41,21 @@ export async function subscribeToNewsletter(email: string) {
     };
   }
 }
+
+interface NewsletterResult {
+  success: boolean;
+  error?: string;
+}
+
+/**
+ * Action wrapper for layout newsletter subscription.
+ * Bridges subscribeNewsletterAction (used by components) to the core Klaviyo subscription handler.
+ */
+export async function subscribeNewsletterAction(email: string): Promise<NewsletterResult> {
+  const result = await subscribeToNewsletter(email);
+  return {
+    success: result.success,
+    error: result.error,
+  };
+}
+

@@ -4,6 +4,10 @@
   --shadow-lg: 0 12px 40px rgba(10, 10, 10, 0.12);
   --shadow-xl: 0 24px 64px rgba(10, 10, 10, 0.16);
 
+  --elevation-sm: var(--shadow-sm);
+  --elevation-md: var(--shadow-md);
+  --elevation-lg: var(--shadow-lg);
+
   --blur-glass: 16px;
   --radius-sm: 2px;
   --radius-md: 4px;

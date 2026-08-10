@@ -1,5 +1,47 @@
 'use server';
 
+import { trackShipment } from '@/lib/shiprocket';
+
+interface TrackingResult {
+  success: boolean;
+  status?: string;
+  awb?: string;
+  history?: { status: string; timestamp: string; location?: string }[];
+  error?: string;
+}
+
+/**
+ * Polls Shiprocket for live order status by order ID or AWB.
+ * Bridges trackOrderAction (used by TrackOrderForm) to the core Shiprocket client.
+ */
+export async function trackOrderAction(orderIdOrAwb: string): Promise<TrackingResult> {
+  if (!orderIdOrAwb.trim()) {
+    return { success: false, error: 'Enter an order ID or tracking number.' };
+  }
+
+  try {
+    const status = await trackShipment(orderIdOrAwb);
+
+    const history = [
+      {
+        status: status.statusText || 'Order status query complete',
+        timestamp: status.updatedAt || new Date().toISOString(),
+        location: status.location,
+      }
+    ];
+
+    return {
+      success: true,
+      status: status.status,
+      awb: status.awbCode || orderIdOrAwb,
+      history,
+    };
+  } catch (error) {
+    console.error('[tracking] trackOrderAction Exception:', error);
+    return { success: false, error: 'Failed to retrieve tracking details.' };
+  }
+}
+
 export async function trackOrder(orderId: string) {
   const token = process.env.SHIPROCKET_API_TOKEN;
 
@@ -39,3 +81,4 @@ export async function trackOrder(orderId: string) {
     return { success: false, error: 'Unable to fetch tracking information.' };
   }
 }
+

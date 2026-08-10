@@ -9,7 +9,7 @@ test("can browse the Archive and add an Artifact to the bag", async ({ page }) =
   await expect(page.getByRole("heading", { name: "Archive" })).toBeVisible();
 
   await page.getByRole("link", { name: /Raw Denim Chore Coat/i }).first().click();
-  await expect(page).toHaveURL(/\/artifact\/raw-denim-chore-coat/);
+  await expect(page).toHaveURL(/\/artifact\/artifact-001-denim-jacket/);
 
   await page.getByRole("button", { name: "S", exact: true }).click();
   await page.getByRole("button", { name: /Add to Bag/i }).click();

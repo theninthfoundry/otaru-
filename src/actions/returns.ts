@@ -55,3 +55,50 @@ export async function submitReturnRequest(formData: {
     };
   }
 }
+
+interface ReturnResult {
+  success: boolean;
+  ticketId?: string;
+  error?: string;
+}
+
+/**
+ * Submits a return request from the ReturnForm component.
+ */
+export async function submitReturnAction(input: {
+  orderId: string;
+  email: string;
+  reason: string;
+  itemHandles: string[];
+}): Promise<ReturnResult> {
+  // 1. Basic validation
+  if (!input.orderId || !input.orderId.trim()) {
+    return { success: false, error: 'Order ID is required.' };
+  }
+  if (!input.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email)) {
+    return { success: false, error: 'A valid email address is required.' };
+  }
+  if (!input.reason || !input.reason.trim()) {
+    return { success: false, error: 'Return reason is required.' };
+  }
+
+  try {
+    const result = await createShiprocketReturn({
+      orderId: input.orderId,
+      reason: input.reason,
+    });
+
+    if (!result.success) {
+      return { success: false, error: result.error ?? 'Failed to create return order.' };
+    }
+
+    return {
+      success: true,
+      ticketId: result.returnId,
+    };
+  } catch (error) {
+    console.error('[returns] submitReturnAction Exception:', error);
+    return { success: false, error: 'An unexpected error occurred.' };
+  }
+}
+

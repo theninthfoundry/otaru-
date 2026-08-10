@@ -87,10 +87,10 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
               serialNumber={serialQuery.toUpperCase()}
               artifactName={getCleanTitle(matchedArtifact.title)}
               artifactNumber={artifactNumStr}
-              gsm={matchedArtifact.metafields?.materialComposition || 'Premium Textile Blend'}
-              wash={matchedArtifact.metafields?.careInstructions || 'Dry Clean Suggested'}
-              construction={matchedArtifact.metafields?.provenanceCountry || 'Handcrafted Design'}
-              productionBatch={`Unit ${unitNumber.padStart(3, '0')} of ${matchedArtifact.metafields?.editionSize || 100} (Chapter ${matchedArtifact.metafields?.chapterNumber || '01'})`}
+              gsm={matchedArtifact.gsm || '14.5oz Raw Selvage Denim'}
+              wash={matchedArtifact.wash || 'Unwashed Raw Treatment'}
+              construction={matchedArtifact.construction || 'Triple-Needle Lap Seams'}
+              productionBatch={`Unit ${unitNumber.padStart(3, '0')} of 150 (Chapter ${matchedArtifact.chapterId || '01'})`}
               issuedDate={new Date(matchedArtifact.createdAt || '2026-01-01').getFullYear().toString()}
             />
           ) : (
