@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { prisma } from '@/lib/db/prisma';
 
 export type AuditEventType =
   | 'ORDER_CREATED'
@@ -109,6 +110,21 @@ export function auditLog(params: {
     fs.writeFileSync(AUDIT_FILE, JSON.stringify(events, null, 2), 'utf-8');
 
     chainTail = { seq, hash };
+
+    if (process.env.DATABASE_URL) {
+      prisma.auditEvent.create({
+        data: {
+          type: params.type,
+          ref: params.ref,
+          ip: params.ip,
+          email: params.email,
+          details: params.details,
+          meta: (params.meta as any) ?? undefined,
+          prevHash: tail.hash,
+          hash,
+        },
+      }).catch(err => console.warn('[Prisma Audit Dual-Write Warning]:', err.message));
+    }
   } catch (err) {
     console.error('[AuditTrail] Failed to write event:', err);
   }

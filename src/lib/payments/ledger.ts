@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { prisma } from '@/lib/db/prisma';
 
 export interface LedgerHistoryEntry {
   status: string;
@@ -102,12 +103,33 @@ export function addTransaction(tx: Omit<Transaction, 'createdAt' | 'history'> & 
     };
     transactions[existingIdx] = existing;
     saveTransactions(transactions);
-    return existing;
+  } else {
+    transactions.unshift(newTx);
+    saveTransactions(transactions);
   }
 
-  transactions.unshift(newTx);
-  saveTransactions(transactions);
-  return newTx;
+  // Dual-write to Prisma DB asynchronously if configured
+  if (process.env.DATABASE_URL) {
+    prisma.payment.upsert({
+      where: { gatewayOrderId: tx.id },
+      create: {
+        orderId: tx.orderId,
+        gateway: 'RAZORPAY',
+        gatewayOrderId: tx.id,
+        amount: tx.amount,
+        currency: tx.currency,
+        status: tx.status,
+        details: tx.details,
+        signature: tx.security.signatureVerified ? 'VERIFIED' : null,
+      },
+      update: {
+        status: tx.status,
+        details: tx.details,
+      },
+    }).catch(err => console.warn('[Prisma Dual-Write Warning]:', err.message));
+  }
+
+  return existingIdx !== -1 ? transactions[existingIdx] : newTx;
 }
 
 export function updateTransactionStatus(
@@ -141,6 +163,14 @@ export function updateTransactionStatus(
 
   transactions[txIndex] = tx;
   saveTransactions(transactions);
+
+  if (process.env.DATABASE_URL) {
+    prisma.payment.updateMany({
+      where: { OR: [{ gatewayOrderId: id }, { orderId: id }] },
+      data: { status, details },
+    }).catch(err => console.warn('[Prisma Dual-Write Warning]:', err.message));
+  }
+
   return tx;
 }
 
