@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { validateBody, OrderRequestSchema } from '@/lib/payments/schemas';
 import { checkPaymentRateLimit } from '@/lib/payments/payment-rate-limiter';
-import { checkIdempotency, registerIdempotencyKey } from '@/lib/payments/idempotency';
+import { checkIdempotencyAsync, registerIdempotencyKey } from '@/lib/payments/idempotency';
 import { evaluateFraudRisk } from '@/lib/payments/fraud';
 import { issueCartToken } from '@/lib/payments/cart-token';
 import { issueNonce } from '@/lib/payments/nonce-store';
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const idempCheck = checkIdempotency(idempotencyKey, email);
+    const idempCheck = await checkIdempotencyAsync(idempotencyKey, email);
     if (idempCheck.status === 'INVALID_KEY') {
       return NextResponse.json(
         { error: 'Idempotency-Key must be a valid UUID.', code: 'INVALID_IDEMPOTENCY_KEY' },
@@ -95,20 +95,23 @@ export async function POST(request: Request) {
       );
     }
 
-    const subtotal = cart.lines.reduce((sum, line) => {
-      const price = parseFloat(line.cost?.totalAmount?.amount ?? '0');
+    // Convert all floating amounts to INTEGER MINOR UNITS (paise / cents)
+    const subtotalCents = cart.lines.reduce((sum, line) => {
+      const price = Math.round(parseFloat(line.cost?.totalAmount?.amount ?? '0') * 100);
       const qty = line.quantity ?? 1;
       return sum + price * qty;
     }, 0);
-    const shipping = subtotal > 300 ? 0 : 15;
-    const total = Math.round((subtotal + shipping) * 100) / 100;
+
+    const shippingCents = subtotalCents > 30000 ? 0 : 1500;
+    const totalCents = subtotalCents + shippingCents;
+    const totalFloat = totalCents / 100;
 
     const fraud = evaluateFraudRisk({
       email,
       ip,
       firstName: customer.firstName,
       lastName: customer.lastName,
-      amount: total,
+      amount: totalFloat,
       currency: cart.cost?.subtotalAmount?.currencyCode ?? 'USD',
     });
 
@@ -136,7 +139,6 @@ export async function POST(request: Request) {
       });
     }
 
-    const amountInCents = Math.round(total * 100);
     const currency = cart.cost?.subtotalAmount?.currencyCode ?? 'USD';
     const internalOrderId = `OTARU-REG-${Math.floor(Math.random() * 900000) + 100000}`;
 
@@ -147,7 +149,7 @@ export async function POST(request: Request) {
     }));
     const cartToken = issueCartToken({
       lines: cartTokenLines,
-      amount: total,
+      amount: totalFloat,
       currency,
       orderId: internalOrderId,
     });
@@ -170,7 +172,7 @@ export async function POST(request: Request) {
             Authorization: `Basic ${auth}`,
           },
           body: JSON.stringify({
-            amount: amountInCents,
+            amount: totalCents,
             currency: currency === 'USD' ? 'USD' : 'INR',
             receipt: internalOrderId,
             notes: {
@@ -198,7 +200,7 @@ export async function POST(request: Request) {
       const mockId = `order_MOCK_${Math.random().toString(36).substring(2, 11).toUpperCase()}`;
       razorpayOrder = {
         id: mockId,
-        amount: amountInCents,
+        amount: totalCents,
         currency,
         receipt: internalOrderId,
         status: 'created',
@@ -210,7 +212,7 @@ export async function POST(request: Request) {
       orderId: internalOrderId,
       customerId: email,
       customerName: `${customer.firstName} ${customer.lastName}`,
-      amount: total,
+      amount: totalFloat,
       currency,
       method: isMock ? 'Escrow Sandbox' : 'Razorpay Gateway',
       status: 'CREATED',
@@ -228,7 +230,7 @@ export async function POST(request: Request) {
       ref: internalOrderId,
       ip,
       email,
-      meta: { razorpayId: razorpayOrder.id, amount: total, fraudScore: fraud.score },
+      meta: { razorpayId: razorpayOrder.id, amountCents: totalCents, fraudScore: fraud.score },
     });
 
     const responsePayload = {
