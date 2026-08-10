@@ -1,110 +1,78 @@
-# Otaru Granular Git Commit Automation (25 Atomic Commits)
+# Otaru Granular Git Commit Automation (Phase 1 through Phase 4)
 
-Write-Host "=== Starting Granular Git Commits ===" -ForegroundColor Green
+Write-Host "=== Starting Production Hardening Git Commits ===" -ForegroundColor Green
 
-# 1. Architecture Docs
-git add docs/ARCHITECTURE.md
-git commit -m "docs: add architectural manifesto and modular monolith layout"
+# 1. PostgreSQL Prisma Schema
+git add prisma/schema.prisma package.json
+git commit -m "feat(database): introduce PostgreSQL Prisma schema for commerce and audit models"
 
-# 2. Data Models
-git add docs/DATA_MODEL.md
-git commit -m "docs: define order state machine and prisma schema draft"
+# 2. Resilient Database Client
+git add src/lib/db/prisma.ts
+git commit -m "feat(database): implement fail-fast Prisma client singleton with offline proxy fallback"
 
-# 3. Deployment
-git add docs/DEPLOYMENT.md
-git commit -m "docs: add deployment guide and environment variable specifications"
+# 3. Transactional Ledger & Audit Dual-Write
+git add src/lib/payments/ledger.ts src/lib/payments/audit-trail.ts
+git commit -m "feat(payments): integrate Prisma dual-write engine for ledger transactions and audit events"
 
-# 4. Integrations Spec
-git add docs/INTEGRATIONS.md
-git commit -m "docs: catalog third-party API integration boundaries"
+# 4. Database-Backed Idempotency Engine
+git add src/lib/payments/idempotency.ts
+git commit -m "feat(payments): implement DB-backed idempotency with UNIQUE key locks and status transitions"
 
-# 5. Security Spec
-git add docs/SECURITY.md
-git commit -m "docs: document edge-level CSP, CSRF, and rate limiting specifications"
+# 5. Financial Minor Units & Checkout Updates
+git add src/app/api/checkout/razorpay/order/route.ts src/app/api/checkout/razorpay/verify/route.ts
+git commit -m "refactor(checkout): standardize monetary values to integer minor units and async idempotency"
 
-# 6. Webhooks Spec
-git add docs/WEBHOOKS.md
-git commit -m "docs: define webhook routing and ISR revalidation strategy"
+# 6. Phase 1.5 Concurrency Tests
+git add src/__tests__/concurrency-payment.test.ts
+git commit -m "test(payments): add integration test suite for payment concurrency and idempotency locks"
 
-# 7. ADRs
-git add docs/ADR/
-git commit -m "docs(adr): add architectural decision records 001 through 004"
+# 7. Redis Ephemeral Client & Distributed Locks
+git add src/lib/redis/client.ts
+git commit -m "feat(redis): implement Upstash & in-memory Redis client with fail-closed production policy"
 
-# 8. Root Configs
-git add next.config.ts postcss.config.mjs next.config.mjs postcss.config.js
-git commit -m "chore: standardize next.config.ts and postcss.config.mjs"
+# 8. Standardized Event Envelopes & Queue Engine
+git add src/lib/queue/domain-events.ts src/lib/queue/client.ts
+git commit -m "feat(queue): implement domain event envelope structure and async queue client"
 
-# 9. Shiprocket
-git add src/lib/integrations/shiprocket.ts
-git commit -m "feat(integrations): move shiprocket logistics API client"
+# 9. Transactional Outbox Publisher & Worker Locks
+git add src/lib/queue/outbox-publisher.ts
+git commit -m "feat(queue): implement outbox publisher with atomic worker PROCESSING status locks"
 
-# 10. Klaviyo
-git add src/lib/integrations/klaviyo.ts
-git commit -m "feat(integrations): move klaviyo crm newsletter API client"
+# 10. Retry Classification & DLQ Storage
+git add src/lib/queue/retry.ts src/lib/queue/dead-letter.ts
+git commit -m "feat(queue): add exponential backoff retry classification and Dead Letter Queue storage"
 
-# 11. Interakt
-git add src/lib/integrations/interakt.ts
-git commit -m "feat(integrations): move interakt whatsapp notification client"
+# 11. Decoupled Asynchronous Webhook Endpoint
+git add src/app/api/webhooks/razorpay/route.ts
+git commit -m "feat(webhooks): implement fast decoupled Razorpay webhook route with atomic outbox persistence"
 
-# 12. Shopify Integration
-git add src/lib/integrations/shopify/
-git commit -m "feat(integrations): consolidate shopify storefront graphql queries and mappers"
+# 12. Phase 2 Queue & Outbox Tests
+git add src/__tests__/phase2-queue-outbox.test.ts src/__tests__/phase2-verification.test.ts
+git commit -m "test(queue): add integration tests for outbox worker claims and Redis distributed locks"
 
-# 13. Sanity Integration
-git add src/lib/integrations/sanity/
-git commit -m "feat(integrations): consolidate sanity studio cms groq queries and client"
+# 13. Correlation Tracing & Redacting Logger
+git add src/lib/observability/tracer.ts src/lib/security/logger.ts
+git commit -m "feat(observability): implement correlation ID tracing context and secret-redacting JSON logger"
 
-# 14. Commerce Domain
-git add src/lib/commerce/
-git commit -m "feat(domain): implement commerce domain products, checkout, and orders services"
+# 14. Metrics Engine & Exporter Endpoint
+git add src/lib/observability/metrics.ts src/app/api/metrics/route.ts
+git commit -m "feat(observability): add latency quantile metrics registry and /api/metrics JSON endpoint"
 
-# 15. CMS Domain
-git add src/lib/cms/
-git commit -m "feat(domain): implement sanity cms domain wrapper service"
+# 15. Phase 3 Observability Tests
+git add src/__tests__/phase3-observability.test.ts
+git commit -m "test(observability): add integration tests for trace context bindings and metric quantiles"
 
-# 16. Provenance Domain
-git add src/lib/provenance/
-git commit -m "feat(domain): implement provenance authenticity certificate & nfc verification"
+# 16. Circuit Breaker & Chaos Engine
+git add src/lib/resilience/circuit-breaker.ts src/lib/resilience/chaos.ts
+git commit -m "feat(resilience): implement circuit breaker pattern and chaos fault injection toggles"
 
-# 17. Membership Domain
-git add src/lib/membership/
-git commit -m "feat(domain): implement patron and collector membership tier entitlements"
+# 17. Phase 4 Resilience Tests
+git add src/__tests__/phase4-resilience-chaos.test.ts
+git commit -m "test(resilience): add integration tests for circuit breakers and worker lock recovery"
 
-# 18. Lib Wrappers
-git add src/lib/shopify.ts src/lib/sanity.ts src/lib/shopify/ src/lib/sanity/
-git commit -m "refactor(lib): update domain re-exports for shopify and sanity"
-
-# 19. UI Components
-git add src/components/ui/
-git commit -m "refactor(ui): standardize primitives to kebab-case file naming"
-
-# 20. Layout Components
-git add src/components/layout/
-git commit -m "refactor(layout): organize header, footer, and navigation components"
-
-# 21. Orders & Verify Components
-git add src/components/orders/ src/components/verify/
-git commit -m "refactor(components): standardize return forms, tracking, and verification cards"
-
-# 22. Home & Editorial Components
-git add src/components/home/ src/components/editorial/ src/components/journal/
-git commit -m "refactor(editorial): organize chapter spotlight and journal components"
-
-# 23. Animations & Drops Components
-git add src/components/animations/ src/components/drops/
-git commit -m "refactor(animations): enhance reveal-text and drop countdown components"
-
-# 24. Artifact, Cart & 3D Components
-git add src/components/artifact/ src/components/cart/ src/components/wishlist/ src/components/search/ src/components/three/
-git commit -m "refactor(components): organize artifact details, cart drawer, and 3d material viewer"
-
-# 25. Unit Tests & Types
-git add src/__tests__/domain-services.test.ts src/types/
-git commit -m "test: add domain service unit tests and update typescript definitions"
-
-# 26. Remaining files & Push
+# 18. Documentation Update & Push
 git add .
-git commit -m "chore: final repository consolidation and cleanup"
+git commit -m "chore: update system walkthrough documentation and complete production completed phases"
 git push
 
-Write-Host "=== All 26 Commits Pushed Successfully ===" -ForegroundColor Green
+Write-Host "=== All Production Commits Pushed Successfully ===" -ForegroundColor Green
