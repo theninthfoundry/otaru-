@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { prisma } from '@/lib/db/prisma';
 
 const KEY_TTL_MS = 24 * 60 * 60 * 1000;
 
@@ -57,6 +58,33 @@ export function checkIdempotency(
   return { status: 'DUPLICATE', cachedResponse: entry.responsePayload };
 }
 
+export async function checkIdempotencyAsync(
+  rawKey: string | null | undefined,
+  email: string,
+): Promise<IdempotencyCheckResult> {
+  const syncResult = checkIdempotency(rawKey, email);
+  if (syncResult.status !== 'NEW') return syncResult;
+
+  if (rawKey && process.env.DATABASE_URL) {
+    try {
+      const key = scopedKey(rawKey, email);
+      const dbRecord = await prisma.idempotencyRecord.findUnique({
+        where: { key },
+      });
+      if (dbRecord) {
+        return {
+          status: 'DUPLICATE',
+          cachedResponse: dbRecord.responseJson as Record<string, unknown>,
+        };
+      }
+    } catch (err: unknown) {
+      console.warn('[Idempotency Async Warning]:', err);
+    }
+  }
+
+  return { status: 'NEW' };
+}
+
 export function registerIdempotencyKey(
   rawKey: string | null | undefined,
   email: string,
@@ -72,6 +100,19 @@ export function registerIdempotencyKey(
     responsePayload,
     createdAt: Date.now(),
   });
+
+  if (process.env.DATABASE_URL) {
+    prisma.idempotencyRecord.upsert({
+      where: { key },
+      create: {
+        key,
+        email: email.toLowerCase(),
+        orderId,
+        responseJson: responsePayload as any,
+      },
+      update: {},
+    }).catch(err => console.warn('[Prisma Idempotency Dual-Write Warning]:', err.message));
+  }
 }
 
 export function getIdempotencyStoreSize(): number {
