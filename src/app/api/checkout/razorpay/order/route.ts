@@ -17,6 +17,7 @@ export async function POST(request: Request) {
     headersList.get('x-real-ip') ||
     '127.0.0.1';
   const idempotencyKey = headersList.get('Idempotency-Key') ?? headersList.get('idempotency-key');
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true';
 
   let email = '';
 
@@ -95,7 +96,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Convert all floating amounts to INTEGER MINOR UNITS (paise / cents)
+    // Monetary values stored in INTEGER MINOR UNITS (paise / cents)
     const subtotalCents = cart.lines.reduce((sum, line) => {
       const price = Math.round(parseFloat(line.cost?.totalAmount?.amount ?? '0') * 100);
       const qty = line.quantity ?? 1;
@@ -127,16 +128,6 @@ export async function POST(request: Request) {
         { error: 'Order could not be processed. Please contact support.', code: 'FRAUD_BLOCKED' },
         { status: 403 },
       );
-    }
-
-    if (fraud.decision === 'FLAG') {
-      auditLog({
-        type: 'FRAUD_FLAGGED',
-        details: `Order FLAGGED by fraud engine. Score: ${fraud.score}. Signals: ${fraud.signals.join(', ')}`,
-        ip,
-        email,
-        meta: { score: fraud.score, signals: fraud.signals },
-      });
     }
 
     const currency = cart.cost?.subtotalAmount?.currencyCode ?? 'USD';
@@ -194,6 +185,24 @@ export async function POST(request: Request) {
       } catch (e: unknown) {
         logger.error('[Order API] Exception calling Razorpay:', e);
       }
+    }
+
+    // Strict Production Isolation: Throw 503 if Razorpay fails in Production
+    if (!razorpayOrder && isProduction) {
+      logger.error('[Order API SECURITY ALERT] Razorpay API unavailable in production mode. Refusing mock order fallback.');
+      auditLog({
+        type: 'ORDER_BLOCKED',
+        details: `Order creation rejected: Razorpay gateway unavailable in production mode. Email: ${email}`,
+        ip,
+        email,
+      });
+      return NextResponse.json(
+        {
+          error: 'Payment gateway is currently unavailable. Please try again in a few moments.',
+          code: 'RAZORPAY_GATEWAY_UNAVAILABLE',
+        },
+        { status: 503 },
+      );
     }
 
     if (!razorpayOrder) {

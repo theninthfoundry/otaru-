@@ -102,54 +102,6 @@ const GET_PRODUCTS = /* GraphQL */ `
   ${PRODUCT_FRAGMENT}
 `;
 
-const GET_PRODUCTS_BY_COLLECTION = /* GraphQL */ `
-  query GetProductsByCollection(
-    $handle: String!
-    $first: Int!
-    $sortKey: ProductCollectionSortKeys
-    $reverse: Boolean
-    $after: String
-  ) {
-    collection(handle: $handle) {
-      id
-      handle
-      title
-      description
-      products(
-        first: $first
-        sortKey: $sortKey
-        reverse: $reverse
-        after: $after
-      ) {
-        edges {
-          node {
-            ...ProductFields
-          }
-          cursor
-        }
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-          startCursor
-          endCursor
-        }
-      }
-    }
-  }
-  ${PRODUCT_FRAGMENT}
-`;
-
-const GET_PRODUCT_RECOMMENDATIONS = /* GraphQL */ `
-  query GetProductRecommendations($productId: ID!) {
-    productRecommendations(productId: $productId) {
-      ...ProductFields
-    }
-  }
-  ${PRODUCT_FRAGMENT}
-`;
-
-import { MOCK_ARTIFACTS } from '../mocks';
-
 export async function getProductByHandle(
   handle: string,
 ): Promise<Artifact | null> {
@@ -166,12 +118,11 @@ export async function getProductByHandle(
     if (data.product) {
       return reshapeProduct(data.product);
     }
+    return null;
   } catch (error) {
-    console.warn(`[Shopify API] Falling back to mock data for handle "${handle}":`, (error as Error).message);
+    console.warn(`[Shopify API Query Error for handle "${handle}"]:`, (error as Error).message);
+    return null; // Strict: Return null to trigger Next.js 404 rather than silent fake product fallback
   }
-
-  const mock = MOCK_ARTIFACTS.find((a) => a.handle === handle);
-  return mock ?? MOCK_ARTIFACTS[0] ?? null;
 }
 
 export async function getProducts(options: {
@@ -210,86 +161,10 @@ export async function getProducts(options: {
       pageInfo: data.products.pageInfo,
     };
   } catch (error) {
-    console.warn('[Shopify API] Falling back to mock artifacts for list query:', (error as Error).message);
+    console.warn('[Shopify API List Error]:', (error as Error).message);
     return {
-      artifacts: MOCK_ARTIFACTS.slice(0, first),
+      artifacts: [],
       pageInfo: { hasNextPage: false, endCursor: null },
     };
-  }
-}
-
-export async function getProductsByCollection(
-  collectionHandle: string,
-  options: {
-    first?: number;
-    sortKey?: string;
-    reverse?: boolean;
-    after?: string;
-  } = {},
-): Promise<{
-  artifacts: Artifact[];
-  pageInfo: { hasNextPage: boolean; endCursor: string | null };
-} | null> {
-  const { first = DEFAULT_PAGE_SIZE, reverse = false, after } = options;
-
-  try {
-    const data = await shopifyFetch<{
-      collection: {
-        id: string;
-        handle: string;
-        title: string;
-        description: string;
-        products: {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          edges: { node: any; cursor: string }[];
-          pageInfo: { hasNextPage: boolean; endCursor: string | null };
-        };
-      } | null;
-    }>({
-      query: GET_PRODUCTS_BY_COLLECTION,
-      variables: {
-        handle: collectionHandle,
-        first,
-        sortKey: 'MANUAL',
-        reverse,
-        after,
-      },
-      tags: [TAGS.products, TAGS.collections],
-    });
-
-    if (!data.collection) return null;
-
-    return {
-      artifacts: reshapeProducts(
-        data.collection.products.edges.map((e) => e.node),
-      ),
-      pageInfo: data.collection.products.pageInfo,
-    };
-  } catch (error) {
-    console.warn(`[Shopify API] Falling back for collection "${collectionHandle}":`, (error as Error).message);
-    return {
-      artifacts: MOCK_ARTIFACTS.slice(0, first),
-      pageInfo: { hasNextPage: false, endCursor: null },
-    };
-  }
-}
-
-export async function getProductRecommendations(
-  productId: string,
-): Promise<Artifact[]> {
-  try {
-    const data = await shopifyFetch<{
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      productRecommendations: any[];
-    }>({
-      query: GET_PRODUCT_RECOMMENDATIONS,
-      variables: { productId },
-      tags: [TAGS.products],
-    });
-
-    return reshapeProducts(data.productRecommendations ?? []);
-  } catch (error) {
-    console.warn('[Shopify API] Falling back for recommendations:', (error as Error).message);
-    return MOCK_ARTIFACTS.slice(0, 3);
   }
 }

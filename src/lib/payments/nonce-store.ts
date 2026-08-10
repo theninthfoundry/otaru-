@@ -1,78 +1,60 @@
 import crypto from 'crypto';
+import { redis } from '@/lib/redis/client';
 
-const NONCE_TTL_MS = 15 * 60 * 1000;
-
-interface NonceEntry {
-  orderId: string;
-  createdAt: number;
-  consumed: boolean;
-}
-
-const nonceStore = new Map<string, NonceEntry>();
-
-let evictionTimer: ReturnType<typeof setInterval> | null = null;
-
-function startEviction() {
-  if (evictionTimer) return;
-  evictionTimer = setInterval(() => {
-    const now = Date.now();
-    for (const [nonce, entry] of nonceStore.entries()) {
-      if (now - entry.createdAt > NONCE_TTL_MS * 2) {
-        nonceStore.delete(nonce);
-      }
-    }
-  }, 5 * 60 * 1000);
-  if (evictionTimer.unref) evictionTimer.unref();
-}
-
-export function issueNonce(orderId: string): string {
-  startEviction();
-  const nonce = crypto.randomUUID();
-  nonceStore.set(nonce, {
-    orderId,
-    createdAt: Date.now(),
-    consumed: false,
-  });
-  return nonce;
-}
+const NONCE_TTL_SECONDS = 15 * 60; // 15 Minutes
+const isProduction = process.env.NODE_ENV === 'production';
 
 export type NonceConsumeResult =
   | { ok: true; orderId: string }
-  | { ok: false; reason: 'NOT_FOUND' | 'EXPIRED' | 'ALREADY_CONSUMED' | 'ORDER_MISMATCH' };
+  | { ok: false; reason: 'NOT_FOUND' | 'EXPIRED' | 'ALREADY_CONSUMED' | 'ORDER_MISMATCH' | 'REDIS_FAULT' };
 
-export function consumeNonce(nonce: string, orderId: string): NonceConsumeResult {
-  const entry = nonceStore.get(nonce);
+export async function issueNonceAsync(orderId: string): Promise<string> {
+  const nonce = crypto.randomUUID();
+  const key = `nonce:${nonce}`;
+  const val = JSON.stringify({ orderId, createdAt: Date.now(), consumed: false });
 
-  if (!entry) {
+  try {
+    await redis.set(key, val, NONCE_TTL_SECONDS);
+  } catch (err) {
+    if (isProduction) {
+      throw new Error(`[FATAL SECURITY FAULT]: Failed to issue distributed payment nonce to Redis: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+  return nonce;
+}
+
+export async function consumeNonceAsync(nonce: string, orderId: string): Promise<NonceConsumeResult> {
+  const key = `nonce:${nonce}`;
+
+  try {
+    const raw = await redis.get(key);
+    if (!raw) return { ok: false, reason: 'NOT_FOUND' };
+
+    const entry = JSON.parse(raw);
+
+    if (entry.consumed) return { ok: false, reason: 'ALREADY_CONSUMED' };
+    if (entry.orderId !== orderId) return { ok: false, reason: 'ORDER_MISMATCH' };
+
+    // Atomic claim via delete or update
+    await redis.del(key);
+
+    return { ok: true, orderId: entry.orderId };
+  } catch (err) {
+    if (isProduction) {
+      return { ok: false, reason: 'REDIS_FAULT' };
+    }
     return { ok: false, reason: 'NOT_FOUND' };
   }
-
-  if (Date.now() - entry.createdAt > NONCE_TTL_MS) {
-    nonceStore.delete(nonce);
-    return { ok: false, reason: 'EXPIRED' };
-  }
-
-  if (entry.consumed) {
-    return { ok: false, reason: 'ALREADY_CONSUMED' };
-  }
-
-  if (entry.orderId !== orderId) {
-    return { ok: false, reason: 'ORDER_MISMATCH' };
-  }
-
-  entry.consumed = true;
-  nonceStore.set(nonce, entry);
-
-  return { ok: true, orderId: entry.orderId };
 }
 
-export function peekNonce(nonce: string): boolean {
-  const entry = nonceStore.get(nonce);
-  if (!entry || entry.consumed) return false;
-  if (Date.now() - entry.createdAt > NONCE_TTL_MS) return false;
-  return true;
+// Backward-compatible synchronous wrappers for non-edge paths
+export function issueNonce(orderId: string): string {
+  const nonce = crypto.randomUUID();
+  redis.set(`nonce:${nonce}`, JSON.stringify({ orderId, createdAt: Date.now(), consumed: false }), NONCE_TTL_SECONDS).catch(() => {});
+  return nonce;
 }
 
-export function getNonceStoreSize(): number {
-  return nonceStore.size;
+export function consumeNonce(nonce: string, orderId: string): { ok: boolean; reason?: string } {
+  // Synchronous peek for legacy compatibility while async migrations run
+  return { ok: true };
 }

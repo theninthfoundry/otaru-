@@ -21,13 +21,19 @@ export function NfcScanner() {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ndef.addEventListener('reading', ({ message, serialNumber }: any) => {
-          let readSerial = serialNumber || 'OTARU-007-104';
+          let readSerial = serialNumber || '';
 
           for (const record of message.records) {
             if (record.recordType === 'text') {
               const decoder = new TextDecoder(record.encoding);
               readSerial = decoder.decode(record.data);
             }
+          }
+
+          if (!readSerial) {
+            setStatusMessage('Empty NFC tag payload detected.');
+            setIsScanning(false);
+            return;
           }
 
           setStatusMessage(`Verified Tag! Serial: ${readSerial}`);
@@ -45,12 +51,9 @@ export function NfcScanner() {
         setIsScanning(false);
       }
     } else {
-      setTimeout(() => {
-        const simulatedSerial = 'OTARU-001-042';
-        setStatusMessage(`[NFC Simulator] Detected Tag: ${simulatedSerial}`);
-        setIsScanning(false);
-        router.push(`/verify?serial=${encodeURIComponent(simulatedSerial)}`);
-      }, 1500);
+      // Production Strict: Unsupported device warning without fake tag simulation
+      setStatusMessage('Web NFC is not supported on this device/browser. Please enter the serial number printed on your care label below.');
+      setIsScanning(false);
     }
   }
 
@@ -64,7 +67,7 @@ export function NfcScanner() {
           Tap Garment NFC Tag
         </h4>
         <p className="text-caption text-otaru-chalk/70 text-xs font-light max-w-sm mx-auto">
-          Tap your smartphone directly against the interior leather NFC tag on your Otaru garment.
+          Tap your Android Chrome smartphone directly against the interior leather NFC tag on your Otaru garment.
         </p>
       </div>
 

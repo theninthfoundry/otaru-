@@ -15,6 +15,8 @@ export async function POST(request: Request) {
     headersList.get('x-real-ip') ||
     '127.0.0.1';
 
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true';
+
   try {
     const rateLimit = checkPaymentRateLimit('verify', ip);
     if (!rateLimit.allowed) {
@@ -52,6 +54,25 @@ export async function POST(request: Request) {
     }
 
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, mock, nonce } = validation.data;
+
+    // Strict Production Gate: Reject any mock payment attempt in Production
+    if (isProduction && (mock || razorpay_signature === 'mock_signature_approved')) {
+      logger.warn(`[Verify API SECURITY ALERT] Rejected mock verification attempt in production environment. IP: ${ip}, Order: ${razorpay_order_id}`);
+      auditLog({
+        type: 'PAYMENT_FAILED',
+        details: `Mock verification attempt FORBIDDEN in production. Order: ${razorpay_order_id}`,
+        ip,
+        ref: razorpay_order_id,
+      });
+      return NextResponse.json(
+        {
+          verified: false,
+          error: 'Mock payment verification is strictly forbidden in production.',
+          code: 'PRODUCTION_MOCK_FORBIDDEN',
+        },
+        { status: 403 },
+      );
+    }
 
     if (nonce) {
       const nonceResult = consumeNonce(nonce, razorpay_order_id);
@@ -140,7 +161,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ verified: true });
     }
 
-    if (razorpay_signature === 'mock_signature_approved') {
+    // Local Development Sandbox Only
+    if (!isProduction && razorpay_signature === 'mock_signature_approved') {
       updateTransactionStatus(
         razorpay_order_id,
         'CAPTURED',
@@ -160,17 +182,17 @@ export async function POST(request: Request) {
     updateTransactionStatus(
       razorpay_order_id,
       'FAILED',
-      `Sandbox payment verification rejected. Signature: ${razorpay_signature}`,
+      `Payment verification rejected. Signature: ${razorpay_signature}`,
       { signatureVerified: false },
     );
     auditLog({
       type: 'PAYMENT_FAILED',
-      details: `Sandbox payment REJECTED for order: ${razorpay_order_id}`,
+      details: `Payment REJECTED for order: ${razorpay_order_id}`,
       ip,
       ref: razorpay_order_id,
     });
     return NextResponse.json(
-      { verified: false, error: 'Payment verification rejected.', code: 'SANDBOX_REJECTED' },
+      { verified: false, error: 'Payment verification rejected.', code: 'PAYMENT_REJECTED' },
       { status: 400 },
     );
   } catch (error: unknown) {

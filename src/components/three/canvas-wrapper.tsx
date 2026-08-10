@@ -28,23 +28,26 @@ export function CanvasWrapper({
     setIsMounted(true);
   }, []);
 
-  if (!isMounted || isMobile || prefersReducedMotion) {
+  if (!isMounted || prefersReducedMotion) {
     return <div className={className}>{fallback}</div>;
   }
+
+  // Mobile WebGL Profile: Lower DPR target (0.75 - 1.0) for performance
+  const dprRange: [number, number] = isMobile ? [0.75, 1] : [1, 2];
 
   return (
     <div className={className} aria-hidden="true">
       <Canvas
         camera={{ position: cameraPosition, fov }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        dpr={dprRange}
+        gl={{ antialias: !isMobile, alpha: true, powerPreference: 'high-performance' }}
       >
         <Suspense fallback={null}>
           <ambientLight intensity={0.6} />
           <directionalLight position={[10, 10, 5]} intensity={1.2} />
           <pointLight position={[-10, -10, -5]} intensity={0.5} />
           <OrbitControls
-            enableZoom={true}
+            enableZoom={!isMobile}
             minDistance={2.5}
             maxDistance={7}
             enablePan={false}
