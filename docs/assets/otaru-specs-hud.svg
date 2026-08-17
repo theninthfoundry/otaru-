@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 130" width="100%" height="100%">
+  <defs>
+    <linearGradient id="hudBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0c1017" />
+      <stop offset="50%" stop-color="#06080c" />
+      <stop offset="100%" stop-color="#0b0e14" />
+    </linearGradient>
+
+    <linearGradient id="glowBorder" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.6" />
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#f6d365" stop-opacity="0.6" />
+    </linearGradient>
+
+    <linearGradient id="pillGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#00f2fe" stop-opacity="0.05" />
+    </linearGradient>
+
+    <linearGradient id="pillGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0.05" />
+    </linearGradient>
+
+    <linearGradient id="pillGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.05" />
+    </linearGradient>
+
+    <linearGradient id="pillGrad4" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.05" />
+    </linearGradient>
+
+    <linearGradient id="pillGrad5" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#ef4444" stop-opacity="0.05" />
+    </linearGradient>
+  </defs>
+
+  <style>
+    .mono { font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', Arial, sans-serif; }
+    .title { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; }
+    .subtitle { font-size: 10px; font-weight: 400; letter-spacing: 0.05em; fill: #94a3b8; }
+    .tag { font-size: 9px; font-weight: 600; letter-spacing: 0.15em; }
+  </style>
+
+  <!-- Container -->
+  <rect width="1200" height="130" rx="12" fill="url(#hudBg)" stroke="url(#glowBorder)" stroke-width="1.2" />
+
+  <!-- Grid Partition Columns -->
+  <!-- Module 1: Transactional Precision -->
+  <g transform="translate(24, 20)">
+    <rect width="216" height="90" rx="8" fill="url(#pillGrad1)" stroke="#00f2fe" stroke-opacity="0.3" stroke-width="0.8" />
+    <circle cx="20" cy="24" r="5" fill="#00f2fe" />
+    <text x="34" y="27" class="mono tag" fill="#00f2fe">FINANCIAL ENGINE</text>
+    <text x="20" y="52" class="sans title" fill="#ffffff">Integer Precision</text>
+    <text x="20" y="70" class="mono subtitle">Zero Float Drifts · Minor Units</text>
+    <text x="20" y="84" class="mono tag" fill="#64748b">ACID · SELECT FOR UPDATE</text>
+  </g>
+
+  <!-- Module 2: 3D Material Specimen -->
+  <g transform="translate(260, 20)">
+    <rect width="216" height="90" rx="8" fill="url(#pillGrad2)" stroke="#a855f7" stroke-opacity="0.3" stroke-width="0.8" />
+    <circle cx="20" cy="24" r="5" fill="#a855f7" />
+    <text x="34" y="27" class="mono tag" fill="#c084fc">3D SPECIMEN INSPECTION</text>
+    <text x="20" y="52" class="sans title" fill="#ffffff">WebGL Material R3F</text>
+    <text x="20" y="70" class="mono subtitle">60 FPS · 800 GSM Weave Mesh</text>
+    <text x="20" y="84" class="mono tag" fill="#64748b">THREE.JS · REACT THREE FIBER</text>
+  </g>
+
+  <!-- Module 3: Web NFC Provenance -->
+  <g transform="translate(496, 20)">
+    <rect width="216" height="90" rx="8" fill="url(#pillGrad3)" stroke="#10b981" stroke-opacity="0.3" stroke-width="0.8" />
+    <circle cx="20" cy="24" r="5" fill="#10b981" />
+    <text x="34" y="27" class="mono tag" fill="#34d399">HARDWARE PROVENANCE</text>
+    <text x="20" y="52" class="sans title" fill="#ffffff">Physical Web NFC</text>
+    <text x="20" y="70" class="mono subtitle">Cryptographic NTAG-424 DNA</text>
+    <text x="20" y="84" class="mono tag" fill="#64748b">ECDSA · ANTI-COUNTERFEIT</text>
+  </g>
+
+  <!-- Module 4: High-Contention Queues -->
+  <g transform="translate(732, 20)">
+    <rect width="216" height="90" rx="8" fill="url(#pillGrad4)" stroke="#f59e0b" stroke-opacity="0.3" stroke-width="0.8" />
+    <circle cx="20" cy="24" r="5" fill="#f59e0b" />
+    <text x="34" y="27" class="mono tag" fill="#fbbf24">DROP ENGINE</text>
+    <text x="20" y="52" class="sans title" fill="#ffffff">Contention Guard</text>
+    <text x="20" y="70" class="mono subtitle">5,000+ RPS Flash Drop Queuing</text>
+    <text x="20" y="84" class="mono tag" fill="#64748b">UPSTASH REDIS · SLIDING TOKEN</text>
+  </g>
+
+  <!-- Module 5: Tamper-Evident Ledger -->
+  <g transform="translate(968, 20)">
+    <rect width="208" height="90" rx="8" fill="url(#pillGrad5)" stroke="#ef4444" stroke-opacity="0.3" stroke-width="0.8" />
+    <circle cx="20" cy="24" r="5" fill="#ef4444" />
+    <text x="34" y="27" class="mono tag" fill="#f87171">AUDIT INTEGRITY</text>
+    <text x="20" y="52" class="sans title" fill="#ffffff">SHA-256 Hash Chain</text>
+    <text x="20" y="70" class="mono subtitle">Immutable State Audit Log</text>
+    <text x="20" y="84" class="mono tag" fill="#64748b">OUTBOX PATTERN · ZERO DRIFT</text>
+  </g>
+</svg>

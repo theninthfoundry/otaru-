@@ -1,37 +1,45 @@
-```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                                                                         │
-│                                OTARU                                    │
-│                                                                         │
-│                      DIGITAL HOUSE / SYSTEMS                            │
-│                                                                         │
-│                   Where artifact meets interface.                       │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+<div align="center">
 
-# OTARU — DIGITAL HOUSE & COMMERCE PLATFORM
+<br />
 
-[![Next.js 15](https://img.shields.io/badge/Next.js-15.1.0-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
-[![React 19](https://img.shields.io/badge/React-19.0.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Durable_State-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-6.3.0-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
-[![Upstash Redis](https://img.shields.io/badge/Upstash_Redis-Distributed-00E599?style=for-the-badge&logo=redis&logoColor=black)](https://upstash.com/)
-[![Shopify](https://img.shields.io/badge/Shopify-Storefront_API-95BF47?style=for-the-badge&logo=shopify&logoColor=white)](https://shopify.dev/)
-[![Sanity Studio](https://img.shields.io/badge/Sanity-CMS_Studio_v3-F03E2F?style=for-the-badge&logo=sanity&logoColor=white)](https://www.sanity.io/)
-[![Three.js](https://img.shields.io/badge/Three.js-WebGL_R3F-000000?style=for-the-badge&logo=threedotjs&logoColor=white)](https://threejs.org/)
-[![Web NFC](https://img.shields.io/badge/Web_NFC-Provenance-008080?style=for-the-badge&logo=nfc&logoColor=white)](https://w3c.github.io/web-nfc/)
-[![Vercel](https://img.shields.io/badge/Vercel-Production_Deploy-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
+<!-- Hero Banner Artwork -->
+<img src="docs/assets/otaru-hero-banner.svg" alt="OTARU — Digital House & Commerce Infrastructure" width="100%" />
 
-> **Otaru is not merely a storefront. It is a digital infrastructure layer for a physical design house.**
+<br /><br />
 
-Otaru bridges tactile, heavy-gauge physical garments with an immersive, high-performance digital narrative. Architected as an **Event-Driven Modular Monolith**, it combines integer minor-unit financial precision, transactional outbox durability, physical Web NFC provenance, interactive 3D WebGL material inspection, and distributed edge security.
+<!-- Holographic Status & Architecture Spec HUD -->
+<img src="docs/assets/otaru-specs-hud.svg" alt="System Capabilities & Technical Specifications" width="100%" />
+
+<br /><br />
+
+<!-- Curated Tech Stack Matrix Badges -->
+[![Next.js 15](https://img.shields.io/badge/Next.js_15.1-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React 19](https://img.shields.io/badge/React_19.0-0B192C?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![TypeScript 5.7](https://img.shields.io/badge/TypeScript_5.7-1E293B?style=for-the-badge&logo=typescript&logoColor=38BDF8)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-ACID_Durable-1E1B4B?style=for-the-badge&logo=postgresql&logoColor=818CF8)](https://www.postgresql.org/)
+[![Prisma 6.3](https://img.shields.io/badge/Prisma_6.3-ORM-0F172A?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![Upstash Redis](https://img.shields.io/badge/Upstash-Edge_Redis-064E3B?style=for-the-badge&logo=redis&logoColor=34D399)](https://upstash.com/)
+[![Shopify Storefront](https://img.shields.io/badge/Shopify-Storefront_API-365314?style=for-the-badge&logo=shopify&logoColor=BEF264)](https://shopify.dev/)
+[![Sanity Studio v3](https://img.shields.io/badge/Sanity_v3-Visual_CMS-7F1D1D?style=for-the-badge&logo=sanity&logoColor=FCA5A5)](https://www.sanity.io/)
+[![Three.js](https://img.shields.io/badge/Three.js-WebGL_R3F-030712?style=for-the-badge&logo=threedotjs&logoColor=F43F5E)](https://threejs.org/)
+[![Web NFC](https://img.shields.io/badge/Web_NFC-Physical_DNA-134E4A?style=for-the-badge&logo=nfc&logoColor=2DD4BF)](https://w3c.github.io/web-nfc/)
+[![Vercel Edge](https://img.shields.io/badge/Vercel-Edge_Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
+
+<br />
+
+<p align="center">
+  <b><code>小樽工藝系統 // THE DIGITAL HOUSE PLATFORM</code></b><br>
+  <i>"Where heavy-gauge physical craftsmanship converges with immutable digital state."</i>
+</p>
 
 ---
 
-![Otaru Hero Visual](/docs/assets/otaru-hero.webp)
-*Placeholder: Storefront hero specimen visualization (`/docs/assets/otaru-hero.webp`)*
+</div>
+
+> ### ❖ CORE ARCHITECTURAL DIRECTIVE
+> **Otaru is not merely a storefront. It is the high-performance digital infrastructure layer for a physical design house.**  
+> 
+> Architected as an **Event-Driven Modular Monolith**, Otaru fuses integer minor-unit financial determinism, transactional outbox durability, cryptographically sealed Web NFC hardware provenance, 60fps WebGL material specimen inspection, and zero-trust distributed edge security into an uncompromising digital experience.
 
 ---
 

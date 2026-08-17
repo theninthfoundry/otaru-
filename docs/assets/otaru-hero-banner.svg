@@ -1,0 +1,255 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradients -->
+    <radialGradient id="bgGlow" cx="50%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#141926" stop-opacity="0.9" />
+      <stop offset="45%" stop-color="#090b10" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#030406" stop-opacity="1" />
+    </radialGradient>
+
+    <radialGradient id="cyanFlare" cx="30%" cy="40%" r="40%">
+      <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.18" />
+      <stop offset="60%" stop-color="#4facfe" stop-opacity="0.04" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="amberFlare" cx="75%" cy="30%" r="45%">
+      <stop offset="0%" stop-color="#ffb154" stop-opacity="0.12" />
+      <stop offset="50%" stop-color="#ff416c" stop-opacity="0.03" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Metallic Brand Gradient -->
+    <linearGradient id="textGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="25%" stop-color="#e2e8f0" />
+      <stop offset="50%" stop-color="#94a3b8" />
+      <stop offset="75%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#64748b" />
+    </linearGradient>
+
+    <linearGradient id="accentCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f2fe" />
+      <stop offset="100%" stop-color="#4facfe" />
+    </linearGradient>
+
+    <linearGradient id="accentGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f6d365" />
+      <stop offset="100%" stop-color="#fda085" />
+    </linearGradient>
+
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.6" />
+      <stop offset="20%" stop-color="#ffffff" stop-opacity="0.1" />
+      <stop offset="80%" stop-color="#ffffff" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#f6d365" stop-opacity="0.5" />
+    </linearGradient>
+
+    <!-- Blueprint Grid Pattern -->
+    <pattern id="microGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#ffffff" stroke-opacity="0.025" stroke-width="0.75" />
+      <circle cx="24" cy="24" r="0.75" fill="#00f2fe" fill-opacity="0.15" />
+    </pattern>
+
+    <pattern id="macroGrid" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M 120 0 L 0 0 0 120" fill="none" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1" />
+      <path d="M 0 60 L 120 60 M 60 0 L 60 120" fill="none" stroke="#00f2fe" stroke-opacity="0.03" stroke-width="0.5" stroke-dasharray="2,4" />
+    </pattern>
+
+    <!-- Dot Texture Matrix -->
+    <pattern id="dotMatrix" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="0.6" fill="#ffffff" fill-opacity="0.08" />
+    </pattern>
+
+    <!-- High-Pass Noise Simulation -->
+    <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="22" result="blur" />
+    </filter>
+  </defs>
+
+  <style>
+    .mono { font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', Arial, sans-serif; }
+    .serif { font-family: 'Cinzel', 'Playfair Display', 'Didot', 'Times New Roman', serif; }
+    .brand-title {
+      font-family: -apple-system, BlinkMacSystemFont, 'Space Grotesk', 'Syncopate', 'Syne', sans-serif;
+      font-weight: 900;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+    }
+    .japanese-text {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
+      letter-spacing: 0.25em;
+    }
+    .hud-label {
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      fill: #64748b;
+    }
+    .hud-value {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      fill: #e2e8f0;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.8; }
+    }
+    .pulsing-node {
+      animation: pulse 4s ease-in-out infinite;
+    }
+  </style>
+
+  <!-- Base Canvas Background -->
+  <rect width="1200" height="480" fill="#04060a" rx="16" />
+  <rect width="1200" height="480" fill="url(#bgGlow)" rx="16" />
+  <rect width="1200" height="480" fill="url(#microGrid)" rx="16" />
+  <rect width="1200" height="480" fill="url(#macroGrid)" rx="16" />
+
+  <!-- Ambient Light Flares -->
+  <circle cx="340" cy="180" r="280" fill="url(#cyanFlare)" filter="url(#softGlow)" />
+  <circle cx="860" cy="160" r="260" fill="url(#amberFlare)" filter="url(#softGlow)" />
+
+  <!-- Decorative Architectural Grid Lines & Geometry -->
+  <g opacity="0.65">
+    <!-- Top & Bottom Ruler Lines -->
+    <line x1="40" y1="40" x2="1160" y2="40" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1" />
+    <line x1="40" y1="440" x2="1160" y2="440" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1" />
+    <line x1="40" y1="40" x2="40" y2="440" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1" />
+    <line x1="1160" y1="40" x2="1160" y2="440" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1" />
+
+    <!-- Corner Caliper Crosshairs -->
+    <path d="M 30 40 L 50 40 M 40 30 L 40 50" stroke="#00f2fe" stroke-width="1.5" stroke-opacity="0.8" />
+    <path d="M 1150 40 L 1170 40 M 1160 30 L 1160 50" stroke="#00f2fe" stroke-width="1.5" stroke-opacity="0.8" />
+    <path d="M 30 440 L 50 440 M 40 430 L 40 450" stroke="#f6d365" stroke-width="1.5" stroke-opacity="0.8" />
+    <path d="M 1150 440 L 1170 440 M 1160 430 L 1160 450" stroke="#f6d365" stroke-width="1.5" stroke-opacity="0.8" />
+
+    <!-- Precision Registration Circles -->
+    <circle cx="600" cy="240" r="190" fill="none" stroke="#ffffff" stroke-opacity="0.035" stroke-width="1" />
+    <circle cx="600" cy="240" r="230" fill="none" stroke="#00f2fe" stroke-opacity="0.04" stroke-width="1" stroke-dasharray="4,8" />
+    <circle cx="600" cy="240" r="140" fill="none" stroke="#ffffff" stroke-opacity="0.02" stroke-width="1" stroke-dasharray="1,5" />
+
+    <!-- Golden Ratio Diagonal Arc -->
+    <path d="M 160 440 C 160 200, 360 40, 600 40" fill="none" stroke="url(#accentCyan)" stroke-opacity="0.15" stroke-width="1" stroke-dasharray="3,6" />
+    <path d="M 1040 40 C 1040 280, 840 440, 600 440" fill="none" stroke="url(#accentGold)" stroke-opacity="0.12" stroke-width="1" stroke-dasharray="3,6" />
+  </g>
+
+  <!-- Frame Enclosure Card with Glassmorphic Gradient Stroke -->
+  <rect x="56" y="56" width="1088" height="368" rx="10" fill="#080c14" fill-opacity="0.4" stroke="url(#borderGrad)" stroke-width="1.2" />
+
+  <!-- Top Metadata Navigation Bar -->
+  <g transform="translate(80, 86)">
+    <!-- Node Status Indicator -->
+    <circle cx="6" cy="6" r="4" fill="#00f2fe" />
+    <circle cx="6" cy="6" r="8" fill="none" stroke="#00f2fe" stroke-opacity="0.4" class="pulsing-node" />
+    <text x="24" y="9" class="mono hud-value" fill="#00f2fe">SYS.ACTV // SPECIMEN 00-OTR</text>
+
+    <!-- Center Coordinates -->
+    <text x="520" y="9" text-anchor="middle" class="mono hud-label">LAT 43°11'26"N ⬡ LONG 140°59'48"E — OTARU ARCHIVE</text>
+
+    <!-- Right Side Protocol -->
+    <text x="1024" y="9" text-anchor="end" class="mono hud-value" fill="#94a3b8">EVENT-DRIVEN MONOLITH // V2.4</text>
+  </g>
+
+  <!-- Decorative Separator Line -->
+  <line x1="80" y1="108" x2="1120" y2="108" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1" />
+
+  <!-- Main Focal Brand Typography & Aesthetics -->
+  <g transform="translate(600, 224)" text-anchor="middle">
+    <!-- Japanese Watermark Kanji in Background -->
+    <text y="-48" class="japanese-text" font-size="14" font-weight="700" fill="#00f2fe" fill-opacity="0.7" letter-spacing="0.4em">
+      小 樽 工 藝 系 統
+    </text>
+
+    <!-- Giant Illuminated Brand Title -->
+    <!-- Ambient Blur Shadow for 3D depth -->
+    <text y="38" class="brand-title serif" font-size="82" font-weight="900" fill="#00f2fe" fill-opacity="0.25" filter="url(#glowFilter)">
+      OTARU
+    </text>
+    <!-- Sharp Foreground Text with Linear Gradient -->
+    <text y="38" class="brand-title" font-size="82" font-weight="900" fill="url(#textGold)">
+      OTARU
+    </text>
+
+    <!-- Subtitle Banner -->
+    <g transform="translate(0, 72)">
+      <text class="mono" font-size="12" font-weight="600" fill="#cbd5e1" letter-spacing="0.32em">
+        DIGITAL HOUSE <tspan fill="#00f2fe">╳</tspan> COMMERCE PLATFORM
+      </text>
+      <text y="24" class="sans" font-size="12" font-style="italic" font-weight="300" fill="#64748b" letter-spacing="0.18em">
+        "Where tactile heavy-gauge physical artifact meets immutable digital interface."
+      </text>
+    </g>
+  </g>
+
+  <!-- Left Technical Coordinate Matrix Block -->
+  <g transform="translate(86, 170)">
+    <rect x="0" y="0" width="130" height="92" rx="4" fill="#030712" fill-opacity="0.6" stroke="#ffffff" stroke-opacity="0.06" stroke-width="0.8" />
+    <text x="12" y="20" class="mono hud-label">SPECIMEN CORE</text>
+    <text x="12" y="38" class="mono" font-size="10" fill="#38bdf8">0x7F · RFC-7807</text>
+    <text x="12" y="54" class="mono" font-size="10" fill="#94a3b8">NFC PROVENANCE</text>
+    <text x="12" y="70" class="mono" font-size="10" fill="#94a3b8">WEBGL 3D SPEC</text>
+    <text x="12" y="84" class="mono" font-size="9" fill="#475569">ACID / OUTBOX</text>
+  </g>
+
+  <!-- Right Technical Coordinate Matrix Block -->
+  <g transform="translate(984, 170)">
+    <rect x="0" y="0" width="130" height="92" rx="4" fill="#030712" fill-opacity="0.6" stroke="#ffffff" stroke-opacity="0.06" stroke-width="0.8" />
+    <text x="12" y="20" class="mono hud-label">STATE ENGINE</text>
+    <text x="12" y="38" class="mono" font-size="10" fill="#f59e0b">PG SELECT FOR UPD</text>
+    <text x="12" y="54" class="mono" font-size="10" fill="#94a3b8">UPSTASH REDIS</text>
+    <text x="12" y="70" class="mono" font-size="10" fill="#94a3b8">SANITY STUDIO V3</text>
+    <text x="12" y="84" class="mono" font-size="9" fill="#10b981">99.99% RESILIENT</text>
+  </g>
+
+  <!-- Bottom Technical Specification Bar -->
+  <line x1="80" y1="362" x2="1120" y2="362" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1" />
+
+  <g transform="translate(80, 390)">
+    <!-- Column 1 -->
+    <g transform="translate(0, 0)">
+      <text class="mono hud-label">FRAMEWORK</text>
+      <text y="16" class="mono hud-value">NEXT.JS 15.1 (RSC)</text>
+    </g>
+
+    <!-- Column 2 -->
+    <g transform="translate(200, 0)">
+      <text class="mono hud-label">RUNTIME ENGINE</text>
+      <text y="16" class="mono hud-value">REACT 19 + TS 5.7</text>
+    </g>
+
+    <!-- Column 3 -->
+    <g transform="translate(420, 0)">
+      <text class="mono hud-label">DATA PERSISTENCE</text>
+      <text y="16" class="mono hud-value">POSTGRESQL + PRISMA</text>
+    </g>
+
+    <!-- Column 4 -->
+    <g transform="translate(660, 0)">
+      <text class="mono hud-label">EDGE ORCHESTRATION</text>
+      <text y="16" class="mono hud-value">UPSTASH DISTRIBUTED</text>
+    </g>
+
+    <!-- Column 5 -->
+    <g transform="translate(900, 0)">
+      <text class="mono hud-label">PHYSICAL INTEGRATION</text>
+      <text y="16" class="mono hud-value" fill="#00f2fe">WEB NFC NTAG-424</text>
+    </g>
+  </g>
+
+  <!-- Exterior Corner Accents -->
+  <rect x="36" y="36" width="8" height="8" fill="#00f2fe" />
+  <rect x="1156" y="36" width="8" height="8" fill="#00f2fe" />
+  <rect x="36" y="436" width="8" height="8" fill="#f6d365" />
+  <rect x="1156" y="436" width="8" height="8" fill="#f6d365" />
+</svg>
