@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import type { Cart } from "@/types/shopify";
-import { mockCreateCart } from "@/lib/mock-data";
+import { mockCreateCart } from "@/lib/shopify/mocks";
 import { addToCartAction, getCartAction, removeCartLineAction, updateCartLineAction } from "@/actions/cart";
 
 const CART_ID_STORAGE_KEY = "otaru:cart-id";
