@@ -3,12 +3,12 @@
 <br />
 
 <!-- Hero Banner Artwork -->
-<img src="docs/assets/otaru-hero-banner.svg" alt="OTARU — Digital House & Commerce Infrastructure" width="100%" />
+<img src="./docs/assets/otaru-hero-banner.svg" alt="OTARU — Digital House &amp; Commerce Infrastructure" width="100%" />
 
 <br /><br />
 
 <!-- Holographic Status & Architecture Spec HUD -->
-<img src="docs/assets/otaru-specs-hud.svg" alt="System Capabilities & Technical Specifications" width="100%" />
+<img src="./docs/assets/otaru-specs-hud.svg" alt="System Capabilities &amp; Technical Specifications" width="100%" />
 
 <br /><br />
 
