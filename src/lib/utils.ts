@@ -16,6 +16,9 @@ export function formatMoney(amount: string | number, currencyCode = "USD") {
   }).format(value);
 }
 
+/** Alias for formatMoney for price formatting across components */
+export const formatPrice = formatMoney;
+
 export function slugify(input: string) {
   return input
     .toLowerCase()
@@ -24,3 +27,8 @@ export function slugify(input: string) {
     .replace(/[\s_-]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
+
+export function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+

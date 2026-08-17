@@ -18,10 +18,14 @@ export type {
 
 export type {
   SanityChapter,
+  SanityChapter as Chapter,
   SanityJournalEntry,
+  SanityJournalEntry as JournalEntry,
   SanityStudioPage,
   SanitySymbol,
   SanitySiteSettings,
   SanityImage,
   PortableTextBlock,
 } from '@/lib/sanity/types';
+
+export type { CartActionResult } from './cart';
