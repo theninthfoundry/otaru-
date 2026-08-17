@@ -1,4 +1,4 @@
-import type { Artifact } from './types';
+import type { Artifact, Cart } from './types';
 
 export const MOCK_ARTIFACTS: Artifact[] = [
   {
@@ -222,14 +222,24 @@ export const MOCK_ARTIFACTS: Artifact[] = [
     artifactNumber: '007',
     artifactName: 'The Observer Heavy Hoodie',
     chapterId: 'chap-01',
-    gsm: '420 GSM Heavy Loopback',
-    construction: 'Flatlock Seam Reinforcement',
-    wash: 'Silicone Wash & Reactive Dye',
-    printTechnique: 'High-Density Puff Print',
-    symbolMeaning: 'Silent Observation',
     seo: {
       title: 'Artifact #007 — "The Observer" Heavy Hoodie | Otaru',
       description: 'Heavyweight organic cotton French Terry hoodie with reactive dye wash.',
     },
   },
 ];
+
+export function mockCreateCart(): Cart {
+  return {
+    id: 'gid://mock/Cart/1',
+    checkoutUrl: '#',
+    totalQuantity: 0,
+    cost: {
+      subtotalAmount: { amount: '0.00', currencyCode: 'USD' },
+      totalAmount: { amount: '0.00', currencyCode: 'USD' },
+    },
+    lines: [],
+  };
+}
+
+

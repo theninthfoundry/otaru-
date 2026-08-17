@@ -11,11 +11,11 @@ export const DEFAULT_PAGE_SIZE = 20;
 export const MAX_PAGE_SIZE = 250;
 
 export const SORT_OPTIONS: SortOption[] = [
-  { label: 'Relevance', key: 'RELEVANCE', reverse: false },
-  { label: 'Newest', key: 'CREATED_AT', reverse: true },
-  { label: 'Price: Low to High', key: 'PRICE', reverse: false },
-  { label: 'Price: High to Low', key: 'PRICE', reverse: true },
-  { label: 'Best Selling', key: 'BEST_SELLING', reverse: false },
+  { label: 'Relevance', value: 'relevance', key: 'RELEVANCE', reverse: false },
+  { label: 'Newest', value: 'created-desc', key: 'CREATED_AT', reverse: true },
+  { label: 'Price: Low to High', value: 'price-asc', key: 'PRICE', reverse: false },
+  { label: 'Price: High to Low', value: 'price-desc', key: 'PRICE', reverse: true },
+  { label: 'Best Selling', value: 'best-selling', key: 'BEST_SELLING', reverse: false },
 ];
 
 export const COLLECTION_HANDLES = {
