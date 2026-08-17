@@ -129,6 +129,22 @@ export interface SearchResult {
   collections: Collection[];
 }
 
+export interface SEO {
+  title?: string;
+  description?: string;
+}
+
+export interface ShopifyError {
+  message: string;
+  locations?: { line: number; column: number }[];
+  path?: string[];
+}
+
+export interface ShopifyResponse<T> {
+  data: T;
+  errors?: ShopifyError[];
+}
+
 export interface PageInfo {
   hasNextPage: boolean;
   hasPreviousPage: boolean;

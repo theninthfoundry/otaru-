@@ -168,3 +168,75 @@ export async function getProducts(options: {
     };
   }
 }
+
+const GET_PRODUCTS_BY_COLLECTION = /* GraphQL */ `
+  query GetProductsByCollection($handle: String!, $first: Int!) {
+    collection(handle: $handle) {
+      products(first: $first) {
+        edges {
+          node {
+            ...ProductFields
+          }
+        }
+      }
+    }
+  }
+  ${PRODUCT_FRAGMENT}
+`;
+
+const GET_PRODUCT_RECOMMENDATIONS = /* GraphQL */ `
+  query GetProductRecommendations($productId: ID!) {
+    productRecommendations(productId: $productId) {
+      ...ProductFields
+    }
+  }
+  ${PRODUCT_FRAGMENT}
+`;
+
+export async function getProductsByCollection(
+  handle: string,
+  first = DEFAULT_PAGE_SIZE,
+): Promise<Artifact[]> {
+  try {
+    const data = await shopifyFetch<{
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      collection: { products: { edges: { node: any }[] } } | null;
+    }>({
+      query: GET_PRODUCTS_BY_COLLECTION,
+      variables: { handle, first },
+      tags: [TAGS.collections, TAGS.products],
+    });
+
+    if (data.collection?.products?.edges) {
+      return reshapeProducts(data.collection.products.edges.map((e) => e.node));
+    }
+    return [];
+  } catch (error) {
+    console.warn(`[Shopify API Collection Products Error for handle "${handle}"]:`, (error as Error).message);
+    return [];
+  }
+}
+
+export async function getProductRecommendations(
+  productId: string,
+): Promise<Artifact[]> {
+  try {
+    const data = await shopifyFetch<{
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      productRecommendations: any[];
+    }>({
+      query: GET_PRODUCT_RECOMMENDATIONS,
+      variables: { productId },
+      tags: [TAGS.products],
+    });
+
+    if (data.productRecommendations) {
+      return reshapeProducts(data.productRecommendations);
+    }
+    return [];
+  } catch (error) {
+    console.warn(`[Shopify API Recommendations Error for ID "${productId}"]:`, (error as Error).message);
+    return [];
+  }
+}
+
