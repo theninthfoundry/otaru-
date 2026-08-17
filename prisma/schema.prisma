@@ -176,7 +176,7 @@ model AuditEvent {
   hash          String
 
   @@index([seq])
-  @@index([createdAt])
+  @@index([timestamp])
   @@map("audit_events")
 }
 

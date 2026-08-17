@@ -19,10 +19,9 @@ const envSchema = z.object({
   INTERAKT_API_KEY: z.string().optional(),
   SHOPIFY_REVALIDATION_SECRET: z.string().optional(),
   
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-}) as any;
+});
 
-export type Env = any;
+export type Env = z.infer<typeof envSchema>;
 
 export function validateEnv(): Env {
   const result = envSchema.safeParse(process.env);
