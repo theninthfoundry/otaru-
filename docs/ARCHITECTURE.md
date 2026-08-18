@@ -61,3 +61,23 @@ Global middleware coordinates security verification before any request is proces
 - **IP-Based Token Bucket Rate Limiting**: Guarding APIs from denial of service.
 - **CSRF Token Validation**: Authenticating request origin headers on mutations.
 - **Nonce Injection**: Securing style and script elements against scripting attacks.
+
+---
+
+## 🛰️ Extended Subsystems & Capabilities
+
+### 1. Multi-Currency FX Engine (`src/lib/commerce/currency.ts`)
+Deterministic minor-unit integer currency conversions across `USD`, `EUR`, `GBP`, `JPY`, `CAD`, and `INR` with localized formatting and country-specific ISO routing.
+
+### 2. Transactional Outbox Background Worker (`src/lib/queue/worker.ts` & `/api/cron/outbox`)
+Asynchronous background drain process with atomic status transitions, exponential backoff, and dead-letter queue routing.
+
+### 3. Cryptographic Provenance Transfer Protocol (`src/lib/provenance/transfer.ts` & `/api/verify/transfer`)
+SHA-256 state seal and transfer token verification allowing patrons to securely reassign NFC physical artifact certificates.
+
+### 4. Real-Time Telemetry SSE Stream (`src/app/api/telemetry/stream` & `useDropTelemetry`)
+Server-Sent Events connection streaming live concurrent viewers, cart reservation velocity, and drop contention indicators.
+
+### 5. Automated Safety-Net Reconciliation Cron (`src/app/api/cron/reconcile`)
+Periodic reconciliation engine comparing gateway states with PostgreSQL ledger records and sealing results into the cryptographic audit chain.
+

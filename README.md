@@ -702,7 +702,7 @@ CHAPTER II — Durable PostgreSQL State & Minor Units            [COMPLETED ✅]
 CHAPTER III — Transactional Outbox & Event Pipeline            [COMPLETED ✅]
 CHAPTER IV — Adversarial Trust Boundary & Payment Hardening   [COMPLETED ✅]
 CHAPTER V — Safety-Net Reconciliation Engine & Release Gate   [COMPLETED ✅]
-CHAPTER VI — Multi-Region Edge Distributed Caching & Scaling   [PLANNED ⏳]
+CHAPTER VI — Multi-Currency, WebXR & Edge Scaling Subsystems  [COMPLETED ✅]
 ```
 
 ---
