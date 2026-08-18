@@ -2,15 +2,9 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { type SupportedCurrency, CURRENCY_CONFIGS } from "@/lib/commerce/currency";
 
-export type CurrencyCode = "USD" | "EUR" | "GBP" | "INR";
-
-const CURRENCY_TO_COUNTRY: Record<CurrencyCode, string> = {
-  USD: "US",
-  EUR: "DE",
-  GBP: "GB",
-  INR: "IN",
-};
+export type CurrencyCode = SupportedCurrency;
 
 interface CurrencyStore {
   currency: CurrencyCode;
@@ -19,18 +13,20 @@ interface CurrencyStore {
 }
 
 /**
- * Drives the @inContext(country:) directive on Storefront API queries.
- * Persisted so a returning visitor keeps their currency choice. Changing
- * currency should trigger a re-fetch of price-bearing data — call this from
- * a Server Component boundary (e.g. re-run getArtifacts with the new
- * country) once real multi-currency Shopify markets are configured.
+ * Global Currency Store
+ * Persisted so a returning visitor retains their currency preference.
+ * Coordinates with @inContext(country:) on Storefront queries and drives real-time FX formatting.
  */
 export const useCurrencyStore = create<CurrencyStore>()(
   persist(
     (set) => ({
       currency: "USD",
       countryCode: "US",
-      setCurrency: (currency) => set({ currency, countryCode: CURRENCY_TO_COUNTRY[currency] }),
+      setCurrency: (currency) =>
+        set({
+          currency,
+          countryCode: CURRENCY_CONFIGS[currency]?.countryCode || "US",
+        }),
     }),
     { name: "otaru:currency" }
   )
