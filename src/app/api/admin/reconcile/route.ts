@@ -1,12 +1,11 @@
 import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
 import { runPaymentReconciliation } from '@/lib/payments/reconciliation';
 import { auditLog } from '@/lib/payments/audit-trail';
 import { logger } from '@/lib/security/logger';
 
 export async function POST(request: Request) {
-  const headersList = await headers();
-  const authHeader = headersList.get('authorization');
+  const reqHeaders = request.headers;
+  const authHeader = reqHeaders.get('authorization');
   const adminSecret = process.env.ADMIN_API_SECRET;
   const isProduction = process.env.NODE_ENV === 'production';
 
@@ -19,8 +18,8 @@ export async function POST(request: Request) {
   }
 
   const ip =
-    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    headersList.get('x-real-ip') ||
+    reqHeaders.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    reqHeaders.get('x-real-ip') ||
     '127.0.0.1';
 
   try {
@@ -36,7 +35,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(report, { status: 200 });
   } catch (error: unknown) {
-    logger.error('[Admin Reconcile API] Exception executing reconciliation scan:', error);
+    logger.error('[Admin Reconcile API] Exception executing reconciliation scan:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       { error: 'Reconciliation scan failed.', code: 'INTERNAL_ERROR' },
       { status: 500 },

@@ -38,6 +38,10 @@ export async function sanityFetch<T>(
   params: Record<string, unknown> = {},
   tags?: string[],
 ): Promise<T> {
+  if (!sanityConfig.projectId || process.env.NODE_ENV === 'test') {
+    throw new Error('Sanity projectId is not configured in local environment.');
+  }
+
   return sanityClient.fetch<T>(query, params, {
     next: {
       revalidate: 60,

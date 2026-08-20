@@ -30,11 +30,11 @@ const CurrencySchema = z
 
 const RazorpayOrderIdSchema = z
   .string()
-  .regex(/^(order_[A-Za-z0-9]+|OTARU-REG-\d+)$/, 'Invalid Razorpay order ID format.');
+  .regex(/^(order_[A-Za-z0-9_-]+|OTARU-REG-\d+)$/, 'Invalid Razorpay order ID format.');
 
 const RazorpayPaymentIdSchema = z
   .string()
-  .regex(/^(pay_[A-Za-z0-9]+)$/, 'Invalid Razorpay payment ID format.');
+  .regex(/^(pay_[A-Za-z0-9_-]+)$/, 'Invalid Razorpay payment ID format.');
 
 const RazorpaySignatureSchema = z
   .string()
@@ -78,11 +78,11 @@ export const OrderRequestSchema = z.object({
     email: EmailSchema,
     firstName: NameSchema,
     lastName: NameSchema,
-    address: z.string().trim().min(1).max(300),
-    city: z.string().trim().min(1).max(100),
-    zip: z.string().trim().min(1).max(20),
-  }),
-}).strict();
+    address: z.string().trim().min(1).max(300).optional(),
+    city: z.string().trim().min(1).max(100).optional(),
+    zip: z.string().trim().min(1).max(20).optional(),
+  }).passthrough(),
+}).passthrough();
 
 export type OrderRequest = z.infer<typeof OrderRequestSchema>;
 
@@ -96,7 +96,7 @@ export const VerifyRequestSchema = z.object({
   mock: z.boolean().optional().default(false),
   nonce: z.string().uuid('Nonce must be a valid UUID.').optional(),
   cartToken: z.string().min(10).optional(),
-}).strict();
+}).passthrough();
 
 export type VerifyRequest = z.infer<typeof VerifyRequestSchema>;
 
@@ -111,14 +111,17 @@ export type RefundRequest = z.infer<typeof RefundRequestSchema>;
 export function validateBody<T>(
   schema: z.ZodSchema<T>,
   body: unknown,
-): { data: T; error?: never } | { data?: never; error: string; issues: z.ZodIssue[] } {
+): { data: T; error?: undefined; issues?: undefined } | { data?: undefined; error: string; issues: z.ZodIssue[] } {
   const result = schema.safeParse(body);
   if (result.success) {
     return { data: result.data };
   }
   const firstIssue = result.error.issues[0];
+  const message = firstIssue
+    ? `${firstIssue.path.join('.')} — ${firstIssue.message}`
+    : 'Validation failed';
   return {
-    error: `Validation failed: ${firstIssue.path.join('.')} — ${firstIssue.message}`,
+    error: `Validation failed: ${message}`,
     issues: result.error.issues,
   };
 }

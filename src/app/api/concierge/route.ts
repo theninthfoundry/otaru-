@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const parsed = ConciergeSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+      return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Invalid request payload.' }, { status: 400 });
     }
 
     const inquiry = await submitConciergeInquiry(parsed.data);

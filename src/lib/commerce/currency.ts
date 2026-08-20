@@ -122,7 +122,7 @@ export function formatPrice(
     currency: config.code,
     minimumFractionDigits: config.minorUnitFactor === 1 ? 0 : 2,
     maximumFractionDigits: config.minorUnitFactor === 1 ? 0 : 2,
-  }).format(majorAmount);
+  }).format(majorAmount).replace(/\uFFE5/g, '¥');
 }
 
 /**

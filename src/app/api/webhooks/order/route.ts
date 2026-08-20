@@ -1,12 +1,11 @@
-import { NextResponse } from 'next';
-import { headers } from 'next/headers';
+import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { sendOrderConfirmationWhatsApp, sendShippingUpdateWhatsApp } from '@/lib/interakt';
 import { trackKlaviyoEvent } from '@/lib/klaviyo';
 
 export async function POST(request: Request) {
   const body = await request.text();
-  const headersList = await headers();
+  const headersList = request.headers;
 
   const hmacHeader = headersList.get('x-shopify-hmac-sha256');
   const secret = process.env.SHOPIFY_REVALIDATION_SECRET || process.env.SHOPIFY_WEBHOOK_SECRET;
@@ -56,7 +55,6 @@ export async function POST(request: Request) {
           properties: {
             orderNumber,
             totalPrice,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             lineItems: orderData.line_items?.map((item: any) => ({
               title: item.title,
               quantity: item.quantity,
@@ -68,7 +66,7 @@ export async function POST(request: Request) {
     }
 
     if (topic === 'orders/fulfilled' || topic === 'fulfillments/create') {
-      const trackingUrl = orderData.fulfillments?.[0]?.tracking_url ?? `https://otaru.in/track-order?order=${orderNumber}`;
+      const trackingUrl = orderData.fulfillments?.[0]?.tracking_url ?? `https://otaru.co/track-order?order=${orderNumber}`;
       const courierName = orderData.fulfillments?.[0]?.tracking_company ?? 'Standard Shipping';
 
       if (phone) {

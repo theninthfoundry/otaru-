@@ -186,7 +186,7 @@ export async function POST(request: Request) {
       timestamp: new Date().toISOString(),
     });
   } catch (error: unknown) {
-    logger.error('[Webhook] Exception:', error);
+    logger.error('[Webhook] Exception:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json({ error: 'Failed to process webhook.' }, { status: 400 });
   }
 }

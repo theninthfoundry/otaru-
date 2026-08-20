@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
 import { validateBody, OrderRequestSchema } from '@/lib/payments/schemas';
 import { checkPaymentRateLimit } from '@/lib/payments/payment-rate-limiter';
 import { checkIdempotencyAsync, registerIdempotencyKey } from '@/lib/payments/idempotency';
@@ -11,12 +10,12 @@ import { auditLog } from '@/lib/payments/audit-trail';
 import { logger } from '@/lib/security/logger';
 
 export async function POST(request: Request) {
-  const headersList = await headers();
+  const reqHeaders = request.headers;
   const ip =
-    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    headersList.get('x-real-ip') ||
+    reqHeaders.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    reqHeaders.get('x-real-ip') ||
     '127.0.0.1';
-  const idempotencyKey = headersList.get('Idempotency-Key') ?? headersList.get('idempotency-key');
+  const idempotencyKey = reqHeaders.get('Idempotency-Key') ?? reqHeaders.get('idempotency-key');
   const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true';
 
   let email = '';
@@ -45,14 +44,14 @@ export async function POST(request: Request) {
     }
 
     const validation = validateBody(OrderRequestSchema, rawBody);
-    if (validation.error) {
+    if (validation.error || !validation.data) {
       auditLog({
         type: 'SCHEMA_VALIDATION_FAILED',
-        details: `Order schema validation failed: ${validation.error}`,
+        details: `Order schema validation failed: ${validation.error || 'Invalid body'}`,
         ip,
       });
       return NextResponse.json(
-        { error: validation.error, code: 'VALIDATION_FAILED' },
+        { error: validation.error || 'Validation failed', code: 'VALIDATION_FAILED' },
         { status: 400 },
       );
     }
@@ -68,36 +67,39 @@ export async function POST(request: Request) {
         details: `Order creation blocked by email rate limiter. Email: ${email}`,
         ip,
         email,
-        meta: { endpoint: 'order', blockedBy: emailRateLimit.blockedBy },
+        meta: { endpoint: 'order', resetAt: emailRateLimit.resetAt },
       });
       return NextResponse.json(
-        { error: 'Too many orders from this account. Please wait.', code: 'RATE_LIMITED_ACCOUNT' },
+        { error: 'Too many requests from this email. Please wait.', code: 'RATE_LIMITED' },
         { status: 429, headers: { 'Retry-After': String(retryAfter) } },
       );
     }
 
-    const idempCheck = await checkIdempotencyAsync(idempotencyKey, email);
-    if (idempCheck.status === 'INVALID_KEY') {
-      return NextResponse.json(
-        { error: 'Idempotency-Key must be a valid UUID.', code: 'INVALID_IDEMPOTENCY_KEY' },
-        { status: 400 },
-      );
-    }
-    if (idempCheck.status === 'DUPLICATE') {
+    // Distributed Idempotency Guard
+    const idempotency = await checkIdempotencyAsync(idempotencyKey, email);
+    if (idempotency.isDuplicate && idempotency.response) {
       auditLog({
         type: 'IDEMPOTENCY_COLLISION',
-        details: `Duplicate order creation blocked via idempotency key. Email: ${email}`,
+        details: `Duplicate order creation intercepted by Redis distributed lock. Key: ${idempotencyKey}`,
         ip,
         email,
+        meta: { idempotencyKey },
       });
       return NextResponse.json(
-        { ...idempCheck.cachedResponse, idempotent: true },
+        idempotency.response.body,
+        { status: idempotency.response.status },
+      );
+    }
+
+    if (idempotency.isLocked) {
+      return NextResponse.json(
+        { error: 'A payment operation is already being processed for this order.', code: 'OPERATION_LOCKED' },
         { status: 200 },
       );
     }
 
     // Monetary values stored in INTEGER MINOR UNITS (paise / cents)
-    const subtotalCents = cart.lines.reduce((sum, line) => {
+    const subtotalCents = cart.lines.reduce((sum: number, line: any) => {
       const price = Math.round(parseFloat(line.cost?.totalAmount?.amount ?? '0') * 100);
       const qty = line.quantity ?? 1;
       return sum + price * qty;
@@ -133,7 +135,7 @@ export async function POST(request: Request) {
     const currency = cart.cost?.subtotalAmount?.currencyCode ?? 'USD';
     const internalOrderId = `OTARU-REG-${Math.floor(Math.random() * 900000) + 100000}`;
 
-    const cartTokenLines = cart.lines.map(l => ({
+    const cartTokenLines = cart.lines.map((l: any) => ({
       id: l.id,
       quantity: l.quantity,
       amount: l.cost.totalAmount.amount,
@@ -150,7 +152,7 @@ export async function POST(request: Request) {
     const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
 
-    let razorpayOrder = null;
+    let razorpayOrder: any = null;
     let isMock = true;
 
     if (keyId && keySecret) {
@@ -183,7 +185,7 @@ export async function POST(request: Request) {
           logger.error(`[Order API] Razorpay order creation failed: ${errText}`);
         }
       } catch (e: unknown) {
-        logger.error('[Order API] Exception calling Razorpay:', e);
+        logger.error('[Order API] Exception calling Razorpay:', e instanceof Error ? e : new Error(String(e)));
       }
     }
 
@@ -256,7 +258,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(responsePayload);
   } catch (error: unknown) {
-    logger.error('[Order API] Unhandled exception:', error);
+    logger.error('[Order API] Unhandled exception:', error instanceof Error ? error : new Error(String(error)));
     auditLog({
       type: 'ORDER_BLOCKED',
       details: `Order creation failed with unhandled exception: ${error instanceof Error ? error.message : String(error)}`,

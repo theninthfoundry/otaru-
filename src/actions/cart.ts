@@ -22,13 +22,15 @@ export async function addItem(
 
     if (!cartId) {
       const cart = await createCart([{ merchandiseId: variantId, quantity }]);
-      cartId = cart.id;
-      cookieStore.set(CART_COOKIE, cartId, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 7,
-      });
+      if (cart?.id) {
+        cartId = cart.id;
+        cookieStore.set(CART_COOKIE, cart.id, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 60 * 60 * 24 * 7,
+        });
+      }
     } else {
       await addToCart(cartId, [{ merchandiseId: variantId, quantity }]);
     }

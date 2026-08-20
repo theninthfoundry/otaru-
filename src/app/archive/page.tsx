@@ -4,7 +4,7 @@ import { getProducts, getProductsByCollection } from '@/lib/shopify/queries/prod
 import { getCollections } from '@/lib/shopify/queries/collections';
 import { ArchiveFilters } from '@/components/archive/archive-filters';
 import { ArchiveGrid, ArchiveGridSkeleton } from '@/components/archive/archive-grid';
-import type { SortKey } from '@/lib/shopify/types';
+import type { SortKey, Artifact } from '@/lib/shopify/types';
 
 export const metadata: Metadata = {
   title: 'Archive — Otaru',
@@ -29,7 +29,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   const sortConfig = parseSortParam(sort);
   const isInStockOnly = inStock === 'true';
 
-  let artifacts = [];
+  let artifacts: Artifact[] = [];
   let pageInfo = { hasNextPage: false, endCursor: null as string | null };
 
   if (collection) {

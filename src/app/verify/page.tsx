@@ -24,7 +24,7 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
   let artifactNumStr = '';
 
   const match = serialQuery.match(/^OTARU-(\d{3})-(\d{1,4})$/i);
-  if (match) {
+  if (match && match[1] && match[2]) {
     isValidFormat = true;
     artifactNumStr = match[1];
     unitNumber = parseInt(match[2], 10).toString();

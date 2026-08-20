@@ -25,12 +25,12 @@ export async function POST(request: NextRequest) {
     if (action === 'claim') {
       const parsed = ClaimSchema.safeParse(body);
       if (!parsed.success) {
-        return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+        return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Invalid claim payload' }, { status: 400 });
       }
 
       const ip =
-        request.ip ||
-        request.headers.get('x-forwarded-for')?.split(',')[0] ||
+        request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+        request.headers.get('x-real-ip') ||
         '127.0.0.1';
 
       const result = await claimOwnershipTransfer(
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     // Default: Initiate transfer
     const parsed = InitiateSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+      return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Invalid initiate payload' }, { status: 400 });
     }
 
     const transfer = await createOwnershipTransfer(

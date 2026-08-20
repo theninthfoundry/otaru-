@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
 import crypto from 'crypto';
 import { validateBody, VerifyRequestSchema } from '@/lib/payments/schemas';
 import { checkPaymentRateLimit } from '@/lib/payments/payment-rate-limiter';
@@ -9,10 +8,10 @@ import { auditLog } from '@/lib/payments/audit-trail';
 import { logger } from '@/lib/security/logger';
 
 export async function POST(request: Request) {
-  const headersList = await headers();
+  const reqHeaders = request.headers;
   const ip =
-    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    headersList.get('x-real-ip') ||
+    reqHeaders.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    reqHeaders.get('x-real-ip') ||
     '127.0.0.1';
 
   const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true';
@@ -41,14 +40,14 @@ export async function POST(request: Request) {
     }
 
     const validation = validateBody(VerifyRequestSchema, rawBody);
-    if (validation.error) {
+    if (validation.error || !validation.data) {
       auditLog({
         type: 'SCHEMA_VALIDATION_FAILED',
-        details: `Verify schema validation failed: ${validation.error}`,
+        details: `Verify schema validation failed: ${validation.error || 'Invalid body'}`,
         ip,
       });
       return NextResponse.json(
-        { error: validation.error, code: 'VALIDATION_FAILED' },
+        { error: validation.error || 'Validation failed', code: 'VALIDATION_FAILED' },
         { status: 400 },
       );
     }
@@ -196,7 +195,7 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   } catch (error: unknown) {
-    logger.error('[Verify API] Unhandled exception:', error);
+    logger.error('[Verify API] Unhandled exception:', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       { error: 'Verification failed. Please try again.', code: 'INTERNAL_ERROR' },
       { status: 500 },

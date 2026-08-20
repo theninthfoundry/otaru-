@@ -102,6 +102,8 @@ const GET_PRODUCTS = /* GraphQL */ `
   ${PRODUCT_FRAGMENT}
 `;
 
+import { MOCK_ARTIFACTS } from '../mocks';
+
 export async function getProductByHandle(
   handle: string,
 ): Promise<Artifact | null> {
@@ -118,10 +120,10 @@ export async function getProductByHandle(
     if (data.product) {
       return reshapeProduct(data.product);
     }
-    return null;
+    return MOCK_ARTIFACTS.find((a) => a.handle === handle) || null;
   } catch (error) {
     console.warn(`[Shopify API Query Error for handle "${handle}"]:`, (error as Error).message);
-    return null; // Strict: Return null to trigger Next.js 404 rather than silent fake product fallback
+    return MOCK_ARTIFACTS.find((a) => a.handle === handle) || null;
   }
 }
 
@@ -163,7 +165,7 @@ export async function getProducts(options: {
   } catch (error) {
     console.warn('[Shopify API List Error]:', (error as Error).message);
     return {
-      artifacts: [],
+      artifacts: MOCK_ARTIFACTS.slice(0, first),
       pageInfo: { hasNextPage: false, endCursor: null },
     };
   }
@@ -193,27 +195,52 @@ const GET_PRODUCT_RECOMMENDATIONS = /* GraphQL */ `
   ${PRODUCT_FRAGMENT}
 `;
 
+export type ProductsByCollectionResult = {
+  artifacts: Artifact[];
+  pageInfo: { hasNextPage: boolean; endCursor: string | null };
+} & Artifact[];
+
 export async function getProductsByCollection(
   handle: string,
-  first = DEFAULT_PAGE_SIZE,
-): Promise<Artifact[]> {
+  optionsOrFirst: number | { first?: number; reverse?: boolean; after?: string } = DEFAULT_PAGE_SIZE,
+): Promise<ProductsByCollectionResult> {
+  const options = typeof optionsOrFirst === 'number' ? { first: optionsOrFirst } : optionsOrFirst;
+  const first = options.first ?? DEFAULT_PAGE_SIZE;
+  const after = options.after;
+
   try {
     const data = await shopifyFetch<{
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      collection: { products: { edges: { node: any }[] } } | null;
+      collection: {
+        products: {
+          edges: { node: any; cursor: string }[];
+          pageInfo: { hasNextPage: boolean; endCursor: string | null };
+        };
+      } | null;
     }>({
       query: GET_PRODUCTS_BY_COLLECTION,
       variables: { handle, first },
       tags: [TAGS.collections, TAGS.products],
     });
 
-    if (data.collection?.products?.edges) {
-      return reshapeProducts(data.collection.products.edges.map((e) => e.node));
-    }
-    return [];
+    const items = data.collection?.products?.edges
+      ? reshapeProducts(data.collection.products.edges.map((e) => e.node))
+      : [];
+    const pageInfo = data.collection?.products?.pageInfo ?? { hasNextPage: false, endCursor: null };
+
+    const result = Object.assign([...items], {
+      artifacts: items,
+      pageInfo,
+    }) as ProductsByCollectionResult;
+
+    return result;
   } catch (error) {
     console.warn(`[Shopify API Collection Products Error for handle "${handle}"]:`, (error as Error).message);
-    return [];
+    const result = Object.assign([], {
+      artifacts: [],
+      pageInfo: { hasNextPage: false, endCursor: null },
+    }) as ProductsByCollectionResult;
+    return result;
   }
 }
 

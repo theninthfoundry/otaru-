@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const artifact of artifacts) {
       artifactPages.push({
         url: `${BASE_URL}/artifact/${artifact.handle}`,
-        lastModified: new Date(artifact.updatedAt),
+        lastModified: new Date(artifact.updatedAt || Date.now()),
         changeFrequency: 'weekly',
         priority: 0.8,
       });

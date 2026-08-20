@@ -17,7 +17,7 @@ function cn(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-const EVENT_CONFIG: Record<AuditEventType, { icon: string; color: string; bg: string; threat: boolean }> = {
+const EVENT_CONFIG: Partial<Record<AuditEventType, { icon: string; color: string; bg: string; threat: boolean }>> = {
   ORDER_CREATED:            { icon: '✦', color: 'text-emerald-400', bg: 'bg-emerald-950/30 border-emerald-900/50', threat: false },
   ORDER_BLOCKED:            { icon: '⊘', color: 'text-red-400',     bg: 'bg-red-950/40 border-red-900/50',         threat: true },
   PAYMENT_VERIFIED:         { icon: '✓', color: 'text-emerald-300', bg: 'bg-emerald-950/20 border-emerald-900/30', threat: false },
@@ -36,8 +36,8 @@ const EVENT_CONFIG: Record<AuditEventType, { icon: string; color: string; bg: st
   NONCE_REPLAY_BLOCKED:     { icon: '⊘', color: 'text-red-400',    bg: 'bg-red-950/40 border-red-900/50',         threat: true },
 };
 
-function ThreatBadge({ type }: { type: AuditEventType }) {
-  const cfg = EVENT_CONFIG[type] ?? { icon: '·', color: 'text-white/40', bg: 'bg-white/5 border-white/10', threat: false };
+function ThreatBadge({ type }: { type: AuditEventType | string }) {
+  const cfg = (EVENT_CONFIG as any)[type] ?? { icon: '·', color: 'text-white/40', bg: 'bg-white/5 border-white/10', threat: false };
   return (
     <span className={cn('inline-flex items-center gap-1.5 px-2 py-0.5 border rounded-full text-[9px] font-mono font-semibold tracking-wider', cfg.bg, cfg.color)}>
       {cfg.icon} {type.replace(/_/g, ' ')}

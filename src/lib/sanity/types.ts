@@ -2,10 +2,11 @@
 export type PortableTextBlock = any;
 
 export interface SanityImage {
-  _type: 'image';
-  asset: {
-    _ref: string;
-    _type: 'reference';
+  _type?: string;
+  asset?: {
+    _ref?: string;
+    _type?: string;
+    url?: string;
   };
   alt?: string;
   caption?: string;

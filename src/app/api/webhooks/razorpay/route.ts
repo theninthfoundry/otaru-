@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
 import crypto from 'crypto';
 import { prisma } from '@/lib/db/prisma';
 import { logger } from '@/lib/security/logger';
 
 export async function POST(request: Request) {
-  const headersList = await headers();
+  const headersList = request.headers;
   const signature = headersList.get('x-razorpay-signature');
   const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
 
@@ -44,7 +43,7 @@ export async function POST(request: Request) {
   const eventType = payload.event || 'payment.captured';
 
   // 2. Atomic Persist inside PostgreSQL Transaction
-  if (process.env.DATABASE_URL) {
+  if (process.env.DATABASE_URL && prisma?.$transaction) {
     try {
       await prisma.$transaction(async (tx) => {
         // Idempotent deduplication check
@@ -74,7 +73,7 @@ export async function POST(request: Request) {
         });
       });
     } catch (err) {
-      logger.error('[Webhook Razorpay Error]:', err);
+      logger.error('[Webhook Razorpay Error]:', err instanceof Error ? err : new Error(String(err)));
     }
   }
 
