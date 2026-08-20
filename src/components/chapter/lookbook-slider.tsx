@@ -19,7 +19,8 @@ export function LookbookSlider({ images, chapterTitle = 'Chapter Lookbook' }: Lo
 
   if (!images || images.length === 0) return null;
 
-  const currentImage = images[activeIndex];
+  const currentImage = images[activeIndex] || images[0];
+  if (!currentImage) return null;
 
   const handleNext = () => {
     setActiveIndex((prev) => (prev + 1) % images.length);

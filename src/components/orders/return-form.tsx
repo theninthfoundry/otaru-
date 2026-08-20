@@ -9,14 +9,14 @@ const REASONS = ["Wrong size", "Changed my mind", "Damaged on arrival", "Not as 
 export function ReturnForm() {
   const [orderId, setOrderId] = useState("");
   const [email, setEmail] = useState("");
-  const [reason, setReason] = useState(REASONS[0]);
+  const [reason, setReason] = useState(REASONS[0] || 'Wrong size');
   const [result, setResult] = useState<Awaited<ReturnType<typeof submitReturnAction>> | null>(null);
   const [isPending, startTransition] = useTransition();
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     startTransition(async () => {
-      const res = await submitReturnAction({ orderId, email, reason, itemHandles: [] });
+      const res = await submitReturnAction({ orderId, email, reason: reason || 'Wrong size', itemHandles: [] });
       setResult(res);
     });
   }

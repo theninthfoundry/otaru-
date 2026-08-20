@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Drawer } from "@/components/ui/Drawer";
-import { Button } from "@/components/ui/Button";
+import { Drawer } from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
 
 interface ConciergeDrawerProps {
   isOpen: boolean;
@@ -55,7 +55,7 @@ export function ConciergeDrawer({ isOpen, onClose, artifactHandle }: ConciergeDr
   };
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} title="ARCHIVAL CONCIERGE" position="right">
+    <Drawer isOpen={isOpen} onClose={onClose} title="ARCHIVAL CONCIERGE" side="right">
       <div className="space-y-6 pt-2">
         <p className="text-xs text-muted-foreground leading-relaxed">
           Request bespoke tailoring consultations, private archive viewings, or garment care
