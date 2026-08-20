@@ -32,6 +32,6 @@ describe('Otaru Domain Services Architectural Tests', () => {
   it('Membership Domain: exports patron and collector tiers', () => {
     expect(MEMBERSHIP_TIERS).toHaveProperty('patron');
     expect(MEMBERSHIP_TIERS).toHaveProperty('collector');
-    expect(MEMBERSHIP_TIERS.patron.benefits).toContain('Early access');
+    expect(MEMBERSHIP_TIERS.patron?.benefits).toContain('Early access');
   });
 });

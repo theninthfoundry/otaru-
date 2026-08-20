@@ -41,8 +41,8 @@ describe('Phase 2 — Distributed Runtime, Outbox & DLQ Engine', () => {
 
       const items = getDeadLetterItems();
       expect(items.length).toBe(1);
-      expect(items[0].event.payload).toEqual({ orderId: 'OTARU-REG-888' });
-      expect(items[0].error).toContain('Shiprocket API Gateway Timeout');
+      expect(items[0]?.event.payload).toEqual({ orderId: 'OTARU-REG-888' });
+      expect(items[0]?.error).toContain('Shiprocket API Gateway Timeout');
     });
   });
 });

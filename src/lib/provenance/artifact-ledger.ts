@@ -1,35 +1,35 @@
 /**
- * OTARU ARTIFACT OS — 16-State Permanent Artifact Provenance Ledger
- * Maintains an immutable append-only cryptographic timeline of physical garment custody and milestones.
+ * OTARU ARTIFACT OS — Physical-Digital Provenance Ledger
+ * Cryptographically links serialized physical garment milestones (weaving, dyeing, cutting, assembly, NFC binding, vault release).
  */
 
 import { createHash } from 'crypto';
 import { appendAuditEvent } from '@/lib/payments/audit-trail';
 
-export type ArtifactMilestoneType =
+export type ProvenanceMilestone =
+  | 'RAW_FIBER_HARVESTED'
+  | 'YARN_SPUN'
+  | 'TEXTILE_WOVEN'
+  | 'INDIGO_DYE_DIPPED'
+  | 'PATTERN_CUT'
+  | 'HAND_STITCHED'
+  | 'HARDWARE_ATTACHED'
   | 'ARTIFACT_CREATED'
-  | 'MATERIAL_REGISTERED'
-  | 'MANUFACTURING_STARTED'
-  | 'MANUFACTURING_COMPLETED'
-  | 'QUALITY_CHECKED'
-  | 'NFC_BOUND'
-  | 'CERTIFICATE_ISSUED'
-  | 'LISTED'
-  | 'RESERVED'
-  | 'SOLD'
+  | 'QUALITY_INSPECTED'
+  | 'NFC_SEAL_BOUND'
+  | 'VAULT_STORED'
+  | 'RELEASED_TO_DROP'
+  | 'PURCHASED'
+  | 'SHIPPED'
   | 'DELIVERED'
-  | 'OWNERSHIP_TRANSFERRED'
-  | 'RETURNED'
-  | 'REFUNDED'
-  | 'RESOLD'
-  | 'ARCHIVED';
+  | 'OWNERSHIP_TRANSFERRED';
 
 export interface ArtifactTimelineEntry {
   entryId: string;
   serialNumber: string;
-  milestone: ArtifactMilestoneType;
-  actor: string; // e.g. "atelier:master_tailor_04", "system:order_orchestrator", "patron:owner@otaru.co"
-  location: string; // e.g. "Kojima, Okayama Prefecture, Japan"
+  milestone: ProvenanceMilestone;
+  actor: string;
+  location: string;
   timestamp: string;
   details: string;
   metadata?: Record<string, unknown>;
@@ -37,15 +37,16 @@ export interface ArtifactTimelineEntry {
   entryHash: string;
 }
 
+// In-memory persistent timeline ledger (dual-written to Audit Trail and DB)
 const artifactLedgers = new Map<string, ArtifactTimelineEntry[]>();
 
 export class ArtifactLedger {
   /**
-   * Appends an immutable milestone event to the physical garment's timeline.
+   * Appends a verifiable manufacturing/ownership milestone to a garment's timeline.
    */
   public static async recordMilestone(
     serialNumber: string,
-    milestone: ArtifactMilestoneType,
+    milestone: ProvenanceMilestone,
     params: {
       actor: string;
       location?: string;
@@ -54,7 +55,8 @@ export class ArtifactLedger {
     }
   ): Promise<ArtifactTimelineEntry> {
     const history = artifactLedgers.get(serialNumber) || [];
-    const prevHash = history.length > 0 ? history[history.length - 1].entryHash : 'GENESIS_00000000000000000000000000000000';
+    const lastEntry = history.length > 0 ? history[history.length - 1] : undefined;
+    const prevHash = lastEntry ? lastEntry.entryHash : 'GENESIS_00000000000000000000000000000000';
     const timestamp = new Date().toISOString();
     const location = params.location || 'Otaru Central Atelier';
     const entryId = `MIL-${serialNumber}-${history.length + 1}`;
@@ -107,7 +109,8 @@ export class ArtifactLedger {
 
     for (let i = 0; i < history.length; i++) {
       const current = history[i];
-      const expectedPrevHash = i === 0 ? 'GENESIS_00000000000000000000000000000000' : history[i - 1].entryHash;
+      if (!current) continue;
+      const expectedPrevHash = i === 0 ? 'GENESIS_00000000000000000000000000000000' : (history[i - 1]?.entryHash ?? '');
 
       if (current.prevHash !== expectedPrevHash) {
         return { isValid: false, verifiedEntries: i, brokenIndex: i };

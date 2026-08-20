@@ -42,8 +42,8 @@ describe('Otaru Artifact OS — P0 & P1 Core Subsystems Verification', () => {
       // Verify history
       const history = OrderStateMachine.getHistory(orderId);
       expect(history.length).toBe(1);
-      expect(history[0].fromState).toBe('CREATED');
-      expect(history[0].toState).toBe('RESERVED');
+      expect(history[0]?.fromState).toBe('CREATED');
+      expect(history[0]?.toState).toBe('RESERVED');
     });
   });
 
@@ -74,7 +74,7 @@ describe('Otaru Artifact OS — P0 & P1 Core Subsystems Verification', () => {
     it('manages serialized units and allocates them to confirmed orders', async () => {
       const units = PhysicalInventoryEngine.registerUnits('selvage-denim', 'size-m', 5, 101);
       expect(units.length).toBe(5);
-      expect(units[0].serialNumber).toBe('OTARU-SEL-101');
+      expect(units[0]?.serialNumber).toBe('OTARU-SEL-101');
 
       // Reserve 2 units
       const res = PhysicalInventoryEngine.reserveUnits('selvage-denim', 'size-m', 2, 'cart_alpha_123', 600);
@@ -82,14 +82,19 @@ describe('Otaru Artifact OS — P0 & P1 Core Subsystems Verification', () => {
       expect(res.reservedUnits.length).toBe(2);
 
       // Allocate to confirmed order
+      const reserved0 = res.reservedUnits[0]?.serialNumber;
+      const reserved1 = res.reservedUnits[1]?.serialNumber;
+      expect(reserved0).toBeDefined();
+      expect(reserved1).toBeDefined();
+
       const alloc = await PhysicalInventoryEngine.allocateToOrder(
-        [res.reservedUnits[0].serialNumber, res.reservedUnits[1].serialNumber],
+        [reserved0!, reserved1!],
         'ORD-CONFIRMED-99',
         'corr_alloc_01'
       );
       expect(alloc.success).toBe(true);
-      expect(alloc.allocatedUnits[0].state).toBe('ALLOCATED');
-      expect(alloc.allocatedUnits[0].allocatedOrderId).toBe('ORD-CONFIRMED-99');
+      expect(alloc.allocatedUnits[0]?.state).toBe('ALLOCATED');
+      expect(alloc.allocatedUnits[0]?.allocatedOrderId).toBe('ORD-CONFIRMED-99');
     });
   });
 
@@ -103,20 +108,20 @@ describe('Otaru Artifact OS — P0 & P1 Core Subsystems Verification', () => {
         location: 'Kojima, Okayama',
       });
 
-      await ArtifactLedger.recordMilestone(serial, 'QUALITY_CHECKED', {
+      await ArtifactLedger.recordMilestone(serial, 'QUALITY_INSPECTED', {
         actor: 'inspector:04',
         details: 'Passed structural tension, dye uniformity, and seam tension inspection',
       });
 
-      await ArtifactLedger.recordMilestone(serial, 'NFC_BOUND', {
+      await ArtifactLedger.recordMilestone(serial, 'NFC_SEAL_BOUND', {
         actor: 'atelier:nfc_station',
         details: 'Bound to hardware encrypted NFC chip UID 04:A2:3B:19',
       });
 
       const timeline = ArtifactLedger.getTimeline(serial);
       expect(timeline.length).toBe(3);
-      expect(timeline[1].prevHash).toBe(timeline[0].entryHash);
-      expect(timeline[2].prevHash).toBe(timeline[1].entryHash);
+      expect(timeline[1]?.prevHash).toBe(timeline[0]?.entryHash);
+      expect(timeline[2]?.prevHash).toBe(timeline[1]?.entryHash);
 
       const verification = ArtifactLedger.verifyTimelineIntegrity(serial);
       expect(verification.isValid).toBe(true);
@@ -214,7 +219,7 @@ describe('Otaru Artifact OS — P0 & P1 Core Subsystems Verification', () => {
       const report = FinancialControlPlane.evaluateHealth(orders, payments);
       expect(report.status).toBe('RED');
       expect(report.discrepanciesCount).toBe(1);
-      expect(report.discrepancies[0].type).toBe('PAID_LOCALLY_UNPAID_GATEWAY');
+      expect(report.discrepancies[0]?.type).toBe('PAID_LOCALLY_UNPAID_GATEWAY');
     });
   });
 
@@ -238,7 +243,8 @@ describe('Otaru Artifact OS — P0 & P1 Core Subsystems Verification', () => {
       expect(passes.length).toBe(1);
 
       // Validate pass
-      const val = VirtualWaitingRoom.validatePass(passes[0].passToken, dropId);
+      expect(passes[0]).toBeDefined();
+      const val = VirtualWaitingRoom.validatePass(passes[0]!.passToken, dropId);
       expect(val.valid).toBe(true);
 
       // Emergency kill switch

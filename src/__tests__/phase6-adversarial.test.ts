@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { POST as verifyPaymentHandler } from '@/app/api/checkout/razorpay/verify/route';
 import { POST as createOrderHandler } from '@/app/api/checkout/razorpay/order/route';
 import { scanProductionInvariants } from '@/lib/testing/production-invariant-scanner';
@@ -7,8 +7,8 @@ import path from 'path';
 describe('Phase 6 — Production Trust Boundary & Adversarial Suite', () => {
   describe('1. Payment Trust Boundary Hardening', () => {
     it('strictly rejects mock payment verification in production mode with 403 Forbidden', async () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
+      vi.stubEnv('STRICT_PAYMENT_MODE', 'true');
 
       const mockReq = new Request('http://localhost/api/checkout/razorpay/verify', {
         method: 'POST',
@@ -26,13 +26,15 @@ describe('Phase 6 — Production Trust Boundary & Adversarial Suite', () => {
       const data = await res.json();
       expect(data.code).toBe('PRODUCTION_MOCK_FORBIDDEN');
 
-      process.env.NODE_ENV = originalEnv;
+      vi.unstubAllEnvs();
     });
 
     it('rejects order creation with HTTP 503 when payment gateway is unconfigured in production', async () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
+      vi.stubEnv('STRICT_PAYMENT_MODE', 'true');
+      vi.stubEnv('PAYMENT_CART_SECRET', 'test_secret_at_least_32_characters_long_12345');
       delete process.env.RAZORPAY_KEY_SECRET;
+      delete process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
 
       const mockReq = new Request('http://localhost/api/checkout/razorpay/order', {
         method: 'POST',
@@ -49,7 +51,7 @@ describe('Phase 6 — Production Trust Boundary & Adversarial Suite', () => {
       const res = await createOrderHandler(mockReq);
       expect(res.status).toBe(503);
 
-      process.env.NODE_ENV = originalEnv;
+      vi.unstubAllEnvs();
     });
   });
 

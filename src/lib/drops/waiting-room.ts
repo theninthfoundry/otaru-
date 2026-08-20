@@ -51,7 +51,9 @@ export class VirtualWaitingRoom {
     const toAdmit = dropQueue.slice(0, batchSize);
 
     for (let i = 0; i < toAdmit.length; i++) {
-      const [key, item] = toAdmit[i];
+      const entry = toAdmit[i];
+      if (!entry) continue;
+      const [key, item] = entry;
       queuePool.delete(key);
 
       const passToken = `PASS-${randomUUID().replace(/-/g, '').substring(0, 16).toUpperCase()}`;

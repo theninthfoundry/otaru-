@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { runPaymentReconciliation } from '@/lib/payments/reconciliation';
 import { validateEnvMatrix } from '@/lib/testing/env-matrix-checker';
 import { POST as reconcileHandler } from '@/app/api/admin/reconcile/route';
@@ -14,9 +14,8 @@ describe('Phase 7 — Release Candidate & Reconciliation Test Suite', () => {
 
   describe('2. Protected Admin Reconcile Endpoint', () => {
     it('rejects unauthenticated POST requests in production mode with 401 Unauthorized', async () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
-      process.env.ADMIN_API_SECRET = 'super_secret_admin_key_123';
+      vi.stubEnv('NODE_ENV', 'production');
+      vi.stubEnv('ADMIN_API_SECRET', 'super_secret_admin_key_123');
 
       const mockReq = new Request('http://localhost/api/admin/reconcile', {
         method: 'POST',
@@ -25,7 +24,7 @@ describe('Phase 7 — Release Candidate & Reconciliation Test Suite', () => {
       const res = await reconcileHandler(mockReq);
       expect(res.status).toBe(401);
 
-      process.env.NODE_ENV = originalEnv;
+      vi.unstubAllEnvs();
     });
   });
 
