@@ -32,8 +32,6 @@
 
     "@prisma/client": "^6.3.0",
 
-    "@shopify/hydrogen-react": "^2024.10.0",
-
     "next-sanity": "^9.8.0",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^3.67.0",

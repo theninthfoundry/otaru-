@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react() as any],
   test: {
     environment: 'jsdom',
     globals: true,
@@ -11,9 +11,9 @@ export default defineConfig({
     include: ['src/**/*.test.{ts,tsx}'],
   },
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@/sanity': path.resolve(__dirname, './sanity'),
-    },
+    alias: [
+      { find: /^@\/sanity\/(.*)/, replacement: path.resolve(__dirname, './sanity/$1') },
+      { find: /^@\/(.*)/, replacement: path.resolve(__dirname, './src/$1') },
+    ],
   },
 });
