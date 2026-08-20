@@ -3,9 +3,9 @@ import { DomainEvent } from './domain-events';
 export interface DeadLetterItem {
   id: string;
   event: DomainEvent;
-  error: string;
+  error?: string;
   failedAt: string;
-  attempts: number;
+  attempts?: number;
 }
 
 const dlqStore: DeadLetterItem[] = [];
@@ -19,7 +19,7 @@ export function sendToDeadLetterQueue(event: DomainEvent, error: string, attempt
     attempts,
   };
   dlqStore.unshift(dlqItem);
-  console.warn(`[DLQ Alert] Event ${event.id} (${event.type}) moved to Dead Letter Queue after ${attempts} attempts: ${error}`);
+  console.warn(`[DLQ Alert] Event ${event.id || event.eventId} (${event.type || event.eventType}) moved to Dead Letter Queue after ${attempts} attempts: ${error}`);
 }
 
 export function getDeadLetterItems(limit = 50): DeadLetterItem[] {
@@ -29,3 +29,26 @@ export function getDeadLetterItems(limit = 50): DeadLetterItem[] {
 export function clearDeadLetterQueue(): void {
   dlqStore.length = 0;
 }
+
+export interface DeadLetterQueueInterface {
+  push: (event: DomainEvent | any) => void;
+  getItems: () => DeadLetterItem[];
+  clear: () => void;
+  length: number;
+}
+
+export const deadLetterQueue = {
+  push(event: DomainEvent | any) {
+    const error = event.metadata?.failureReason || 'Exhausted retry attempts';
+    sendToDeadLetterQueue(event, error, 5);
+  },
+  getItems() {
+    return getDeadLetterItems();
+  },
+  clear() {
+    clearDeadLetterQueue();
+  },
+  get length() {
+    return dlqStore.length;
+  },
+};

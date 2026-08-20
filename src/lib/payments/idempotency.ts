@@ -34,6 +34,12 @@ export type IdempotencyCheckResult =
   | { status: 'DUPLICATE'; cachedResponse: Record<string, unknown> }
   | { status: 'INVALID_KEY' };
 
+export type AsyncIdempotencyResult =
+  | { isDuplicate: false; isLocked: false; status: 'NEW'; response?: undefined }
+  | { isDuplicate: true; isLocked: false; status: 'DUPLICATE'; cachedResponse: Record<string, unknown>; response: { status: number; body: Record<string, unknown> } }
+  | { isDuplicate: false; isLocked: true; status: 'LOCKED'; response?: undefined }
+  | { isDuplicate: false; isLocked: false; status: 'INVALID_KEY'; response?: undefined };
+
 export function checkIdempotency(
   rawKey: string | null | undefined,
   email: string,
@@ -55,26 +61,44 @@ export function checkIdempotency(
     return { status: 'NEW' };
   }
 
-  return { status: 'DUPLICATE', cachedResponse: entry.responsePayload };
+  return {
+    status: 'DUPLICATE',
+    cachedResponse: entry.responsePayload,
+  };
 }
 
 export async function checkIdempotencyAsync(
   rawKey: string | null | undefined,
   email: string,
-): Promise<IdempotencyCheckResult> {
+): Promise<AsyncIdempotencyResult> {
   const syncResult = checkIdempotency(rawKey, email);
-  if (syncResult.status !== 'NEW') return syncResult;
+  if (syncResult.status === 'DUPLICATE') {
+    return {
+      isDuplicate: true,
+      isLocked: false,
+      status: 'DUPLICATE',
+      cachedResponse: syncResult.cachedResponse,
+      response: { status: 200, body: syncResult.cachedResponse },
+    };
+  }
+  if (syncResult.status === 'INVALID_KEY') {
+    return { isDuplicate: false, isLocked: false, status: 'INVALID_KEY' };
+  }
 
-  if (rawKey && process.env.DATABASE_URL) {
+  if (rawKey && process.env.DATABASE_URL && prisma?.idempotencyRecord) {
     try {
       const key = scopedKey(rawKey, email);
       const dbRecord = await prisma.idempotencyRecord.findUnique({
         where: { key },
       });
-      if (dbRecord) {
+      if (dbRecord && dbRecord.responseBody) {
+        const cached = dbRecord.responseBody as Record<string, unknown>;
         return {
+          isDuplicate: true,
+          isLocked: false,
           status: 'DUPLICATE',
-          cachedResponse: dbRecord.responseJson as Record<string, unknown>,
+          cachedResponse: cached,
+          response: { status: dbRecord.responseStatus || 200, body: cached },
         };
       }
     } catch (err: unknown) {
@@ -82,7 +106,7 @@ export async function checkIdempotencyAsync(
     }
   }
 
-  return { status: 'NEW' };
+  return { isDuplicate: false, isLocked: false, status: 'NEW' };
 }
 
 export function registerIdempotencyKey(
@@ -101,16 +125,23 @@ export function registerIdempotencyKey(
     createdAt: Date.now(),
   });
 
-  if (process.env.DATABASE_URL) {
+  if (process.env.DATABASE_URL && prisma?.idempotencyRecord) {
+    const expiresAt = new Date(Date.now() + KEY_TTL_MS);
     prisma.idempotencyRecord.upsert({
       where: { key },
       create: {
         key,
         email: email.toLowerCase(),
         orderId,
-        responseJson: responsePayload as any,
+        status: 'COMPLETED',
+        responseBody: responsePayload as any,
+        responseStatus: 200,
+        expiresAt,
       },
-      update: {},
+      update: {
+        responseBody: responsePayload as any,
+        status: 'COMPLETED',
+      },
     }).catch(err => console.warn('[Prisma Idempotency Dual-Write Warning]:', err.message));
   }
 }
@@ -123,6 +154,5 @@ export function generateIdempotencyKey(email: string, cartFingerprint: string): 
   return crypto
     .createHash('sha256')
     .update(`${email.toLowerCase()}:${cartFingerprint}:${Date.now()}`)
-    .digest('hex')
-    .substring(0, 32);
+    .digest('hex');
 }

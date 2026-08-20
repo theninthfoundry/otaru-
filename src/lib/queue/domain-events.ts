@@ -9,18 +9,24 @@ export type DomainEventType =
   | 'ShipmentDelivered'
   | 'NfcVerified'
   | 'CustomerSubscribed'
-  | 'MembershipCreated';
+  | 'MembershipCreated'
+  | (string & {});
 
-export type AggregateType = 'Order' | 'Payment' | 'Artifact' | 'Customer' | 'NfcScan';
+export type AggregateType = 'Order' | 'Payment' | 'Artifact' | 'Customer' | 'NfcScan' | (string & {});
 
 export interface EventMetadata {
   correlationId?: string;
   causationId?: string;
   sourceIp?: string;
+  failureReason?: string | null;
+  provider?: string;
+  [key: string]: unknown;
 }
 
 export interface DomainEventEnvelope<T = Record<string, unknown>> {
+  id: string; // Alias for eventId
   eventId: string;
+  type: DomainEventType; // Alias for eventType
   eventType: DomainEventType;
   version: number;
   occurredAt: string;
@@ -28,6 +34,27 @@ export interface DomainEventEnvelope<T = Record<string, unknown>> {
   aggregateId: string;
   payload: T;
   metadata: EventMetadata;
+}
+
+export function createDomainEvent<T = Record<string, unknown>>(
+  type: DomainEventType,
+  payload: T,
+  aggregateId?: string,
+  aggregateType: AggregateType = 'Order'
+): DomainEventEnvelope<T> {
+  const eventId = `evt_${Math.random().toString(36).substring(2, 11)}_${Date.now()}`;
+  return {
+    id: eventId,
+    eventId,
+    type,
+    eventType: type,
+    version: 1,
+    occurredAt: new Date().toISOString(),
+    aggregateType,
+    aggregateId: aggregateId || eventId,
+    payload,
+    metadata: {},
+  };
 }
 
 export function createDomainEventEnvelope<T = Record<string, unknown>>(params: {
@@ -39,8 +66,11 @@ export function createDomainEventEnvelope<T = Record<string, unknown>>(params: {
   causationId?: string;
   sourceIp?: string;
 }): DomainEventEnvelope<T> {
+  const eventId = `evt_${Math.random().toString(36).substring(2, 11)}_${Date.now()}`;
   return {
-    eventId: `evt_${Math.random().toString(36).substring(2, 11)}_${Date.now()}`,
+    id: eventId,
+    eventId,
+    type: params.eventType,
     eventType: params.eventType,
     version: 1,
     occurredAt: new Date().toISOString(),
@@ -55,5 +85,4 @@ export function createDomainEventEnvelope<T = Record<string, unknown>>(params: {
   };
 }
 
-// Backward-compatible alias
 export type DomainEvent<T = Record<string, unknown>> = DomainEventEnvelope<T>;

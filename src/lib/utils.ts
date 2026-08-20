@@ -32,3 +32,10 @@ export function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+export function absoluteUrl(path: string): string {
+  const base =
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://otaru.co');
+  return `${base.replace(/\/+$/, '')}${path.startsWith('/') ? path : `/${path}`}`;
+}
+

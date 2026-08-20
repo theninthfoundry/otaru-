@@ -8,6 +8,10 @@ export type AuditEventType =
   | 'ORDER_BLOCKED'
   | 'PAYMENT_VERIFIED'
   | 'PAYMENT_FAILED'
+  | 'PAYMENT_CAPTURED'
+  | 'PAYMENT_FULLY_REFUNDED'
+  | 'PAYMENT_PARTIALLY_REFUNDED'
+  | 'REFUND_INVARIANT_BREACH_PREVENTED'
   | 'REPLAY_ATTACK_DETECTED'
   | 'RATE_LIMIT_BLOCKED'
   | 'FRAUD_FLAGGED'
@@ -19,7 +23,12 @@ export type AuditEventType =
   | 'REFUND_ISSUED'
   | 'SCHEMA_VALIDATION_FAILED'
   | 'NONCE_CONSUMED'
-  | 'NONCE_REPLAY_BLOCKED';
+  | 'NONCE_REPLAY_BLOCKED'
+  | 'RECONCILIATION_MISMATCH'
+  | 'PROVENANCE_TRANSFER_INITIATED'
+  | 'PROVENANCE_TRANSFER_CLAIMED'
+  | 'CONCIERGE_INQUIRY_SUBMITTED'
+  | (string & {});
 
 export interface AuditEvent {
   seq: number;
@@ -54,6 +63,9 @@ function getChainTail(): { seq: number; hash: string } {
       return { seq: 0, hash: '0'.repeat(64) };
     }
     const last = events[events.length - 1];
+    if (!last) {
+      return { seq: 0, hash: '0'.repeat(64) };
+    }
     return { seq: last.seq, hash: last.hash };
   } catch {
     return { seq: 0, hash: '0'.repeat(64) };
@@ -82,7 +94,7 @@ export function auditLog(params: {
   ip?: string;
   email?: string;
   meta?: Record<string, unknown>;
-}): void {
+}): AuditEvent {
   try {
     ensureFile();
     const tail = getChainTail();
@@ -111,10 +123,10 @@ export function auditLog(params: {
 
     chainTail = { seq, hash };
 
-    if (process.env.DATABASE_URL) {
+    if (process.env.DATABASE_URL && prisma?.auditEvent) {
       prisma.auditEvent.create({
         data: {
-          type: params.type,
+          type: String(params.type),
           ref: params.ref,
           ip: params.ip,
           email: params.email,
@@ -125,9 +137,30 @@ export function auditLog(params: {
         },
       }).catch(err => console.warn('[Prisma Audit Dual-Write Warning]:', err.message));
     }
+
+    return event;
   } catch (err) {
     console.error('[AuditTrail] Failed to write event:', err);
+    return {
+      seq: 0,
+      timestamp: new Date().toISOString(),
+      type: params.type,
+      details: params.details,
+      prevHash: '0'.repeat(64),
+      hash: '0'.repeat(64),
+    };
   }
+}
+
+export async function appendAuditEvent(params: {
+  type: AuditEventType;
+  details: string;
+  ref?: string;
+  ip?: string;
+  email?: string;
+  meta?: Record<string, unknown>;
+}): Promise<AuditEvent> {
+  return auditLog(params);
 }
 
 export function getAuditEvents(limit = 100): AuditEvent[] {
@@ -149,6 +182,7 @@ export function verifyChainIntegrity(): { intact: boolean; brokenAt?: number } {
 
     for (let i = 0; i < events.length; i++) {
       const event = events[i];
+      if (!event) continue;
       const { hash, ...rest } = event;
       const recomputed = computeEventHash(rest);
       if (recomputed !== hash) {

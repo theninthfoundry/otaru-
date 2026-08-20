@@ -90,33 +90,36 @@ export function addTransaction(tx: Omit<Transaction, 'createdAt' | 'history'> & 
   const existingIdx = transactions.findIndex(t => t.orderId === tx.orderId);
   if (existingIdx !== -1) {
     const existing = transactions[existingIdx];
-    existing.status = tx.status;
-    existing.id = tx.id;
-    existing.history.push({
-      status: tx.status,
-      timestamp,
-      details: tx.details || `Transaction updated to status: ${tx.status}`,
-    });
-    existing.security = {
-      ...existing.security,
-      ...tx.security,
-    };
-    transactions[existingIdx] = existing;
-    saveTransactions(transactions);
+    if (existing) {
+      existing.status = tx.status;
+      existing.id = tx.id;
+      existing.history.push({
+        status: tx.status,
+        timestamp,
+        details: tx.details || `Transaction updated to status: ${tx.status}`,
+      });
+      existing.security = {
+        ...existing.security,
+        ...tx.security,
+      };
+      transactions[existingIdx] = existing;
+      saveTransactions(transactions);
+    }
   } else {
     transactions.unshift(newTx);
     saveTransactions(transactions);
   }
 
   // Dual-write to Prisma DB asynchronously if configured
-  if (process.env.DATABASE_URL) {
+  if (process.env.DATABASE_URL && prisma?.payment) {
+    const amountMinor = Math.round(tx.amount * 100);
     prisma.payment.upsert({
       where: { gatewayOrderId: tx.id },
       create: {
         orderId: tx.orderId,
         gateway: 'RAZORPAY',
         gatewayOrderId: tx.id,
-        amount: tx.amount,
+        amountMinor,
         currency: tx.currency,
         status: tx.status,
         details: tx.details,
@@ -129,7 +132,8 @@ export function addTransaction(tx: Omit<Transaction, 'createdAt' | 'history'> & 
     }).catch(err => console.warn('[Prisma Dual-Write Warning]:', err.message));
   }
 
-  return existingIdx !== -1 ? transactions[existingIdx] : newTx;
+  const resultTx = existingIdx !== -1 ? transactions[existingIdx] : newTx;
+  return resultTx || newTx;
 }
 
 export function updateTransactionStatus(
@@ -147,6 +151,8 @@ export function updateTransactionStatus(
   }
 
   const tx = transactions[txIndex];
+  if (!tx) return null;
+
   tx.status = status;
   tx.history.push({
     status,
@@ -164,7 +170,7 @@ export function updateTransactionStatus(
   transactions[txIndex] = tx;
   saveTransactions(transactions);
 
-  if (process.env.DATABASE_URL) {
+  if (process.env.DATABASE_URL && prisma?.payment) {
     prisma.payment.updateMany({
       where: { OR: [{ gatewayOrderId: id }, { orderId: id }] },
       data: { status, details },
