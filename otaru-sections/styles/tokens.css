@@ -1,0 +1,56 @@
+/**
+ * OTARU — DESIGN TOKENS
+ * ---------------------------------------------------------------
+ * Derived from the existing hero ("The mountain remembers.") so every
+ * new section reads as the same object, not a bolted-on redesign.
+ *
+ * Merge the `--otaru-*` values below into your real token files at
+ * src/styles/tokens/*.css, or import this file directly and point
+ * tailwind.config.ts at it (see INTEGRATION.md for the exact config
+ * block). Nothing in the new components below uses a raw hex value —
+ * everything reads from these variables, per your repo's own rule #3.
+ */
+
+:root {
+  /* ---- Color: night sky over Mt. Yōtei, torii red, temple-bell gold ---- */
+  --otaru-ink: #0b1420;          /* deepest background, nav-solid, footer */
+  --otaru-dusk: #17293e;         /* section backgrounds, cards on dark */
+  --otaru-dusk-2: #223b56;       /* elevated surface / hover on dusk */
+  --otaru-horizon: #5c7a94;      /* muted mid-tone, secondary text on dark */
+  --otaru-parchment: #f4efe2;    /* primary text on dark, light backgrounds */
+  --otaru-parchment-dim: #cfc7b3;/* secondary text on parchment/dark */
+  --otaru-gold: #d9bd83;         /* moon, accents, active states */
+  --otaru-gold-dim: #a8905f;     /* gold at rest / borders */
+  --otaru-torii: #a8462f;        /* weathered vermillion — sparing use only */
+  --otaru-line: rgba(244, 239, 226, 0.14); /* hairline dividers on dark */
+  --otaru-line-strong: rgba(244, 239, 226, 0.28);
+
+  /* ---- Type ---- */
+  --font-display: "Newsreader", "Iowan Old Style", "Palatino Linotype", serif;
+  --font-body: "Inter", -apple-system, "Segoe UI", sans-serif;
+
+  --tracking-label: 0.18em;   /* eyebrows, nav, catalog numbers */
+  --tracking-wide: 0.06em;
+
+  /* ---- Motion ---- */
+  --ease-otaru: cubic-bezier(0.16, 1, 0.3, 1); /* slow-out, precise */
+  --duration-fast: 240ms;
+  --duration-base: 560ms;
+  --duration-slow: 900ms;
+
+  /* ---- Spacing rhythm (section padding) ---- */
+  --space-section: clamp(5rem, 10vw, 9rem);
+  --space-gutter: clamp(1.25rem, 4vw, 3rem);
+
+  /* ---- Radius / line weight ---- */
+  --radius-sm: 2px;   /* Otaru uses almost no rounding — archival, not soft */
+  --hairline: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 1ms;
+    --duration-base: 1ms;
+    --duration-slow: 1ms;
+  }
+}
