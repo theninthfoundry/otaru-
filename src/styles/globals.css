@@ -1,50 +1,760 @@
-@import "./tokens/colors.css";
-@import "./tokens/typography.css";
-@import "./tokens/spacing.css";
-@import "./tokens/motion.css";
-@import "./tokens/elevation.css";
-@import "./tokens/grid.css";
+:root {
+  --otaru-ink: #070d14;
+  --otaru-dusk: #0e1724;
+  --otaru-dusk-2: #162334;
+  --otaru-horizon: #637f99;
+  --otaru-parchment: #f8f5ee;
+  --otaru-parchment-dim: #d3ccbc;
+  --otaru-gold: #e2c285;
+  --otaru-gold-dim: #b89c67;
+  --otaru-gold-glow: rgba(226, 194, 133, 0.22);
+  --otaru-torii: #b54932;
+  --otaru-line: rgba(248, 245, 238, 0.12);
+  --otaru-line-strong: rgba(248, 245, 238, 0.24);
+  
+  --font-display: "Newsreader", "Iowan Old Style", "Playfair Display", serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  --tracking-label: 0.18em;
+  --tracking-wide: 0.08em;
+  
+  --ease-otaru: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-micro: 180ms;
+  --duration-small: 350ms;
+  --duration-medium: 650ms;
+  --duration-large: 1100ms;
+  --duration-fast: 200ms;
+  --duration-base: 450ms;
+  --duration-slow: 800ms;
+  
+  --space-section: clamp(4.5rem, 8vw, 8rem);
+  --space-gutter: clamp(1.25rem, 4vw, 3.5rem);
+  
+  --color-border: var(--otaru-line);
+  --color-foreground: var(--otaru-parchment);
+  --color-background: var(--otaru-ink);
+}
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  * {
-    border-color: var(--color-border);
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-body);
-    font-feature-settings: "cv11", "ss01";
-    -webkit-font-smoothing: antialiased;
-  }
-
-  ::selection {
-    background-color: var(--color-ink);
-    color: var(--color-chalk);
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 1ms;
+    --duration-base: 1ms;
+    --duration-slow: 1ms;
   }
 }
 
-@layer components {
-  .otaru-eyebrow {
-    font-family: var(--font-body);
-    font-size: var(--text-caption);
-    letter-spacing: var(--tracking-widest);
-    text-transform: uppercase;
-    color: var(--color-foreground-muted);
-  }
+* {
+  box-sizing: border-box;
+}
 
-  .otaru-container {
-    width: 100%;
-    max-width: var(--container-max);
-    margin-inline: auto;
-    padding-inline: var(--grid-margin);
-  }
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--otaru-ink);
+  color: var(--otaru-parchment);
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   REVEAL-ON-SCROLL & LUXURY ANIMATIONS
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  will-change: opacity, transform;
+  transition: opacity var(--duration-slow) var(--ease-otaru),
+              transform var(--duration-slow) var(--ease-otaru);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(22px);
+  will-change: opacity, transform;
+  transition: opacity var(--duration-slow) var(--ease-otaru),
+              transform var(--duration-slow) var(--ease-otaru);
+  transition-delay: calc(var(--i, 0) * 85ms);
+}
+
+.reveal-stagger.is-visible > *,
+.reveal-stagger .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Section transition subtle atmospheric separators */
+.section-connector {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--otaru-line-strong) 50%, transparent 100%);
+  margin: 0 auto;
+}
+
+.section-connector::after {
+  content: "◇";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--otaru-ink);
+  padding: 0 0.8rem;
+  font-size: 0.8rem;
+  color: var(--otaru-gold-dim);
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-fast) ease;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+ /* ============================================================
+    HERO SECTION — CINEMATIC S5.1 ENTRANCE
+    ============================================================ */
+.hero-stub {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  border-bottom: 1px solid var(--otaru-line);
+}
+
+.hero-stub::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(11,20,32,.55) 0%, rgba(11,20,32,.18) 45%, rgba(11,20,32,0) 68%),
+    linear-gradient(0deg, rgba(11,20,32,.7) 0%, rgba(11,20,32,0) 24%),
+    linear-gradient(180deg, rgba(11,20,32,.45) 0%, rgba(11,20,32,0) 18%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6.75rem clamp(1.25rem, 4vw, 3rem) 2.1rem;
+}
+
+.hero-content > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-content.is-ready > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Topbar metadata enters first */
+.hero-content.is-ready > *:nth-child(1) {
+  transition-delay: 150ms;
+}
+
+/* Main headline enters second */
+.hero-content.is-ready > *:nth-child(2) {
+  transition-delay: 280ms;
+}
+
+/* Footer bottom bar enters third */
+.hero-content.is-ready > *:nth-child(3) {
+  transition-delay: 450ms;
+}
+
+.hero-topbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  font-size: .66rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--otaru-parchment-dim);
+}
+
+.hero-topbar .right {
+  text-align: right;
+}
+
+.hero-main {
+  max-width: 620px;
+}
+
+.hero-eyebrow2 {
+  font-size: .7rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--otaru-parchment-dim);
+}
+
+.hero-title {
+  margin-top: .6em;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 6vw, 4.6rem);
+  line-height: 1.05;
+  color: var(--otaru-parchment);
+}
+
+.hero-sub2 {
+  margin-top: 1.1rem;
+  max-width: 44ch;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--otaru-parchment-dim);
+}
+
+.hero-cta2 {
+  margin-top: 1.7rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .76rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--otaru-parchment);
+  border-bottom: 1px solid var(--otaru-parchment);
+  padding-bottom: .3rem;
+  transition: gap var(--duration-fast) var(--ease-otaru);
+}
+
+.hero-cta2:hover {
+  gap: .9rem;
+}
+
+.hero-origin {
+  position: absolute;
+  right: 1.4rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: center;
+  font-size: .66rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--otaru-parchment-dim);
+  z-index: 1;
+}
+
+.hero-footer {
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+}
+
+.hero-dots {
+  display: flex;
+  gap: .4rem;
+  justify-content: center;
+}
+
+.hero-dots span {
+  height: 2px;
+  width: 1.1rem;
+  background: var(--otaru-line-strong);
+  transition: width var(--duration-fast), background var(--duration-fast);
+}
+
+.hero-dots span.active {
+  background: var(--otaru-parchment);
+  width: 1.8rem;
+}
+
+.hero-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  font-size: .66rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--otaru-parchment-dim);
+}
+
+.hero-bottom .right {
+  text-align: right;
+}
+
+/* ============================================================
+   MOON-PHASE SCROLL INDICATOR
+   ============================================================ */
+.moon-progress {
+  position: fixed;
+  right: 1.4rem;
+  bottom: 1.4rem;
+  z-index: 90;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--otaru-gold);
+  box-shadow: 0 0 0 1px var(--otaru-line-strong), 0 6px 18px rgba(0,0,0,.35);
+  cursor: pointer;
+  transition: transform var(--duration-fast);
+}
+
+.moon-progress:hover {
+  transform: scale(1.1);
+}
+
+.moon-progress .mask {
+  position: absolute;
+  inset: 0;
+  background: var(--otaru-ink);
+  border-radius: 50%;
+  transform: translateX(0%);
+  transition: transform 0.1s linear;
+}
+
+.moon-progress[hidden] {
+  display: none;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--otaru-gold);
+  color: var(--otaru-ink);
+  padding: 0.75rem 1.25rem;
+  z-index: 200;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+.wrap {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding-inline: var(--space-gutter);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: 0.72rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--otaru-gold-dim);
+  font-weight: 500;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 1.1em;
+  height: 1px;
+  background: var(--otaru-gold-dim);
+}
+
+h2.section-title, .section-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin-top: 0.6em;
+  max-width: 18ch;
+  color: var(--otaru-parchment);
+}
+
+.section-lede {
+  margin-top: 1.1em;
+  max-width: 48ch;
+  color: var(--otaru-parchment-dim);
+  font-size: 1.04rem;
+  line-height: 1.7;
+}
+
+.hairline {
+  height: 1px;
+  background: var(--otaru-line);
+  border: none;
+  width: 100%;
+}
+
+/* Aspect Ratios */
+.r-portrait { aspect-ratio: 4/5; }
+.r-square { aspect-ratio: 1/1; }
+.r-wide { aspect-ratio: 16/9; }
+.r-tall { aspect-ratio: 3/4; }
+.r-swatch { aspect-ratio: 1/1; border-radius: 2px; }
+
+/* Sections */
+section.block {
+  padding-block: var(--space-section);
+  position: relative;
+}
+
+section.block.on-ink {
+  background-color: var(--otaru-ink);
+}
+
+section.block.on-dusk {
+  background-color: var(--otaru-dusk);
+  border-top: 1px solid var(--otaru-line);
+  border-bottom: 1px solid var(--otaru-line);
+}
+
+/* Artifact Card & Object Frame Transitions */
+.artifact-card, .object-card {
+  transition: transform var(--duration-base) var(--ease-otaru);
+  text-decoration: none;
+}
+
+.artifact-card:hover, .object-card:hover {
+  transform: translateY(-4px);
+}
+
+.artifact-card:hover .ph, .object-card:hover .ph {
+  border-color: var(--otaru-gold-dim);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(217, 189, 131, 0.12);
+}
+
+/* Architectural Corner Framing Brackets that illuminate on hover */
+.object-card .ph-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  border: 1px solid var(--otaru-line);
+  transition: border-color 0.4s var(--ease-otaru), box-shadow 0.4s var(--ease-otaru);
+}
+
+.object-card .ph-frame::before,
+.object-card .ph-frame::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.object-card .ph-frame::before {
+  top: 6px;
+  left: 6px;
+  border-top: 1.5px solid var(--otaru-gold);
+  border-left: 1.5px solid var(--otaru-gold);
+  transform: translate(-3px, -3px);
+}
+
+.object-card .ph-frame::after {
+  bottom: 6px;
+  right: 6px;
+  border-bottom: 1.5px solid var(--otaru-gold);
+  border-right: 1.5px solid var(--otaru-gold);
+  transform: translate(3px, 3px);
+}
+
+.object-card:hover .ph-frame::before,
+.object-card:hover .ph-frame::after {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* ============================================================
+   JAPANESE CRAFTSMANSHIP & SASHIKO STITCHING BORDERS
+   ============================================================ */
+.sashiko-stitch-box {
+  position: relative;
+  border: 1px dashed rgba(217, 189, 131, 0.4);
+  border-radius: 2px;
+  background-color: rgba(14, 23, 36, 0.4);
+  transition: border-color var(--duration-base) var(--ease-otaru);
+}
+
+.sashiko-stitch-box:hover {
+  border-color: var(--otaru-gold);
+}
+
+/* Watoji Bookbinding Corner Thread Accents */
+.watoji-frame {
+  position: relative;
+  padding: 6px;
+  background: linear-gradient(135deg, rgba(23,41,62,0.6) 0%, rgba(11,20,32,0.85) 100%);
+  border: 1px solid var(--otaru-line);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  border-radius: 2px;
+}
+
+.watoji-frame::before,
+.watoji-frame::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.watoji-frame::before {
+  top: 2px;
+  left: 2px;
+  border-top: 2px solid var(--otaru-gold);
+  border-left: 2px solid var(--otaru-gold);
+}
+
+.watoji-frame::after {
+  bottom: 2px;
+  right: 2px;
+  border-bottom: 2px solid var(--otaru-gold);
+  border-right: 2px solid var(--otaru-gold);
+}
+
+/* Vermilion Atelier Seal / Hanko Stamp */
+.hanko-stamp {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid #b54932;
+  border-radius: 2px;
+  background-color: rgba(181, 73, 50, 0.15);
+  color: #b54932;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 6;
+  transform: rotate(-4deg);
+  box-shadow: inset 0 0 4px rgba(181, 73, 50, 0.2);
+  user-select: none;
+}
+
+/* Artisan Textile Thread Tag */
+.thread-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-family: monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--otaru-gold);
+  background-color: rgba(11, 20, 32, 0.85);
+  backdrop-filter: blur(4px);
+  padding: 0.2rem 0.5rem;
+  border: 1px dashed var(--otaru-gold-dim);
+  border-radius: 2px;
+  z-index: 6;
+  user-select: none;
+}
+
+.cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--otaru-parchment);
+  border-bottom: 1px solid var(--otaru-gold-dim);
+  padding-bottom: 0.25rem;
+  text-decoration: none;
+  transition: gap var(--duration-fast) var(--ease-otaru),
+              border-color var(--duration-fast),
+              color var(--duration-fast);
+}
+
+.cta-link:hover {
+  gap: 0.9rem;
+  color: var(--otaru-gold);
+  border-color: var(--otaru-gold);
+}
+
+.filter-chip {
+  font-size: 0.72rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--otaru-parchment-dim);
+  padding: 0.45rem 1.1rem;
+  border: 1px solid var(--otaru-line-strong);
+  border-radius: 20px;
+  background-color: rgba(14, 23, 36, 0.5);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-otaru);
+}
+
+.filter-chip:hover {
+  color: var(--otaru-parchment);
+  border-color: var(--otaru-gold);
+}
+
+.filter-chip.is-active {
+  color: var(--otaru-ink);
+  background-color: var(--otaru-parchment);
+  border-color: var(--otaru-parchment);
+  font-weight: 600;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background-color: var(--otaru-parchment);
+  color: var(--otaru-ink);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  padding: 0.9rem 1.8rem;
+  border-radius: 2px;
+  border: 1px solid var(--otaru-parchment);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-otaru);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.btn-primary:hover {
+  background-color: var(--otaru-gold);
+  border-color: var(--otaru-gold);
+  color: var(--otaru-ink);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--otaru-gold-glow);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background-color: rgba(14, 23, 36, 0.6);
+  color: var(--otaru-parchment);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  padding: 0.9rem 1.6rem;
+  border-radius: 2px;
+  border: 1px solid var(--otaru-line-strong);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-otaru);
+}
+
+.btn-secondary:hover {
+  border-color: var(--otaru-gold);
+  color: var(--otaru-gold);
+  background-color: rgba(14, 23, 36, 0.9);
+  transform: translateY(-2px);
+}
+
+.btn-gold {
+  background-color: var(--otaru-gold);
+  color: var(--otaru-ink);
+  border: 1px solid var(--otaru-gold);
+}
+
+.btn-gold:hover {
+  background-color: #ebd19b;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--otaru-gold-glow);
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  color: var(--otaru-parchment-dim);
+  transition: color var(--duration-fast) ease, background-color var(--duration-fast) ease;
+}
+
+.icon-btn:hover {
+  color: var(--otaru-parchment);
+  background-color: rgba(248, 245, 238, 0.08);
+}
+
+/* Glassmorphic elements */
+.glass-card {
+  background: rgba(14, 23, 36, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--otaru-line);
+  transition: all var(--duration-base) var(--ease-otaru);
+}
+
+.glass-card:hover {
+  border-color: var(--otaru-line-strong);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Touch targets */
+@media (max-width: 720px), (hover: none) {
+  .icon-btn { width: 2.75rem; height: 2.75rem; }
+  .quick-add { width: 2.75rem; height: 2.75rem; }
+  .qty-group button { width: 2.75rem; height: 2.75rem; }
+  .filter-chip, .currency-pill { min-height: 2.75rem; }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--otaru-ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--otaru-dusk-2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--otaru-horizon);
 }
