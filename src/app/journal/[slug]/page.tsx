@@ -1,104 +1,53 @@
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { getJournalBySlug, getJournalEntries, getJournalSlugs } from '@/lib/sanity/queries';
-import { ReadingProgress } from '@/components/editorial/reading-progress';
-import { EditorialHero } from '@/components/editorial/editorial-hero';
-import { PortableTextRenderer } from '@/components/journal/portable-text-renderer';
-import { RelatedArticles } from '@/components/editorial/related-articles';
+import React from 'react';
+import Link from 'next/link';
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
+import { JOURNAL_POSTS } from '@/lib/catalog';
 
-interface JournalEntryPageProps {
+interface JournalSlugPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const entries = await getJournalSlugs().catch(() => []);
-  return entries.map((e) => ({ slug: e.slug }));
-}
-
-export async function generateMetadata({
-  params,
-}: JournalEntryPageProps): Promise<Metadata> {
+export default async function JournalSlugPage({ params }: JournalSlugPageProps) {
   const { slug } = await params;
-  const entry = await getJournalBySlug(slug);
-
-  if (!entry) return { title: 'Entry Not Found' };
-
-  return {
-    title: `${entry.title} — Otaru Journal`,
-    description: entry.seo?.description ?? entry.excerpt ?? '',
-    openGraph: {
-      title: entry.title,
-      description: entry.excerpt ?? '',
-      type: 'article',
-      publishedTime: entry.publishedAt,
-      authors: entry.author ? [entry.author] : undefined,
-      images: entry.coverImage?.asset?.url ? [{ url: entry.coverImage.asset.url }] : undefined,
-    },
-  };
-}
-
-export default async function JournalEntryPage({
-  params,
-}: JournalEntryPageProps) {
-  const { slug } = await params;
-
-  const [entry, allEntries] = await Promise.all([
-    getJournalBySlug(slug),
-    getJournalEntries(4).catch(() => []),
-  ]);
-
-  if (!entry) notFound();
-
-  const relatedEntries = allEntries.filter((e) => e.slug !== slug).slice(0, 3);
-  const wordCount = entry.body ? JSON.stringify(entry.body).split(/\s+/).length : 500;
-  const readTimeMinutes = Math.max(2, Math.ceil(wordCount / 200));
-
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: entry.title,
-    description: entry.excerpt,
-    datePublished: entry.publishedAt,
-    author: {
-      '@type': 'Person',
-      name: entry.author ?? 'Otaru Studio',
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'Otaru',
-    },
-    image: entry.coverImage?.asset?.url,
-  };
+  const post = JOURNAL_POSTS.find((p) => p.id === slug) || JOURNAL_POSTS[0]!;
 
   return (
-    <>
-      <ReadingProgress />
+    <div className="wrap page-wrap" style={{ paddingTop: '9rem', paddingBottom: '6rem', maxWidth: '760px' }}>
+      <nav aria-label="Breadcrumb" style={{ display: 'flex', gap: '0.5rem', fontSize: '0.76rem', color: 'var(--otaru-parchment-dim)', marginBottom: '2rem' }}>
+        <Link href="/journal" style={{ color: 'inherit' }}>Journal</Link>
+        <span aria-hidden="true">/</span>
+        <span style={{ color: 'var(--otaru-parchment)' }}>{post.cat}</span>
+      </nav>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <span className="eyebrow">{post.cat}</span>
+      <h1 className="section-title" style={{ marginTop: '0.5rem', fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
+        {post.title}
+      </h1>
+      <p style={{ marginTop: '0.5rem', fontSize: '0.76rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--otaru-parchment-dim)' }}>
+        {post.date} · Otaru Studio
+      </p>
 
-      <article id="journal-entry" itemScope itemType="https://schema.org/Article" className="pb-16">
-        <EditorialHero
-          title={entry.title}
-          excerpt={entry.excerpt}
-          author={entry.author}
-          publishedAt={entry.publishedAt}
-          readTimeMinutes={readTimeMinutes}
-          coverImageUrl={entry.coverImage?.asset?.url}
-          coverImageAlt={entry.coverImage?.alt}
-          chapterTitle={entry.chapter?.title}
-          chapterSlug={entry.chapter?.slug}
-          chapterNumber={entry.chapter?.chapterNumber}
-        />
+      <div style={{ margin: '2.5rem 0' }}>
+        <ImagePlaceholder ratio="wide" label={post.title} />
+      </div>
 
-        <div id="journal-body" itemProp="articleBody" className="grid-container mt-12 md:mt-16">
-          {entry.body && <PortableTextRenderer content={entry.body} />}
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.4rem', color: 'var(--otaru-parchment-dim)', fontSize: '1.05rem', lineHeight: 1.8 }}>
+        <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: '1.35rem', color: 'var(--otaru-parchment)', lineHeight: 1.6 }}>
+          &ldquo;{post.excerpt}&rdquo;
+        </p>
+        <p>
+          In our Otaru warehouse, work moves at the pace of the materials themselves. When we cut hemp or dye indigo with water drawn from the harbor canal, the process is never hurried. Every piece is an artifact designed to age gracefully alongside the person who keeps it.
+        </p>
+        <p>
+          We do not chase trends or fleeting seasons. A good garment carries its own biography in every softened collar, faded crease, and repaired seam.
+        </p>
+      </div>
 
-        <RelatedArticles entries={relatedEntries} />
-      </article>
-    </>
+      <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--otaru-line)' }}>
+        <Link href="/journal" className="cta-link" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--otaru-parchment)', borderBottom: '1px solid var(--otaru-gold-dim)', paddingBottom: '0.2rem' }}>
+          ← Back to all journal entries
+        </Link>
+      </div>
+    </div>
   );
 }

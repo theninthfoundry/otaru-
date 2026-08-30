@@ -1,183 +1,225 @@
-import type { Metadata } from 'next';
-import { getStudioContent, getSymbols } from '@/lib/sanity/queries';
-import { PortableTextRenderer } from '@/components/journal/portable-text-renderer';
-import { ManifestoSection } from '@/components/editorial/manifesto-section';
+import React from 'react';
 import Link from 'next/link';
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
+import { RevealOnScroll } from '@/components/ui/RevealOnScroll';
+import { StudioTimeline } from '@/components/studio/StudioTimeline';
+import { StudioValues } from '@/components/studio/StudioValues';
+import { StudioTeam } from '@/components/studio/StudioTeam';
+import { SashikoGrid, VerticalKanjiStamp, JapaneseCornerBorder } from '@/components/ui/ArchivalBackgroundArt';
+import { ArtBackgroundPlate } from '@/components/ui/ArtBackgroundPlate';
 
-export const metadata: Metadata = {
-  title: 'Studio & Atelier Philosophy | Otaru',
-  description: 'The architectural principles, textile craftsmanship, and symbol language behind Otaru.',
-};
-
-const DEFAULT_PRINCIPLES = [
-  {
-    name: '01 — Permanent Intention',
-    description: 'We reject disposable seasonal calendars. Garments are engineered to withstand decades of wear.',
-  },
-  {
-    name: '02 — Architectural Geometry',
-    description: 'Precision drop-shoulder cuts, concealed seams, and ergonomic utility pocketing.',
-  },
-  {
-    name: '03 — Raw Textile Supremacy',
-    description: 'Sourced exclusively from Kuroki Mills denim, Biella virgin wool, and 420GSM French terry.',
-  },
-  {
-    name: '04 — Numbered Chapter Archive',
-    description: 'Every release is a numbered Chapter published in strictly limited edition runs.',
-  },
-];
-
-export default async function StudioPage() {
-  const [content, symbols] = await Promise.all([
-    getStudioContent().catch(() => null),
-    getSymbols().catch(() => []),
-  ]);
-
-  const principles = content?.designPrinciples && content.designPrinciples.length > 0
-    ? content.designPrinciples
-    : DEFAULT_PRINCIPLES;
-
+export default function StudioPage() {
   return (
-    <article id="studio-page" className="py-12 md:py-20 space-y-20">
-      <section id="studio-hero" aria-label="Studio Hero" className="grid-container max-w-4xl text-center space-y-6">
-        <span className="text-overline tracking-widest uppercase text-otaru-ink-subtle text-[11px] font-semibold">
-          Otaru Design Atelier &bull; Established MMXXIV
-        </span>
-        <h1 className="text-display-xl font-bold tracking-tight text-otaru-ink leading-[0.98]">
-          {content?.headline ?? 'Craftsmanship outlasts trends.'}
-        </h1>
-        <p className="text-body-lg text-otaru-ink-muted font-light max-w-2xl mx-auto leading-relaxed">
-          Otaru is a luxury garment design house operating at the intersection of architectural structure, raw textile science, and archival permanence.
-        </p>
-      </section>
+    <div style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh' }}>
+      {/* Background Japanese Woodblock Art Plates */}
+      <ArtBackgroundPlate artName="great-wave" position="top-right" opacity={0.19} maxWidth="850px" maxHeight="600px" />
+      <ArtBackgroundPlate artName="poppies" position="center-left" opacity={0.16} maxWidth="680px" maxHeight="560px" />
+      <ArtBackgroundPlate artName="cherry-blossom" position="bottom-right" opacity={0.17} maxWidth="720px" maxHeight="580px" />
 
-      <ManifestoSection
-        headline="Atelier Philosophy"
-        quote="Garments worth keeping."
-        subtext="Every piece is designed, patterned, and finished to age with dignity, acquiring character through years of physical wear."
-        author="Otaru Design Principles"
-      />
+      {/* Background Sashiko Grid */}
+      <SashikoGrid opacity={0.035} />
 
-      {content?.introduction && (
-        <section id="studio-intro" aria-label="Studio Introduction" className="grid-container max-w-3xl">
-          <div className="space-y-6">
-            <h2 className="text-overline uppercase tracking-widest text-otaru-ink-subtle text-[11px] font-semibold text-center">
-              The Atelier Story
-            </h2>
-            <PortableTextRenderer content={content.introduction} />
-          </div>
-        </section>
-      )}
+      {/* Vertical Japanese Calligraphy Watermarks */}
+      <VerticalKanjiStamp text="工房理念" subtext="ATELIER PHILOSOPHY MMXXVI" top="8%" right="2.5%" opacity={0.05} />
+      <VerticalKanjiStamp text="北海船着" subtext="HOKKAIDO CANAL DOCK" top="42%" left="2%" opacity={0.045} />
+      <VerticalKanjiStamp text="匠心永久" subtext="FOUR CRAFTSMEN · LIFETIME CARE" top="75%" right="2.5%" opacity={0.045} />
 
-      <section id="design-principles" aria-label="Design Principles" className="grid-container max-w-5xl space-y-10">
-        <div className="text-center space-y-2">
-          <span className="text-overline uppercase tracking-widest text-otaru-ink-subtle text-[11px] font-semibold">
-            Core Commandments
-          </span>
-          <h2 className="text-display-sm font-semibold text-otaru-ink">
-            Design Principles
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {principles.map((principle, index) => (
-            <div
-              key={index}
-              className="p-8 bg-otaru-chalk-warm/50 border border-otaru-border/40 rounded-sm space-y-3"
-            >
-              <h3 className="text-heading-sm font-semibold text-otaru-ink">
-                {principle.name}
-              </h3>
-              <p className="text-body-sm text-otaru-ink-muted font-light leading-relaxed">
-                {principle.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section id="symbol-language" aria-label="Symbol Language" className="grid-container max-w-5xl space-y-10 pt-12 border-t border-otaru-border/40">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <span className="text-overline uppercase tracking-widest text-otaru-ink-subtle text-[11px] font-semibold">
-              Archival Glyphs
+      <div className="wrap page-wrap" style={{ paddingTop: '9rem', paddingBottom: '6rem', position: 'relative', zIndex: 1 }}>
+        <RevealOnScroll>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.4rem' }}>
+            <span className="eyebrow" style={{ margin: 0 }}>The studio</span>
+            <span style={{ fontSize: '0.62rem', letterSpacing: '0.18em', color: 'var(--otaru-gold-dim)', textTransform: 'uppercase', fontFamily: 'monospace' }}>
+              [ HOKKAIDO CANAL WAREHOUSE ]
             </span>
-            <h2 className="text-display-sm font-semibold text-otaru-ink mt-1">
-              Symbol Language
-            </h2>
           </div>
-          <Link
-            href="/archive"
-            className="text-caption text-otaru-ink-muted hover:text-otaru-ink underline text-xs"
-          >
-            Inspect Artifacts &rarr;
-          </Link>
+          <h1 className="section-title" style={{ maxWidth: '20ch' }}>
+            What if we made garments differently?
+          </h1>
+          <p className="section-lede" style={{ maxWidth: '58ch' }}>
+            A coat remembered the winters it carried you through. A shirt softened where your hands touched it most. Somewhere along the way, clothing became temporary — made quickly, consumed quickly, forgotten quickly. Otaru began with a simple refusal.
+          </p>
+        </RevealOnScroll>
+
+        {/* The Idea */}
+        <div style={{ marginTop: '6rem' }}>
+          <RevealOnScroll>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                gap: 'clamp(2.5rem, 6vw, 5rem)',
+                alignItems: 'center',
+              }}
+            >
+              <div>
+                <span className="eyebrow">The idea</span>
+                <h2 style={{ marginTop: '0.9rem', fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 3vw, 2.3rem)', lineHeight: 1.25, color: 'var(--otaru-parchment)' }}>
+                  A good garment should have a life longer than its first impression.
+                </h2>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--otaru-parchment-dim)', lineHeight: 1.75 }}>
+                <p style={{ margin: 0 }}>
+                  We believe beauty is not always found in perfection. It can be found in a softened collar, a crease that returns, a repaired seam, a faded surface — the marks left behind by the person who wore it.
+                </p>
+                <p style={{ margin: 0 }}>
+                  These are not failures of a garment. They are its biography.
+                </p>
+                <p style={{ margin: 0 }}>
+                  So we design with time in mind: materials that can age, construction that can endure, forms that don&apos;t depend on a single moment.
+                </p>
+              </div>
+            </div>
+          </RevealOnScroll>
         </div>
 
-        {symbols.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {symbols.map((symbol) => (
-              <div
-                key={symbol._id}
-                className="p-6 bg-otaru-chalk border border-otaru-border/40 rounded-sm space-y-4 text-center"
-              >
-                <div
-                  className="w-12 h-12 mx-auto flex items-center justify-center text-otaru-ink"
-                  dangerouslySetInnerHTML={{ __html: symbol.svgMarkup || '&#9671;' }}
-                />
-                <div>
-                  <h4 className="text-body-sm font-semibold text-otaru-ink">{symbol.name}</h4>
-                  <p className="text-caption text-xs text-otaru-ink-muted font-light mt-1">
-                    {symbol.meaning}
+        {/* The Name */}
+        <div style={{ marginTop: '6rem' }}>
+          <RevealOnScroll>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                gap: 'clamp(2.5rem, 6vw, 5rem)',
+                alignItems: 'center',
+              }}
+            >
+              <div style={{ order: 1 }}>
+                <JapaneseCornerBorder>
+                  <div style={{ border: '1px solid var(--otaru-line)', borderRadius: '2px', overflow: 'hidden' }}>
+                    <ImagePlaceholder ratio="wide" label="Otaru Harbor — 1600×1000" />
+                  </div>
+                </JapaneseCornerBorder>
+              </div>
+              <div style={{ order: 2 }}>
+                <span className="eyebrow">The name</span>
+                <h2 style={{ marginTop: '0.9rem', fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 3vw, 2.3rem)', lineHeight: 1.25, color: 'var(--otaru-parchment)' }}>
+                  A northern port where things arrived, waited, and sometimes remained.
+                </h2>
+                <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--otaru-parchment-dim)', lineHeight: 1.75 }}>
+                  <p style={{ margin: 0 }}>
+                    Otaru is a name borrowed from a real place — a port city where warehouses, stone, water, timber, glass, and weather exist together.
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    A garment can be like a port. It arrives in your life as an object, then begins to collect places, seasons, movements, people, years, memories. The garment changes. So do you. Eventually, neither of you is quite the same as when you met.
                   </p>
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            <div className="p-6 bg-otaru-chalk-warm/40 border border-otaru-border/40 rounded-sm space-y-2">
-              <span className="text-heading-md font-mono text-otaru-ink block">&#9632;</span>
-              <h4 className="text-body-sm font-semibold text-otaru-ink">Monolith</h4>
-              <p className="text-caption text-xs text-otaru-ink-muted">Symbol of permanence and physical structure.</p>
             </div>
-            <div className="p-6 bg-otaru-chalk-warm/40 border border-otaru-border/40 rounded-sm space-y-2">
-              <span className="text-heading-md font-mono text-otaru-ink block">&#9671;</span>
-              <h4 className="text-body-sm font-semibold text-otaru-ink">Kuroki Weave</h4>
-              <p className="text-caption text-xs text-otaru-ink-muted">Symbol of selvage density and raw warp integrity.</p>
-            </div>
-            <div className="p-6 bg-otaru-chalk-warm/40 border border-otaru-border/40 rounded-sm space-y-2">
-              <span className="text-heading-md font-mono text-otaru-ink block">&#8734;</span>
-              <h4 className="text-body-sm font-semibold text-otaru-ink">Archival Cycle</h4>
-              <p className="text-caption text-xs text-otaru-ink-muted">Garments passed down across generations.</p>
-            </div>
-          </div>
-        )}
-      </section>
-
-      <section className="grid-container max-w-2xl text-center space-y-6 pt-12">
-        <h3 className="text-display-xs font-semibold text-otaru-ink">
-          Explore the Published Chapters
-        </h3>
-        <p className="text-body-md text-otaru-ink-muted font-light">
-          Immerse yourself in our published lookbooks, curator essays, and limited artifact releases.
-        </p>
-        <div className="flex justify-center gap-4">
-          <Link
-            href="/chapter"
-            className="px-8 py-3.5 bg-otaru-ink text-otaru-chalk text-body-sm font-medium rounded-full hover:bg-otaru-ink-muted transition-colors"
-          >
-            View Chapters
-          </Link>
-          <Link
-            href="/archive"
-            className="px-8 py-3.5 bg-transparent border border-otaru-border text-otaru-ink text-body-sm font-medium rounded-full hover:border-otaru-ink transition-colors"
-          >
-            Explore Archive
-          </Link>
+          </RevealOnScroll>
         </div>
-      </section>
-    </article>
+
+        {/* Timeline */}
+        <div style={{ marginTop: '6.5rem', paddingTop: '4rem', borderTop: '1px solid var(--otaru-line)' }}>
+          <RevealOnScroll>
+            <span className="eyebrow">A short history</span>
+            <h2 className="section-title">Established MMXXVI, developing garments in Hokkaido since 2023.</h2>
+          </RevealOnScroll>
+          <StudioTimeline />
+        </div>
+
+        {/* Values */}
+        <div style={{ marginTop: '6.5rem', paddingTop: '4rem', borderTop: '1px solid var(--otaru-line)' }}>
+          <RevealOnScroll>
+            <span className="eyebrow">How we work</span>
+            <h2 className="section-title">Four principles that don&apos;t change with the season.</h2>
+          </RevealOnScroll>
+          <StudioValues />
+        </div>
+
+        {/* Who it's for */}
+        <div style={{ marginTop: '6rem' }}>
+          <RevealOnScroll>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                gap: 'clamp(2.5rem, 6vw, 5rem)',
+                alignItems: 'center',
+              }}
+            >
+              <div>
+                <span className="eyebrow">Who it&apos;s for</span>
+                <h2 style={{ marginTop: '0.9rem', fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 3vw, 2.3rem)', lineHeight: 1.25, color: 'var(--otaru-parchment)' }}>
+                  Not an imaginary perfect customer. People who notice.
+                </h2>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--otaru-parchment-dim)', lineHeight: 1.75 }}>
+                <p style={{ margin: 0 }}>
+                  People who keep the same notebook for years. Who remember where they bought something. Who repair objects instead of immediately replacing them.
+                </p>
+                <p style={{ margin: 0 }}>
+                  Who understand the difference between something expensive and something considered — and that the things around us quietly become part of our lives. The garment is only the beginning.
+                </p>
+              </div>
+            </div>
+          </RevealOnScroll>
+        </div>
+
+        {/* Team */}
+        <div style={{ marginTop: '6.5rem', paddingTop: '4rem', borderTop: '1px solid var(--otaru-line)' }}>
+          <RevealOnScroll>
+            <span className="eyebrow">The people</span>
+            <h2 className="section-title">Four names on every care label.</h2>
+          </RevealOnScroll>
+          <StudioTeam />
+        </div>
+
+        {/* Visit Section */}
+        <div
+          style={{
+            marginTop: '6.5rem',
+            paddingTop: '3.5rem',
+            borderTop: '1px solid var(--otaru-line)',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '1.5rem',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <div>
+            <h2 style={{ margin: 0, maxWidth: '28ch', fontFamily: 'var(--font-display)', fontSize: '1.5rem', color: 'var(--otaru-parchment)' }}>
+              The studio is open to visitors by appointment, most Fridays.
+            </h2>
+            <p style={{ margin: '0.5rem 0 0', fontSize: '0.86rem', color: 'var(--otaru-parchment-dim)' }}>
+              Otaru, Hokkaido — exact address on request.
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            <a
+              href="mailto:studio@otaru.in"
+              style={{
+                border: '1px solid var(--otaru-line-strong)',
+                padding: '0.85rem 1.4rem',
+                fontSize: '0.78rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                color: 'var(--otaru-parchment)',
+                textDecoration: 'none',
+              }}
+            >
+              Request a visit
+            </a>
+            <Link
+              href="/journal"
+              className="cta-link"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.78rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'var(--otaru-parchment)',
+                borderBottom: '1px solid var(--otaru-gold-dim)',
+                paddingBottom: '0.2rem',
+              }}
+            >
+              Read the journal <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

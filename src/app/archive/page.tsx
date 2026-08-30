@@ -1,114 +1,97 @@
-import type { Metadata } from 'next';
-import { Suspense } from 'react';
-import { getProducts, getProductsByCollection } from '@/lib/shopify/queries/products';
-import { getCollections } from '@/lib/shopify/queries/collections';
-import { ArchiveFilters } from '@/components/archive/archive-filters';
-import { ArchiveGrid, ArchiveGridSkeleton } from '@/components/archive/archive-grid';
-import type { SortKey } from '@/lib/shopify/types';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Archive — Otaru',
-  description:
-    'The complete Otaru Archive. Every Artifact, every Chapter — past and present.',
-};
+import React, { useState } from 'react';
+import { ArchiveFilters } from '@/components/archive/ArchiveFilters';
+import { ArchiveGrid } from '@/components/archive/ArchiveGrid';
+import { MilestonesGrid } from '@/components/archive/MilestonesGrid';
+import { SashikoGrid, VerticalKanjiStamp } from '@/components/ui/ArchivalBackgroundArt';
+import { ArtBackgroundPlate } from '@/components/ui/ArtBackgroundPlate';
+import { PRODUCT_CATALOG } from '@/lib/catalog';
 
-interface ArchivePageProps {
-  searchParams: Promise<{
-    sort?: string;
-    q?: string;
-    collection?: string;
-    inStock?: string;
-    after?: string;
-  }>;
-}
+const PAGE_SIZE = 8;
+const CATEGORIES = ['All', 'Outerwear', 'Tops', 'Trousers', 'Accessories'];
 
-export default async function ArchivePage({ searchParams }: ArchivePageProps) {
-  const { sort, q, collection, inStock, after } = await searchParams;
+export default function ArchivePage() {
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [sort, setSort] = useState('newest');
+  const [page, setPage] = useState(1);
 
-  const collections = await getCollections(50).catch(() => []);
-  const sortConfig = parseSortParam(sort);
-  const isInStockOnly = inStock === 'true';
+  const allIds = Object.keys(PRODUCT_CATALOG);
 
-  let artifacts = [];
-  let pageInfo = { hasNextPage: false, endCursor: null as string | null };
+  // Filter
+  const filtered = activeCategory === 'All'
+    ? allIds
+    : allIds.filter((id) => PRODUCT_CATALOG[id]?.category === activeCategory);
 
-  if (collection) {
-    const colData = await getProductsByCollection(collection, {
-      first: 24,
-      reverse: sortConfig.reverse,
-      after,
-    }).catch(() => null);
+  // Sort
+  const sorted = [...filtered].sort((a, b) => {
+    const prodA = PRODUCT_CATALOG[a];
+    const prodB = PRODUCT_CATALOG[b];
+    if (sort === 'price-asc') return (prodA?.price ?? 0) - (prodB?.price ?? 0);
+    if (sort === 'price-desc') return (prodB?.price ?? 0) - (prodA?.price ?? 0);
+    return Number(b) - Number(a); // Newest
+  });
 
-    if (colData) {
-      artifacts = colData.artifacts;
-      pageInfo = colData.pageInfo;
-    }
-  } else {
-    const data = await getProducts({
-      first: 24,
-      sortKey: sortConfig.key,
-      reverse: sortConfig.reverse,
-      query: q,
-      after,
-    }).catch(() => ({
-      artifacts: [],
-      pageInfo: { hasNextPage: false, endCursor: null },
-    }));
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageIds = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-    artifacts = data.artifacts;
-    pageInfo = data.pageInfo;
-  }
-
-  if (isInStockOnly) {
-    artifacts = artifacts.filter((item) => item.availableForSale);
-  }
+  const productList = pageIds
+    .map((id) => ({
+      id,
+      product: PRODUCT_CATALOG[id]!,
+    }))
+    .filter((item) => Boolean(item.product));
 
   return (
-    <section id="archive" aria-label="Archive" className="py-12 md:py-16">
-      <div className="grid-container space-y-8">
-        <header className="space-y-2">
-          <h1 className="text-display-md font-semibold tracking-tight text-otaru-ink">
-            Archive
-          </h1>
-          <p className="text-body-md text-otaru-ink-muted max-w-xl">
-            Every Artifact. Every Chapter. Crafted with intention, cataloged for eternity.
-          </p>
-        </header>
+    <div style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh' }}>
+      {/* Background Japanese Art Plates */}
+      <ArtBackgroundPlate artName="cherry-blossom" position="top-right" opacity={0.19} maxWidth="820px" maxHeight="620px" />
+      <ArtBackgroundPlate artName="great-wave" position="bottom-left" opacity={0.16} maxWidth="780px" maxHeight="560px" />
+
+      {/* Background Sashiko Grid */}
+      <SashikoGrid opacity={0.035} />
+
+      {/* Vertical Japanese Calligraphy Watermarks */}
+      <VerticalKanjiStamp text="永久保存録" subtext="PERMANENT RECORD INDEX" top="12%" right="2.5%" opacity={0.05} />
+      <VerticalKanjiStamp text="物象目録" subtext="412 OBJECT CATALOG" top="55%" left="2%" opacity={0.045} />
+
+      <div className="wrap page-wrap" style={{ paddingTop: '9rem', paddingBottom: '6rem', position: 'relative', zIndex: 1 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.4rem' }}>
+          <span className="eyebrow" style={{ margin: 0 }}>The archive</span>
+          <span style={{ fontSize: '0.62rem', letterSpacing: '0.18em', color: 'var(--otaru-gold-dim)', textTransform: 'uppercase', fontFamily: 'monospace' }}>
+            [ MMXXVI FULL INDEX ]
+          </span>
+        </div>
+        <h1 className="section-title">412 objects. Nothing reprinted.</h1>
+        <p className="section-lede">
+          Every artifact we&apos;ve ever released, cataloged and searchable. When a run sells out, the listing stays — as a record, not an invitation.
+        </p>
 
         <ArchiveFilters
-          collections={collections}
-          currentCollection={collection}
-          currentSort={sort ?? 'newest'}
-          currentInStock={isInStockOnly}
-          currentSearch={q ?? ''}
-          totalCount={artifacts.length}
+          categories={CATEGORIES}
+          activeCategory={activeCategory}
+          onSelectCategory={(cat) => {
+            setActiveCategory(cat);
+            setPage(1);
+          }}
+          sort={sort}
+          onSelectSort={(s) => {
+            setSort(s);
+            setPage(1);
+          }}
+          resultCount={sorted.length}
         />
 
-        <Suspense fallback={<ArchiveGridSkeleton />}>
-          <ArchiveGrid
-            initialArtifacts={artifacts}
-            hasNextPage={pageInfo.hasNextPage}
-            endCursor={pageInfo.endCursor}
-          />
-        </Suspense>
-      </div>
-    </section>
-  );
-}
+        <ArchiveGrid
+          products={productList}
+          page={currentPage}
+          totalPages={totalPages}
+          onPageChange={(p) => setPage(p)}
+        />
 
-function parseSortParam(sort?: string): { key: SortKey; reverse: boolean } {
-  switch (sort) {
-    case 'price-asc':
-      return { key: 'PRICE', reverse: false };
-    case 'price-desc':
-      return { key: 'PRICE', reverse: true };
-    case 'newest':
-      return { key: 'CREATED_AT', reverse: true };
-    case 'oldest':
-      return { key: 'CREATED_AT', reverse: false };
-    case 'best-selling':
-      return { key: 'BEST_SELLING', reverse: false };
-    default:
-      return { key: 'CREATED_AT', reverse: true };
-  }
+        <MilestonesGrid />
+      </div>
+    </div>
+  );
 }

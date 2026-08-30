@@ -1,26 +1,30 @@
 import type { Metadata } from 'next';
-import { Inter, Instrument_Serif } from 'next/font/google';
-import { headers } from 'next/headers';
-import { CartProvider } from '@/components/cart/cart-provider';
-import { WishlistProvider } from '@/components/wishlist/wishlist-context';
-import { AnalyticsProvider } from '@/lib/analytics/provider';
-import { LenisProvider } from '@/components/common/lenis-provider';
-import { CursorProvider } from '@/hooks/use-cursor';
-import { CustomCursor } from '@/components/ui/custom-cursor';
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
+import { Inter, Newsreader } from 'next/font/google';
+import { CartProvider } from '@/lib/cart';
+import { CurrencyProvider } from '@/lib/currency';
+import { SizeGuideProvider } from '@/lib/size-guide';
+import { MaterialInspectorProvider } from '@/components/ui/MaterialInspectorModal';
+import { SiteHeader } from '@/components/layout/SiteHeader';
+import { SiteFooter } from '@/components/layout/SiteFooter';
+import { CartDrawer } from '@/components/cart/CartDrawer';
+import { SearchModal } from '@/components/search/SearchModal';
+import { SizeGuideModal } from '@/components/ui/SizeGuideModal';
+import { MoonProgress } from '@/components/ui/MoonProgress';
+import { ArchiveTextureOverlay } from '@/components/ui/ArchiveTextureOverlay';
+import { ScrollProgressLedger } from '@/components/ui/ScrollProgressLedger';
+import { ArchivePageTransition } from '@/components/ui/ArchivePageTransition';
 import '@/styles/globals.css';
-import '@/lib/env';
 
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-sans',
+  variable: '--font-body',
 });
 
-const instrumentSerif = Instrument_Serif({
+const newsreader = Newsreader({
   subsets: ['latin'],
-  weight: '400',
+  style: ['normal', 'italic'],
+  weight: ['400', '500'],
   display: 'swap',
   variable: '--font-display',
 });
@@ -30,23 +34,23 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL ?? 'https://otaru.in',
   ),
   title: {
-    default: 'Otaru — Garments Worth Keeping',
+    default: 'Otaru — Living Image Archive',
     template: '%s | Otaru',
   },
   description:
-    'Craftsmanship outlasts trends. Limited-run, design-led garments built from exceptional fabric and invisible construction quality.',
+    'A living image archive. Limited-run, design-led garments built from exceptional raw textiles, precise architectural cuts, and permanent intention.',
   keywords: [
     'Otaru',
     'garments',
     'craftsmanship',
-    'streetwear',
+    'living image archive',
     'limited edition',
     'design house',
   ],
   openGraph: {
     type: 'website',
     siteName: 'Otaru',
-    locale: 'en_IN',
+    locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
@@ -54,41 +58,39 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-    },
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const headersList = await headers();
-  const nonce = headersList.get('x-nonce') || undefined;
-
   return (
-    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable} cursor-hidden`}>
+    <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
       <body>
-        <a href="#main-content" className="skip-to-content">
-          Skip to main content
+        <a href="#main" className="skip-link">
+          Skip to content
         </a>
-        <LenisProvider>
-          <AnalyticsProvider nonce={nonce}>
-            <WishlistProvider>
-              <CartProvider>
-                <CursorProvider>
-                  <Header />
-                  <main id="main-content" tabIndex={-1}>{children}</main>
-                  <Footer />
-                  <CustomCursor />
-                </CursorProvider>
-              </CartProvider>
-            </WishlistProvider>
-          </AnalyticsProvider>
-        </LenisProvider>
+        <ArchiveTextureOverlay />
+        <CurrencyProvider>
+          <CartProvider>
+            <SizeGuideProvider>
+              <MaterialInspectorProvider>
+                <SiteHeader />
+                <ArchivePageTransition>
+                  <main id="main">{children}</main>
+                </ArchivePageTransition>
+                <SiteFooter />
+                <CartDrawer />
+                <SearchModal />
+                <SizeGuideModal />
+                <MoonProgress />
+                <ScrollProgressLedger />
+              </MaterialInspectorProvider>
+            </SizeGuideProvider>
+          </CartProvider>
+        </CurrencyProvider>
       </body>
     </html>
   );
