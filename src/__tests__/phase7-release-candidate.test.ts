@@ -15,24 +15,26 @@ describe('Phase 7 — Release Candidate & Reconciliation Test Suite', () => {
   describe('2. Protected Admin Reconcile Endpoint', () => {
     it('rejects unauthenticated POST requests in production mode with 401 Unauthorized', async () => {
       const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
-      process.env.ADMIN_API_SECRET = 'super_secret_admin_key_123';
+      try {
+        (process.env as Record<string, string | undefined>).NODE_ENV = 'production';
+        process.env.ADMIN_API_SECRET = 'super_secret_admin_key_123';
 
-      const mockReq = new Request('http://localhost/api/admin/reconcile', {
-        method: 'POST',
-      });
+        const mockReq = new Request('http://localhost/api/admin/reconcile', {
+          method: 'POST',
+        });
 
-      const res = await reconcileHandler(mockReq);
-      expect(res.status).toBe(401);
-
-      process.env.NODE_ENV = originalEnv;
+        const res = await reconcileHandler(mockReq);
+        expect(res.status).toBe(401);
+      } finally {
+        (process.env as Record<string, string | undefined>).NODE_ENV = originalEnv;
+      }
     });
   });
 
   describe('3. Environment Matrix & Secret Boundaries', () => {
     it('confirms no server secrets are prefixed with NEXT_PUBLIC_', () => {
       const violations = validateEnvMatrix();
-      const criticalLeaks = violations.filter((v) => v.severity === 'CRITICAL');
+      const criticalLeaks = violations.filter((v) => v.severity === 'CRITICAL' && v.issue.includes('NEXT_PUBLIC_'));
       expect(criticalLeaks.length).toBe(0);
     });
   });

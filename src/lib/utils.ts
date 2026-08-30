@@ -24,3 +24,12 @@ export function slugify(input: string) {
     .replace(/[\s_-]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
+
+export function absoluteUrl(path: string = "") {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://otaru.in";
+  return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+export function formatPrice(amount: number | string, currency = "USD") {
+  return formatMoney(amount, currency);
+}

@@ -19,7 +19,8 @@ export type AuditEventType =
   | 'REFUND_ISSUED'
   | 'SCHEMA_VALIDATION_FAILED'
   | 'NONCE_CONSUMED'
-  | 'NONCE_REPLAY_BLOCKED';
+  | 'NONCE_REPLAY_BLOCKED'
+  | 'RECONCILIATION_MISMATCH';
 
 export interface AuditEvent {
   seq: number;
@@ -54,6 +55,7 @@ function getChainTail(): { seq: number; hash: string } {
       return { seq: 0, hash: '0'.repeat(64) };
     }
     const last = events[events.length - 1];
+    if (!last) return { seq: 0, hash: '0'.repeat(64) };
     return { seq: last.seq, hash: last.hash };
   } catch {
     return { seq: 0, hash: '0'.repeat(64) };
@@ -149,6 +151,7 @@ export function verifyChainIntegrity(): { intact: boolean; brokenAt?: number } {
 
     for (let i = 0; i < events.length; i++) {
       const event = events[i];
+      if (!event) continue;
       const { hash, ...rest } = event;
       const recomputed = computeEventHash(rest);
       if (recomputed !== hash) {

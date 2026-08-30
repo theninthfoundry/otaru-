@@ -29,9 +29,9 @@ class MetricsRegistry {
     const values = (this.histograms.get(name) || []).slice().sort((a, b) => a - b);
     if (values.length === 0) return { p50: 0, p95: 0, p99: 0, count: 0 };
 
-    const p50 = values[Math.floor(values.length * 0.5)];
-    const p95 = values[Math.floor(values.length * 0.95)];
-    const p99 = values[Math.floor(values.length * 0.99)];
+    const p50 = values[Math.floor(values.length * 0.5)] ?? 0;
+    const p95 = values[Math.floor(values.length * 0.95)] ?? 0;
+    const p99 = values[Math.floor(values.length * 0.99)] ?? 0;
     return { p50, p95, p99, count: values.length };
   }
 

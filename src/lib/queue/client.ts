@@ -18,7 +18,7 @@ class QueueClient {
   }
 
   async enqueue(event: DomainEvent): Promise<boolean> {
-    const eventHandlers = this.handlers.get(event.type) || [];
+    const eventHandlers = this.handlers.get(event.eventType) || [];
     
     // Asynchronous dispatch off main HTTP thread
     setTimeout(async () => {
@@ -26,7 +26,7 @@ class QueueClient {
         try {
           await handler(event);
         } catch (err) {
-          console.error(`[Queue Client] Error executing handler for ${event.type}:`, err);
+          console.error(`[Queue Client] Error executing handler for ${event.eventType}:`, err);
         }
       }
     }, 0);

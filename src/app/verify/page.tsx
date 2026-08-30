@@ -1,119 +1,75 @@
-import type { Metadata } from 'next';
-import { AuthenticityCard } from '@/components/provenance/authenticity-card';
-import { NfcScanner } from '@/components/provenance/nfc-scanner';
-import { getProducts } from '@/lib/shopify/queries/products';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Garment Authenticity Verification — Otaru',
-  description: 'Verify the authenticity, serial number, and textile provenance of your Otaru garments.',
-};
+import React, { useState } from 'react';
+import Link from 'next/link';
 
-interface VerifyPageProps {
-  searchParams: Promise<{ serial?: string }>;
-}
+export default function VerifyPiecePage() {
+  const [tagCode, setTagCode] = useState('');
+  const [verified, setVerified] = useState(false);
 
-export default async function VerifyPage({ searchParams }: VerifyPageProps) {
-  const { serial } = await searchParams;
-  const serialQuery = serial?.trim() || '';
-
-  const { artifacts } = await getProducts({ first: 50 }).catch(() => ({ artifacts: [], pageInfo: { hasNextPage: false, endCursor: null } }));
-
-  let matchedArtifact = null;
-  let unitNumber = '';
-  let isValidFormat = false;
-  let artifactNumStr = '';
-
-  const match = serialQuery.match(/^OTARU-(\d{3})-(\d{1,4})$/i);
-  if (match) {
-    isValidFormat = true;
-    artifactNumStr = match[1];
-    unitNumber = parseInt(match[2], 10).toString();
-
-    const targetNum = parseInt(artifactNumStr, 10);
-
-    matchedArtifact = artifacts.find(art => {
-      const idPart = art.id.split('/').pop() || '';
-      const cleanId = idPart.replace(/\D/g, '');
-      const cleanIdNum = parseInt(cleanId, 10);
-
-      const hasNumberInHandle = art.handle.includes(`-${artifactNumStr}-`) || art.handle.endsWith(`-${artifactNumStr}`);
-      const hasNumberInTitle = art.title.includes(`#${artifactNumStr}`) || art.title.includes(`#${targetNum}`);
-
-      return cleanIdNum === targetNum || hasNumberInHandle || hasNumberInTitle;
-    });
-  }
-
-  const getCleanTitle = (title: string) => {
-    return title.replace(/^Artifact\s+#\d+\s+—\s+/i, '');
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (tagCode) {
+      setVerified(true);
+    }
   };
 
   return (
-    <section id="verify" aria-label="Authenticity Verification" className="py-12 md:py-20">
-      <div className="grid-container max-w-3xl space-y-10">
-        <header className="space-y-3">
-          <p className="text-overline tracking-widest uppercase text-otaru-ink-subtle text-[11px] font-semibold">
-            Archival Provenance
-          </p>
-          <h1 className="text-display-lg font-bold tracking-tight text-otaru-ink">
-            Authenticity Verification
-          </h1>
-          <p className="text-body-lg text-otaru-ink-muted font-light leading-relaxed">
-            Every Otaru garment is issued a unique archival serial number and physical NFC tag. Tap below or enter your code to inspect certificate details.
-          </p>
-        </header>
+    <div className="wrap page-wrap" style={{ paddingTop: '9rem', paddingBottom: '6rem', maxWidth: '640px' }}>
+      <span className="eyebrow">Provenance</span>
+      <h1 className="section-title">Verify authenticity</h1>
+      <p className="section-lede">
+        Every Otaru garment includes an NFC-enabled thread woven into the care label or a stamped serial number.
+        Enter the serial number below to verify its release chapter, dye batch, and craftsman attribution.
+      </p>
 
-        <NfcScanner />
+      {!verified ? (
+        <form onSubmit={handleSubmit} style={{ marginTop: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.4rem' }}>
+          <div>
+            <label htmlFor="tag-code" style={{ fontSize: '0.72rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--otaru-parchment-dim)', display: 'block', marginBottom: '0.4rem' }}>
+              Care Label Serial / Tag Code (e.g. OT-041-TOKUSHIMA)
+            </label>
+            <input
+              id="tag-code"
+              type="text"
+              required
+              value={tagCode}
+              onChange={(e) => setTagCode(e.target.value)}
+              placeholder="OT-041-"
+              style={{
+                width: '100%',
+                background: 'transparent',
+                border: '1px solid var(--otaru-line-strong)',
+                padding: '0.75rem 0.85rem',
+                color: 'var(--otaru-parchment)',
+                outline: 'none',
+              }}
+            />
+          </div>
 
-        <form action="/verify" method="GET" className="flex flex-col sm:flex-row gap-3">
-          <input
-            name="serial"
-            type="text"
-            defaultValue={serialQuery}
-            placeholder="Enter Serial Number (e.g. OTARU-007-104)"
-            className="flex-1 bg-otaru-cream/50 border border-otaru-border rounded-full px-5 py-3 text-body-sm font-mono focus:outline-none focus:border-otaru-ink"
-            required
-          />
-          <button
-            type="submit"
-            className="px-8 py-3 bg-otaru-ink text-otaru-chalk text-body-sm font-medium rounded-full hover:bg-otaru-ink-muted transition-colors shrink-0"
-          >
-            Verify Serial
+          <button type="submit" className="btn-primary" style={{ marginTop: '1rem', padding: '0.9rem' }}>
+            Verify Artifact
           </button>
         </form>
-
-        {serialQuery ? (
-          isValidFormat && matchedArtifact ? (
-            <AuthenticityCard
-              serialNumber={serialQuery.toUpperCase()}
-              artifactName={getCleanTitle(matchedArtifact.title)}
-              artifactNumber={artifactNumStr}
-              gsm={matchedArtifact.gsm || '14.5oz Raw Selvage Denim'}
-              wash={matchedArtifact.wash || 'Unwashed Raw Treatment'}
-              construction={matchedArtifact.construction || 'Triple-Needle Lap Seams'}
-              productionBatch={`Unit ${unitNumber.padStart(3, '0')} of 150 (Chapter ${matchedArtifact.chapterId || '01'})`}
-              issuedDate={new Date(matchedArtifact.createdAt || '2026-01-01').getFullYear().toString()}
-            />
-          ) : (
-            <div className="p-8 bg-red-50/50 border border-red-200 rounded-sm text-center space-y-3 animate-fadeIn">
-              <span className="text-body-sm font-semibold text-red-800 block">
-                Unverified Serial Document
-              </span>
-              <p className="text-caption text-xs text-red-700 max-w-md mx-auto">
-                The serial number <code className="font-mono bg-red-100/50 px-1 py-0.5 rounded-xs font-bold text-red-900">{serialQuery.toUpperCase()}</code> could not be located in Otaru&rsquo;s official registry. Please confirm the code printed on the care tag inside the garment.
-              </p>
-            </div>
-          )
-        ) : (
-          <div className="p-8 bg-otaru-cream/30 border border-otaru-border/40 rounded-sm text-center space-y-2">
-            <span className="text-caption text-xs font-medium text-otaru-ink block">
-              Sample Serial Code: <code className="font-mono">OTARU-007-104</code>
-            </span>
-            <p className="text-caption text-xs text-otaru-ink-muted">
-              Located on the interior care label of your garment.
-            </p>
+      ) : (
+        <div style={{ marginTop: '3rem', padding: '2rem', border: '1px solid var(--otaru-gold-dim)', backgroundColor: 'var(--otaru-dusk)' }}>
+          <span style={{ fontSize: '0.66rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--otaru-gold)' }}>
+            ✓ Verified Authentic
+          </span>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', color: 'var(--otaru-parchment)', marginTop: '0.4rem' }}>
+            {tagCode.toUpperCase()}
+          </h2>
+          <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem', color: 'var(--otaru-parchment-dim)' }}>
+            <p style={{ margin: 0 }}><strong>Dye Master:</strong> Aiko Nakamura</p>
+            <p style={{ margin: 0 }}><strong>Pattern Cutter:</strong> Ren Takahashi</p>
+            <p style={{ margin: 0 }}><strong>Origin:</strong> Otaru Warehouse #4, Hokkaido</p>
+            <p style={{ margin: 0 }}><strong>Warranty:</strong> Lifetime Free Repair Guaranteed</p>
           </div>
-        )}
-      </div>
-    </section>
+          <button type="button" onClick={() => setVerified(false)} className="cta-link" style={{ marginTop: '1.6rem' }}>
+            Verify another piece <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

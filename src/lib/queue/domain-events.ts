@@ -57,3 +57,16 @@ export function createDomainEventEnvelope<T = Record<string, unknown>>(params: {
 
 // Backward-compatible alias
 export type DomainEvent<T = Record<string, unknown>> = DomainEventEnvelope<T>;
+
+export function createDomainEvent<T = Record<string, unknown>>(
+  eventType: DomainEventType,
+  payload: T,
+  aggregateId: string = 'agg_1'
+): DomainEventEnvelope<T> {
+  return createDomainEventEnvelope({
+    eventType,
+    aggregateType: 'Payment',
+    aggregateId,
+    payload,
+  });
+}

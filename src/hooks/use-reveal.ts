@@ -41,7 +41,7 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry && entry.isIntersecting) {
           if (delay > 0) {
             const timer = setTimeout(() => setIsRevealed(true), delay);
             return () => clearTimeout(timer);

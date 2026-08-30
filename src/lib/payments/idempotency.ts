@@ -71,10 +71,10 @@ export async function checkIdempotencyAsync(
       const dbRecord = await prisma.idempotencyRecord.findUnique({
         where: { key },
       });
-      if (dbRecord) {
+      if (dbRecord && dbRecord.responseBody) {
         return {
           status: 'DUPLICATE',
-          cachedResponse: dbRecord.responseJson as Record<string, unknown>,
+          cachedResponse: dbRecord.responseBody as Record<string, unknown>,
         };
       }
     } catch (err: unknown) {
@@ -108,7 +108,9 @@ export function registerIdempotencyKey(
         key,
         email: email.toLowerCase(),
         orderId,
-        responseJson: responsePayload as any,
+        responseBody: responsePayload as any,
+        expiresAt: new Date(Date.now() + KEY_TTL_MS),
+        status: 'COMPLETED',
       },
       update: {},
     }).catch(err => console.warn('[Prisma Idempotency Dual-Write Warning]:', err.message));

@@ -67,6 +67,9 @@ export function verifyCartToken(
     return { valid: false, reason: 'INVALID_FORMAT' };
   }
   const [payloadB64, receivedSig] = parts;
+  if (!payloadB64 || !receivedSig) {
+    return { valid: false, reason: 'INVALID_FORMAT' };
+  }
 
   const expectedSig = crypto
     .createHmac('sha256', getSecret())

@@ -19,7 +19,7 @@ export function sendToDeadLetterQueue(event: DomainEvent, error: string, attempt
     attempts,
   };
   dlqStore.unshift(dlqItem);
-  console.warn(`[DLQ Alert] Event ${event.id} (${event.type}) moved to Dead Letter Queue after ${attempts} attempts: ${error}`);
+  console.warn(`[DLQ Alert] Event ${event.eventId} (${event.eventType}) moved to Dead Letter Queue after ${attempts} attempts: ${error}`);
 }
 
 export function getDeadLetterItems(limit = 50): DeadLetterItem[] {

@@ -29,8 +29,7 @@ export async function middleware(request: NextRequest) {
 
   // 2. Distributed Redis Rate Limiting
   const ip =
-    request.ip ||
-    request.headers.get('x-forwarded-for')?.split(',')[0] ||
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
     request.headers.get('x-real-ip') ||
     '127.0.0.1';
 
@@ -100,13 +99,17 @@ export async function middleware(request: NextRequest) {
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), browsing-topics=()');
 
+  const scriptSrc = isProduction
+    ? `'self' 'nonce-${nonce}' https://www.googletagmanager.com https://connect.facebook.net https://app.posthog.com https://www.clarity.ms https://checkout.razorpay.com`
+    : `'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://app.posthog.com https://www.clarity.ms https://checkout.razorpay.com`;
+
   const csp = [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com https://connect.facebook.net https://app.posthog.com https://www.clarity.ms https://checkout.razorpay.com`,
+    `script-src ${scriptSrc}`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "img-src 'self' data: blob: https://cdn.shopify.com https://cdn.sanity.io https://c.bing.com https://*.clarity.ms",
+    "img-src 'self' data: blob: https://images.unsplash.com https://picsum.photos https://cdn.shopify.com https://cdn.sanity.io https://c.bing.com https://*.clarity.ms",
     "font-src 'self' https://fonts.gstatic.com",
-    "connect-src 'self' https://*.shopify.com https://*.sanity.io https://www.google-analytics.com https://app.posthog.com https://apiv2.shiprocket.in https://*.clarity.ms https://api.razorpay.com",
+    "connect-src 'self' ws: wss: http://localhost:* http://127.0.0.1:* https://*.shopify.com https://*.sanity.io https://www.google-analytics.com https://app.posthog.com https://apiv2.shiprocket.in https://*.clarity.ms https://api.razorpay.com",
     "frame-src 'self' https://checkout.shopify.com https://api.razorpay.com https://*.razorpay.com",
     "object-src 'none'",
     "base-uri 'self'",

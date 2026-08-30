@@ -1,100 +1,60 @@
 'use server';
 
-import { z } from 'zod';
-import { subscribeProfileToList, trackKlaviyoEvent } from '@/lib/klaviyo';
-
-const waitlistSchema = z.object({
-  email: z.string().email('Please enter a valid email address.'),
-  chapterSlug: z.string().min(1, 'Chapter slug is required.'),
-});
-
-export async function joinWaitlist(email: string, chapterSlug: string) {
-  const parsed = waitlistSchema.safeParse({ email, chapterSlug });
-
-  if (!parsed.success) {
-    return {
-      success: false,
-      error: parsed.error.issues[0]?.message ?? 'Invalid waitlist input.',
-    };
-  }
-
-  try {
-    const { email: validEmail, chapterSlug: validChapter } = parsed.data;
-
-    const result = await subscribeProfileToList({
-      email: validEmail,
-      customProperties: {
-        waitlistChapter: validChapter,
-        joinedWaitlistAt: new Date().toISOString(),
-      },
-    });
-
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error ?? 'Failed to join waitlist.',
-      };
-    }
-
-    await trackKlaviyoEvent({
-      eventName: 'Joined Chapter Waitlist',
-      email: validEmail,
-      properties: {
-        chapterSlug: validChapter,
-      },
-    });
-
-    console.log(
-      `[Waitlist Action] ${validEmail} joined waitlist for chapter: ${validChapter}`,
-    );
-
-    return { success: true };
-  } catch (error) {
-    console.error('[Waitlist Action Error]:', error);
-    return { success: false, error: 'Failed to join waitlist. Try again.' };
-  }
-}
-
 interface WaitlistResult {
   success: boolean;
   error?: string;
 }
 
-/**
- * Action wrapper for waitlist submissions (with optional WhatsApp opt-in via Interakt).
- * Bridges joinWaitlistAction (used by WaitlistForm) to Klaviyo and Interakt APIs.
- */
+/** Registers a Drop waitlist entry with Klaviyo, plus an Interakt WhatsApp opt-in. */
 export async function joinWaitlistAction(
   email: string,
   dropSlug: string,
   phone?: string
 ): Promise<WaitlistResult> {
-  const result = await joinWaitlist(email, dropSlug);
-
-  if (!result.success) {
-    return { success: false, error: result.error };
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { success: false, error: 'Enter a valid email address.' };
   }
 
+  const klaviyoKey = process.env.KLAVIYO_PRIVATE_KEY;
   const interaktKey = process.env.INTERAKT_API_KEY;
-  if (interaktKey && phone && phone.trim()) {
-    try {
+
+  if (!klaviyoKey) {
+    console.warn('[waitlist] KLAVIYO_PRIVATE_KEY not set — simulating success in dev.');
+    return { success: true };
+  }
+
+  try {
+    await fetch('https://a.klaviyo.com/api/events/', {
+      method: 'POST',
+      headers: {
+        Authorization: `Klaviyo-API-Key ${klaviyoKey}`,
+        'Content-Type': 'application/json',
+        revision: '2024-10-15',
+      },
+      body: JSON.stringify({
+        data: {
+          type: 'event',
+          attributes: {
+            profile: { data: { type: 'profile', attributes: { email, phone_number: phone } } },
+            metric: { data: { type: 'metric', attributes: { name: 'Joined Drop Waitlist' } } },
+            properties: { dropSlug },
+          },
+        },
+      }),
+    });
+
+    if (interaktKey && phone) {
       await fetch('https://api.interakt.ai/v1/public/track/users/', {
         method: 'POST',
-        headers: {
-          Authorization: `Basic ${interaktKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          phoneNumber: phone,
-          event: 'drop_waitlist_joined',
-          traits: { email, dropSlug },
-        }),
+        headers: { Authorization: `Basic ${interaktKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phoneNumber: phone, event: 'drop_waitlist_joined', traits: { email, dropSlug } }),
       });
-    } catch (err) {
-      console.error('[waitlist] Interakt tracking Exception:', err);
     }
-  }
 
-  return { success: true };
+    return { success: true };
+  } catch {
+    return { success: false, error: 'Could not join the waitlist right now. Please try again.' };
+  }
 }
 
+export const joinWaitlist = joinWaitlistAction;

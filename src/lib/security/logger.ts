@@ -88,12 +88,14 @@ class Logger {
     this.formatLog('INFO', message, context);
   }
 
-  public warn(message: string, context?: LogContext, error?: Error) {
-    this.formatLog('WARN', message, context, error);
+  public warn(message: string, context?: LogContext, error?: unknown) {
+    const errObj = error instanceof Error ? error : error ? new Error(String(error)) : undefined;
+    this.formatLog('WARN', message, context, errObj);
   }
 
-  public error(message: string, error?: Error, context?: LogContext) {
-    this.formatLog('ERROR', message, context, error);
+  public error(message: string, error?: unknown, context?: LogContext) {
+    const errObj = error instanceof Error ? error : error ? new Error(String(error)) : undefined;
+    this.formatLog('ERROR', message, context, errObj);
   }
 
   public audit(message: string, context?: LogContext) {

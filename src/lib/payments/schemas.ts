@@ -30,11 +30,11 @@ const CurrencySchema = z
 
 const RazorpayOrderIdSchema = z
   .string()
-  .regex(/^(order_[A-Za-z0-9]+|OTARU-REG-\d+)$/, 'Invalid Razorpay order ID format.');
+  .regex(/^(order_[A-Za-z0-9_-]+|OTARU-REG-.*)$/, 'Invalid Razorpay order ID format.');
 
 const RazorpayPaymentIdSchema = z
   .string()
-  .regex(/^(pay_[A-Za-z0-9]+)$/, 'Invalid Razorpay payment ID format.');
+  .regex(/^(pay_[A-Za-z0-9_-]+)$/, 'Invalid Razorpay payment ID format.');
 
 const RazorpaySignatureSchema = z
   .string()
@@ -108,17 +108,23 @@ export const RefundRequestSchema = z.object({
 
 export type RefundRequest = z.infer<typeof RefundRequestSchema>;
 
+export type ValidationResult<T> =
+  | { success: true; data: T; error?: undefined }
+  | { success: false; data?: undefined; error: string; issues: z.ZodIssue[] };
+
 export function validateBody<T>(
   schema: z.ZodSchema<T>,
   body: unknown,
-): { data: T; error?: never } | { data?: never; error: string; issues: z.ZodIssue[] } {
+): ValidationResult<T> {
   const result = schema.safeParse(body);
   if (result.success) {
-    return { data: result.data };
+    return { success: true, data: result.data };
   }
   const firstIssue = result.error.issues[0];
+  const errorMessage = firstIssue ? `Validation failed: ${firstIssue.path.join('.')} — ${firstIssue.message}` : 'Validation failed';
   return {
-    error: `Validation failed: ${firstIssue.path.join('.')} — ${firstIssue.message}`,
+    success: false,
+    error: errorMessage,
     issues: result.error.issues,
   };
 }

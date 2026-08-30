@@ -38,6 +38,9 @@ export async function sanityFetch<T>(
   params: Record<string, unknown> = {},
   tags?: string[],
 ): Promise<T> {
+  if (!sanityConfig.token && (!sanityConfig.projectId || sanityConfig.projectId === 'otaru-studio')) {
+    throw new Error('Sanity credentials not configured in local test environment.');
+  }
   return sanityClient.fetch<T>(query, params, {
     next: {
       revalidate: 60,

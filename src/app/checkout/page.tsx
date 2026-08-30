@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/hooks/use-cart';
 import { formatPrice } from '@/lib/utils';
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 
 declare global {
   interface Window {
@@ -32,7 +33,7 @@ type SandboxStep = 'method' | 'details' | 'processing' | 'done' | 'failed';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, setCart } = useCart();
+  const { items, subtotal, clearCart } = useCart();
   const razorpayScriptRef = useRef(false);
 
   const [formData, setFormData] = useState({
@@ -67,10 +68,7 @@ export default function CheckoutPage() {
 
   const idempotencyKey = useMemo(() => crypto.randomUUID(), []);
 
-  const subtotal = cart?.lines.reduce((sum, line) => {
-    return sum + parseFloat(line.cost.totalAmount.amount) * line.quantity;
-  }, 0) || 0;
-  const currency = cart?.cost.subtotalAmount.currencyCode || 'USD';
+  const currency = 'USD';
   const shipping = subtotal > 300 ? 0 : 15;
   const total = subtotal + shipping;
 
@@ -92,20 +90,46 @@ export default function CheckoutPage() {
   };
 
   const createOrder = useCallback(async () => {
+    const payload = {
+      cart: {
+        lines: items.map((line) => ({
+          id: line.id,
+          quantity: line.qty,
+          cost: {
+            totalAmount: {
+              amount: String(line.price * line.qty),
+              currencyCode: 'USD',
+            },
+          },
+          merchandise: {
+            id: line.id,
+            title: line.name,
+            price: {
+              amount: String(line.price),
+            },
+            product: {
+              id: line.id,
+              title: line.name,
+            },
+          },
+        })),
+      },
+      customer: formData,
+    };
     const res = await fetch('/api/checkout/razorpay/order', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Idempotency-Key': idempotencyKey,
       },
-      body: JSON.stringify({ cart, customer: formData }),
+      body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error('Order creation failed.');
     const data = await res.json();
     if (data.cartToken) setCartToken(data.cartToken);
     if (data.nonce) setNonce(data.nonce);
     return data;
-  }, [cart, formData, idempotencyKey]);
+  }, [items, formData, idempotencyKey]);
 
   const runSubmissionOverlay = useCallback((onComplete: () => void) => {
     setIsSubmitting(true);
@@ -123,13 +147,9 @@ export default function CheckoutPage() {
   }, []);
 
   const redirectToSuccess = useCallback((orderNum: string, amount: number) => {
-    const firstLine = cart?.lines[0];
-    const artIdPart = firstLine?.merchandise.product.id.split('/').pop() || '001';
-    const artNumStr = artIdPart.replace(/\D/g, '').padStart(3, '0');
-    setCart(null);
-    document.cookie = 'otaru-cart-id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    router.push(`/checkout/success?orderId=${orderNum}&amount=${amount}&artNum=${artNumStr}`);
-  }, [cart, router, setCart]);
+    clearCart();
+    router.push(`/checkout/success?orderId=${orderNum}&amount=${amount}&artNum=041`);
+  }, [clearCart, router]);
 
   const handleRazorpayPayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -266,7 +286,7 @@ export default function CheckoutPage() {
     setCardCvv('');
   };
 
-  if (!cart || cart.lines.length === 0) {
+  if (items.length === 0) {
     return (
       <div className="grid-container py-20 text-center space-y-4">
         <h1 className="text-display-sm font-semibold text-otaru-ink">Registry Checkout</h1>
@@ -507,30 +527,24 @@ export default function CheckoutPage() {
               </h3>
 
               <div className="divide-y divide-otaru-border/20 max-h-[300px] overflow-y-auto pr-2 space-y-3">
-                {cart.lines.map((line) => (
+                {items.map((line) => (
                   <div key={line.id} className="flex gap-4 pt-3 first:pt-0">
                     <div className="w-14 h-18 bg-otaru-cream rounded-xs overflow-hidden shrink-0">
-                      {line.merchandise.product.featuredImage?.url && (
-                        <img
-                          src={line.merchandise.product.featuredImage.url}
-                          alt={line.merchandise.product.title}
-                          className="w-full h-full object-cover"
-                        />
-                      )}
+                      <ImagePlaceholder ratio="portrait" label="" />
                     </div>
                     <div className="flex-1 flex flex-col justify-between text-xs">
                       <div>
                         <span className="font-medium text-otaru-ink block line-clamp-1">
-                          {line.merchandise.product.title.replace(/^Artifact\s+#\d+\s+—\s+/i, '')}
+                          {line.name}
                         </span>
                         <span className="text-otaru-ink-subtle block font-mono text-[10px] mt-0.5">
-                          {line.merchandise.title}
+                          {line.meta} {line.size ? `· Size ${line.size}` : ''}
                         </span>
                       </div>
                       <div className="flex justify-between items-baseline text-caption mt-1">
-                        <span className="text-otaru-ink-muted font-mono">Qty {line.quantity}</span>
+                        <span className="text-otaru-ink-muted font-mono">Qty {line.qty}</span>
                         <span className="font-semibold text-otaru-ink">
-                          {formatPrice(line.cost.totalAmount.amount, line.cost.totalAmount.currencyCode)}
+                          {formatPrice(line.price * line.qty)}
                         </span>
                       </div>
                     </div>

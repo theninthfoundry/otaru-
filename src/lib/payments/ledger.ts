@@ -88,8 +88,8 @@ export function addTransaction(tx: Omit<Transaction, 'createdAt' | 'history'> & 
   };
 
   const existingIdx = transactions.findIndex(t => t.orderId === tx.orderId);
-  if (existingIdx !== -1) {
-    const existing = transactions[existingIdx];
+  if (existingIdx !== -1 && transactions[existingIdx]) {
+    const existing = transactions[existingIdx]!;
     existing.status = tx.status;
     existing.id = tx.id;
     existing.history.push({
@@ -116,7 +116,7 @@ export function addTransaction(tx: Omit<Transaction, 'createdAt' | 'history'> & 
         orderId: tx.orderId,
         gateway: 'RAZORPAY',
         gatewayOrderId: tx.id,
-        amount: tx.amount,
+        amountMinor: Math.round(tx.amount * 100),
         currency: tx.currency,
         status: tx.status,
         details: tx.details,
@@ -129,7 +129,7 @@ export function addTransaction(tx: Omit<Transaction, 'createdAt' | 'history'> & 
     }).catch(err => console.warn('[Prisma Dual-Write Warning]:', err.message));
   }
 
-  return existingIdx !== -1 ? transactions[existingIdx] : newTx;
+  return (existingIdx !== -1 && transactions[existingIdx]) ? transactions[existingIdx]! : newTx;
 }
 
 export function updateTransactionStatus(
@@ -141,12 +141,12 @@ export function updateTransactionStatus(
   const transactions = getTransactions();
   const txIndex = transactions.findIndex(t => t.id === id || t.orderId === id);
 
-  if (txIndex === -1) {
+  if (txIndex === -1 || !transactions[txIndex]) {
     console.warn(`[Ledger Service] Transaction not found for ID: ${id}`);
     return null;
   }
 
-  const tx = transactions[txIndex];
+  const tx = transactions[txIndex]!;
   tx.status = status;
   tx.history.push({
     status,

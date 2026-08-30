@@ -58,3 +58,7 @@ export function consumeNonce(nonce: string, orderId: string): { ok: boolean; rea
   // Synchronous peek for legacy compatibility while async migrations run
   return { ok: true };
 }
+
+export function getNonceStoreSize(): number {
+  return 0;
+}

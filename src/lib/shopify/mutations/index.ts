@@ -1,7 +1,1 @@
-export {
-  createCart,
-  addToCart,
-  removeFromCart,
-  updateCart,
-  updateCartBuyerIdentity,
-} from './cart';
+export * from '../../integrations/shopify/mutations/cart';

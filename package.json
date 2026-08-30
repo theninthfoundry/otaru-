@@ -4,7 +4,8 @@
   "private": true,
   "description": "Otaru — Garments worth keeping. Editorial luxury garment archive.",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
+    "dev:turbo": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

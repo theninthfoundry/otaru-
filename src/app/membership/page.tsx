@@ -1,112 +1,90 @@
-import type { Metadata } from 'next';
-import { NewsletterForm } from '@/components/layout/newsletter-form';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Private Registry Membership — Otaru',
-  description: 'Join the Otaru Private Registry for early drop access, private passcodes, and exclusive member releases.',
-};
+import React from 'react';
+import Link from 'next/link';
+import { useCurrency } from '@/lib/currency';
+import { RevealOnScroll } from '@/components/ui/RevealOnScroll';
 
 export default function MembershipPage() {
+  const { formatPrice } = useCurrency();
+
   return (
-    <section id="membership" aria-label="Private Registry Membership" className="py-12 md:py-20">
-      <div className="grid-container space-y-16">
-        <header className="space-y-3 max-w-2xl">
-          <p className="text-overline tracking-widest uppercase text-otaru-ink-subtle text-[11px] font-semibold">
-            Private Access & Privileges
-          </p>
-          <h1 className="text-display-lg font-bold tracking-tight text-otaru-ink">
-            The Private Registry
-          </h1>
-          <p className="text-body-lg text-otaru-ink-muted font-light leading-relaxed">
-            Our garments are produced in finite numbers. Registry membership grants early access passcodes before public launches.
-          </p>
-        </header>
+    <div className="wrap page-wrap" style={{ paddingTop: '9rem', paddingBottom: '6rem' }}>
+      <RevealOnScroll>
+        <span className="eyebrow">Archive access</span>
+        <h1 className="section-title">Three tiers. One standard of care.</h1>
+        <p className="section-lede">
+          Membership gives you standing access to new chapters before public release, custom commissions, and a lifetime repair guarantee on every artifact.
+        </p>
+      </RevealOnScroll>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-otaru-chalk border border-otaru-border p-8 rounded-sm space-y-6 flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-overline uppercase tracking-widest text-otaru-ink-subtle text-[10px] font-semibold">
-                Tier 01
-              </span>
-              <h3 className="text-display-sm font-semibold text-otaru-ink">
-                Archival Member
-              </h3>
-              <p className="text-caption text-xs text-otaru-ink-muted leading-relaxed">
-                Complimentary registration for individuals subscribed to the Otaru publication.
+      <div
+        className="tier-grid reveal-stagger"
+        style={{
+          marginTop: '4rem',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '1.6rem',
+        }}
+      >
+        <RevealOnScroll staggerIndex={0}>
+          <div className="tier-card" style={{ border: '1px solid var(--otaru-line)', padding: '2.5rem', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', color: 'var(--otaru-parchment)', margin: 0 }}>Vanguard</h2>
+              <p style={{ marginTop: '0.8rem', color: 'var(--otaru-parchment-dim)', fontSize: '0.92rem', lineHeight: 1.6 }}>
+                Early access to new chapters, 48 hours before public release. First notification when archival runs release.
               </p>
-              <ul className="space-y-2 text-caption text-xs text-otaru-ink pt-4 border-t border-otaru-border/40">
-                <li className="flex items-center gap-2">✓ Chapter drop notifications</li>
-                <li className="flex items-center gap-2">✓ Access to digital verification</li>
-                <li className="flex items-center gap-2">✓ Journal publication access</li>
-              </ul>
             </div>
-            <div className="pt-4">
-              <span className="text-body-sm font-bold text-otaru-ink block">Free Registration</span>
-            </div>
-          </div>
-
-          <div className="bg-otaru-chalk border-2 border-otaru-ink p-8 rounded-sm space-y-6 flex flex-col justify-between shadow-lg relative">
-            <div className="absolute -top-3 left-6 bg-otaru-ink text-otaru-chalk text-[9px] font-bold uppercase tracking-widest px-3 py-0.5 rounded-full">
-              Recommended
-            </div>
-            <div className="space-y-3">
-              <span className="text-overline uppercase tracking-widest text-otaru-ink text-[10px] font-bold">
-                Tier 02
-              </span>
-              <h3 className="text-display-sm font-semibold text-otaru-ink">
-                Symbol Collector
-              </h3>
-              <p className="text-caption text-xs text-otaru-ink-muted leading-relaxed">
-                Unlocked automatically upon purchasing your first Artifact from any Chapter release.
+            <div style={{ marginTop: '2rem' }}>
+              <p style={{ fontSize: '0.82rem', color: 'var(--otaru-gold-dim)', letterSpacing: '0.06em', marginBottom: '1rem' }}>
+                Free with an account
               </p>
-              <ul className="space-y-2 text-caption text-xs text-otaru-ink pt-4 border-t border-otaru-border/40 font-medium">
-                <li className="flex items-center gap-2">★ 15-Minute Early Access Passcodes</li>
-                <li className="flex items-center gap-2">★ Waitlist priority for sold-out pieces</li>
-                <li className="flex items-center gap-2">★ Archival serial number registration</li>
-                <li className="flex items-center gap-2">★ Complimentary doorstep returns</li>
-              </ul>
-            </div>
-            <div className="pt-4">
-              <span className="text-body-sm font-bold text-otaru-ink block">Unlocked via 1st Purchase</span>
+              <Link href="/sign-in" className="btn-primary" style={{ display: 'block', width: '100%', textAlign: 'center', textDecoration: 'none' }}>
+                Join Vanguard
+              </Link>
             </div>
           </div>
+        </RevealOnScroll>
 
-          <div className="bg-otaru-chalk border border-otaru-border p-8 rounded-sm space-y-6 flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-overline uppercase tracking-widest text-otaru-ink-subtle text-[10px] font-semibold">
-                Tier 03
-              </span>
-              <h3 className="text-display-sm font-semibold text-otaru-ink">
-                Founder Circle
-              </h3>
-              <p className="text-caption text-xs text-otaru-ink-muted leading-relaxed">
-                By invitation or lifetime collection of 5+ numbered Artifacts.
+        <RevealOnScroll staggerIndex={1}>
+          <div className="tier-card" style={{ border: '1px solid var(--otaru-gold-dim)', padding: '2.5rem', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', backgroundColor: 'var(--otaru-dusk)' }}>
+            <div>
+              <span style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--otaru-gold)' }}>Recommended</span>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', color: 'var(--otaru-parchment)', marginTop: '0.3rem' }}>Archival</h2>
+              <p style={{ marginTop: '0.8rem', color: 'var(--otaru-parchment-dim)', fontSize: '0.92rem', lineHeight: 1.6 }}>
+                Everything in Vanguard, plus guaranteed allocation on restocks, priority concierge, and archival milestone reservations.
               </p>
-              <ul className="space-y-2 text-caption text-xs text-otaru-ink pt-4 border-t border-otaru-border/40">
-                <li className="flex items-center gap-2">✦ Private prototype previews</li>
-                <li className="flex items-center gap-2">✦ Bespoke tailoring requests</li>
-                <li className="flex items-center gap-2">✦ Dedicated client concierge</li>
-                <li className="flex items-center gap-2">✦ Guaranteed allocation on drops</li>
-              </ul>
             </div>
-            <div className="pt-4">
-              <span className="text-body-sm font-bold text-otaru-ink block">By Archival Invitation</span>
+            <div style={{ marginTop: '2rem' }}>
+              <p style={{ fontSize: '0.82rem', color: 'var(--otaru-gold)', letterSpacing: '0.06em', marginBottom: '1rem' }}>
+                {formatPrice(120)} / year
+              </p>
+              <Link href="/sign-in" className="btn-primary" style={{ display: 'block', width: '100%', textAlign: 'center', textDecoration: 'none' }}>
+                Subscribe to Archival
+              </Link>
             </div>
           </div>
-        </div>
+        </RevealOnScroll>
 
-        <div className="bg-otaru-chalk-warm border border-otaru-border/60 p-8 md:p-12 rounded-sm text-center max-w-xl mx-auto space-y-4">
-          <h3 className="text-heading-md font-semibold text-otaru-ink">
-            Register for Archival Access
-          </h3>
-          <p className="text-body-md text-otaru-ink-muted font-light">
-            Enter your email address to join the Registry and receive private drop passcodes.
-          </p>
-          <div className="pt-2">
-            <NewsletterForm />
+        <RevealOnScroll staggerIndex={2}>
+          <div className="tier-card" style={{ border: '1px solid var(--otaru-line)', padding: '2.5rem', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', color: 'var(--otaru-parchment)', margin: 0 }}>Atelier</h2>
+              <p style={{ marginTop: '0.8rem', color: 'var(--otaru-parchment-dim)', fontSize: '0.92rem', lineHeight: 1.6 }}>
+                By application. Custom commissions, bespoke fittings in our Otaru warehouse, and direct line with our master cutters.
+              </p>
+            </div>
+            <div style={{ marginTop: '2rem' }}>
+              <p style={{ fontSize: '0.82rem', color: 'var(--otaru-gold-dim)', letterSpacing: '0.06em', marginBottom: '1rem' }}>
+                By invitation
+              </p>
+              <a href="mailto:studio@otaru.in" className="btn-secondary" style={{ display: 'block', width: '100%', textAlign: 'center', textDecoration: 'none' }}>
+                Inquire for Atelier
+              </a>
+            </div>
           </div>
-        </div>
+        </RevealOnScroll>
       </div>
-    </section>
+    </div>
   );
 }

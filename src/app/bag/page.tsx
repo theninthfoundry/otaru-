@@ -1,67 +1,53 @@
 'use client';
 
-import { useCart } from '@/hooks/use-cart';
-import { CartItem } from '@/components/cart/cart-item';
-import { CartSummary } from '@/components/cart/cart-summary';
-import { removeItem, updateItemQuantity } from '@/actions/cart';
-import { Spinner } from '@/components/common/spinner';
+import React from 'react';
+import Link from 'next/link';
+import { useCart } from '@/lib/cart';
+import { useCurrency } from '@/lib/currency';
+import { CartLineItem } from '@/components/cart/CartLineItem';
 
 export default function BagPage() {
-  const { cart, isLoading } = useCart();
-
-  if (isLoading) {
-    return (
-      <section id="bag" aria-label="Your Bag">
-        <div className="grid-container flex items-center justify-center min-h-[50vh]">
-          <Spinner />
-        </div>
-      </section>
-    );
-  }
-
-  if (!cart || cart.lines.length === 0) {
-    return (
-      <section id="bag" aria-label="Your Bag">
-        <div className="grid-container">
-          <h1 className="text-heading-lg font-semibold">Bag</h1>
-          <p className="text-body-md text-otaru-ink-muted">
-            Your bag is empty.
-          </p>
-          <a
-            href="/archive"
-            className="text-body-md underline"
-          >
-            Explore the Archive
-          </a>
-        </div>
-      </section>
-    );
-  }
+  const { items, subtotal } = useCart();
+  const { formatPrice } = useCurrency();
 
   return (
-    <section id="bag" aria-label="Your Bag">
-      <div className="grid-container">
-        <h1 className="text-heading-lg font-semibold">Bag</h1>
+    <div className="wrap page-wrap" style={{ paddingTop: '9rem', paddingBottom: '6rem', maxWidth: '700px' }}>
+      <span className="eyebrow">Shopping Bag</span>
+      <h1 className="section-title">Your acquisition bag</h1>
 
-        <div id="cart-items" role="list" className="mt-6 flex flex-col gap-4 max-w-2xl">
-          {cart.lines.map((line) => (
-            <CartItem 
-              key={line.id} 
-              line={line} 
-              onRemove={(id) => {
-                removeItem(id);
-              }} 
-              onUpdateQuantity={(id, qty) => {
-                updateItemQuantity(id, line.merchandise.id, qty);
-              }}
-            />
-          ))}
+      {items.length === 0 ? (
+        <div style={{ marginTop: '3rem', padding: '3rem 0', textAlign: 'center' }}>
+          <p style={{ color: 'var(--otaru-parchment-dim)' }}>Your bag is currently empty.</p>
+          <Link href="/archive" className="btn-primary" style={{ display: 'inline-block', width: 'auto', padding: '0.85rem 1.8rem', marginTop: '1.5rem', textDecoration: 'none' }}>
+            Explore the Archive
+          </Link>
         </div>
+      ) : (
+        <div style={{ marginTop: '3rem' }}>
+          <div>
+            {items.map((line) => (
+              <CartLineItem key={line.id} line={line} />
+            ))}
+          </div>
 
-        <div className="mt-12 max-w-md">
-          <CartSummary cart={cart} />
+          <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--otaru-line)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.1rem', color: 'var(--otaru-parchment)' }}>
+              <span>Subtotal</span>
+              <span>{formatPrice(subtotal)}</span>
+            </div>
+            <p style={{ marginTop: '0.4rem', fontSize: '0.78rem', color: 'var(--otaru-horizon)' }}>
+              Shipping and taxes calculated at checkout.
+            </p>
+            <Link
+              href="/sign-in"
+              className="btn-primary"
+              style={{ display: 'block', width: '100%', textAlign: 'center', marginTop: '1.5rem', padding: '1rem', textDecoration: 'none' }}
+            >
+              Proceed to Checkout
+            </Link>
+          </div>
         </div>
-      </div>
-    </section>
+      )}
+    </div>
   );
 }
