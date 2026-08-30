@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { JapaneseFurinChimes } from '@/components/ui/JapaneseFurinChimes';
 
 export function SiteFooter() {
   const [email, setEmail] = useState('');
@@ -23,9 +24,10 @@ export function SiteFooter() {
         padding: '5.5rem 0 3rem',
         position: 'relative',
         zIndex: 10,
+        overflow: 'hidden',
       }}
     >
-      <div className="wrap">
+      <div className="wrap" style={{ position: 'relative', zIndex: 2 }}>
         {/* Top Ledger Headline */}
         <div style={{ maxWidth: '460px', marginBottom: '3.5rem' }}>
           <Link

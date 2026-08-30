@@ -156,7 +156,7 @@ export function SiteHeader({ onSearchOpen }: SiteHeaderProps) {
         </div>
       </header>
 
-      {/* Mobile Nav Drawer */}
+      {/* Mobile & Fullscreen Nav Drawer */}
       <div
         className={clsx('mobile-nav', isMobileMenuOpen && 'is-open')}
         style={{
@@ -165,20 +165,53 @@ export function SiteHeader({ onSearchOpen }: SiteHeaderProps) {
           backgroundColor: 'var(--otaru-ink)',
           zIndex: 150,
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          gap: '1.6rem',
-          padding: '2rem',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: 'clamp(2rem, 6vw, 5rem)',
           transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(-100%)',
           transition: 'transform var(--duration-base) var(--ease-otaru)',
+          overflow: 'hidden',
         }}
       >
+        {/* Background Glowing Japanese Paper Lanterns Artwork */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            width: 'clamp(340px, 62vw, 900px)',
+            height: '100%',
+            pointerEvents: 'none',
+            zIndex: 0,
+            opacity: 0.45,
+            overflow: 'hidden',
+            userSelect: 'none',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 20%, rgba(0,0,0,1) 100%)',
+            maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 20%, rgba(0,0,0,1) 100%)',
+          }}
+        >
+          <img
+            src="/api/art/lanterns"
+            alt="Japanese Paper Lanterns"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center right',
+              filter: 'contrast(1.18) saturate(1.1) brightness(0.95)',
+            }}
+          />
+        </div>
+
         <button
           type="button"
           className="icon-btn"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-label="Close menu"
-          style={{ position: 'absolute', top: '1.4rem', right: '1.4rem' }}
+          style={{ position: 'absolute', top: '1.4rem', right: '1.4rem', zIndex: 10 }}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
             <line x1="4" y1="4" x2="20" y2="20" />
@@ -186,41 +219,79 @@ export function SiteHeader({ onSearchOpen }: SiteHeaderProps) {
           </svg>
         </button>
 
-        <Link
-          href="/archive"
-          onClick={() => setIsMobileMenuOpen(false)}
-          style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', color: 'var(--otaru-parchment)' }}
+        {/* Navigation Links */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.6rem',
+            maxWidth: '450px',
+          }}
         >
-          Archive
-        </Link>
-        <Link
-          href="/journal"
-          onClick={() => setIsMobileMenuOpen(false)}
-          style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', color: 'var(--otaru-parchment)' }}
+          <span style={{ fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--otaru-gold-dim)', fontFamily: 'monospace' }}>
+            OTARU ARCHIVAL NAVIGATION
+          </span>
+
+          <Link
+            href="/archive"
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3rem)', color: 'var(--otaru-parchment)', textDecoration: 'none' }}
+          >
+            Archive
+          </Link>
+          <Link
+            href="/journal"
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3rem)', color: 'var(--otaru-parchment)', textDecoration: 'none' }}
+          >
+            Journal
+          </Link>
+          <Link
+            href="/studio"
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3rem)', color: 'var(--otaru-parchment)', textDecoration: 'none' }}
+          >
+            Studio
+          </Link>
+          <Link
+            href="/chapters"
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3rem)', color: 'var(--otaru-parchment)', textDecoration: 'none' }}
+          >
+            Chapters
+          </Link>
+          <Link
+            href="/profile"
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{ marginTop: '0.8rem', fontSize: '0.92rem', color: 'var(--otaru-gold)', textDecoration: 'none', letterSpacing: '0.1em', textTransform: 'uppercase' }}
+          >
+            Collector Dossier →
+          </Link>
+        </div>
+
+        {/* Right Corner Craft Watermark */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: '1rem',
+            textAlign: 'right',
+            opacity: 0.45,
+          }}
+          className="hidden md:flex"
         >
-          Journal
-        </Link>
-        <Link
-          href="/studio"
-          onClick={() => setIsMobileMenuOpen(false)}
-          style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', color: 'var(--otaru-parchment)' }}
-        >
-          Studio
-        </Link>
-        <Link
-          href="/chapters"
-          onClick={() => setIsMobileMenuOpen(false)}
-          style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', color: 'var(--otaru-parchment)' }}
-        >
-          Chapters
-        </Link>
-        <Link
-          href="/sign-in"
-          onClick={() => setIsMobileMenuOpen(false)}
-          style={{ marginTop: '1.6rem', fontSize: '1.1rem', color: 'var(--otaru-parchment-dim)' }}
-        >
-          Sign In
-        </Link>
+          <div style={{ writingMode: 'vertical-rl', fontFamily: 'var(--font-display)', fontSize: '2.5rem', letterSpacing: '0.3em', color: 'var(--otaru-parchment)' }}>
+            小樽夜灯
+          </div>
+          <span style={{ fontSize: '0.62rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--otaru-gold-dim)', fontFamily: 'monospace' }}>
+            HOKKAIDO · 43.19° N
+          </span>
+        </div>
       </div>
 
       <style jsx>{`

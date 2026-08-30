@@ -6,10 +6,14 @@ import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { RevealOnScroll } from '@/components/ui/RevealOnScroll';
 import { ScrollZoomImage } from '@/components/ui/ScrollZoomImage';
 import { SashikoGrid, VerticalKanjiStamp, JapaneseCornerBorder } from '@/components/ui/ArchivalBackgroundArt';
+import { ArtBackgroundPlate } from '@/components/ui/ArtBackgroundPlate';
 
 export function StoryJourney() {
   return (
     <section className="block on-ink" id="journey" aria-labelledby="story-heading" style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* Background Glowing Night Lanterns Art Plate */}
+      <ArtBackgroundPlate artName="lanterns" position="top-right" opacity={0.22} maxWidth="780px" maxHeight="560px" />
+
       {/* Background Sashiko Grid */}
       <SashikoGrid opacity={0.035} />
 
