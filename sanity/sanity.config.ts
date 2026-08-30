@@ -7,6 +7,7 @@ import { sanityConfig } from './env';
 export default defineConfig({
   name: 'otaru',
   title: 'Otaru Studio',
+  basePath: '/admin/studio',
 
   projectId: sanityConfig.projectId || 'otaru-studio',
   dataset: sanityConfig.dataset || 'production',

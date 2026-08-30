@@ -3,7 +3,7 @@
 import React from 'react';
 
 interface ArtBackgroundPlateProps {
-  artName: 'great-wave' | 'cherry-blossom' | 'poppies';
+  artName: 'great-wave' | 'cherry-blossom' | 'poppies' | 'pine-tree' | 'mount-fuji' | 'lanterns' | 'furin';
   opacity?: number;
   position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'center' | 'center-right' | 'center-left' | 'full';
   maxWidth?: string;

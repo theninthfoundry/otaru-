@@ -21,6 +21,19 @@ const ART_FILES: Record<string, string[]> = {
     'media_1788082479943.jpg',
     'media_1788082526036.png',
   ],
+  'pine-tree': [
+    'media_1788085046104.png',
+    'media_1788084610324.png',
+  ],
+  'mount-fuji': [
+    'media_1788085181202.png',
+  ],
+  'lanterns': [
+    'media_1788085315253.png',
+  ],
+  'furin': [
+    'media_1788085342167.png',
+  ],
 };
 
 export async function GET(
@@ -45,6 +58,14 @@ export async function GET(
     targetFilename = 'media_1788082526036.png';
   } else if (name === 'great-wave') {
     targetFilename = 'media_1788082684667.jpg';
+  } else if (name === 'pine-tree') {
+    targetFilename = 'media_1788085046104.png';
+  } else if (name === 'mount-fuji') {
+    targetFilename = 'media_1788085181202.png';
+  } else if (name === 'lanterns') {
+    targetFilename = 'media_1788085315253.png';
+  } else if (name === 'furin' || name === 'wind-chimes') {
+    targetFilename = 'media_1788085342167.png';
   }
 
   if (targetFilename) {
