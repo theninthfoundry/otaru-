@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
 import { validateBody, RefundRequestSchema } from '@/lib/payments/schemas';
 import { checkPaymentRateLimit } from '@/lib/payments/payment-rate-limiter';
 import { getTransactions, updateTransactionStatus } from '@/lib/payments/ledger';
@@ -7,10 +6,9 @@ import { auditLog } from '@/lib/payments/audit-trail';
 import { logger } from '@/lib/security/logger';
 
 export async function POST(request: Request) {
-  const headersList = await headers();
   const ip =
-    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    headersList.get('x-real-ip') ||
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
     '127.0.0.1';
 
   try {
@@ -37,7 +35,7 @@ export async function POST(request: Request) {
     }
 
     const validation = validateBody(RefundRequestSchema, rawBody);
-    if (validation.error) {
+    if (!validation.success) {
       return NextResponse.json(
         { error: validation.error, code: 'VALIDATION_FAILED' },
         { status: 400 },

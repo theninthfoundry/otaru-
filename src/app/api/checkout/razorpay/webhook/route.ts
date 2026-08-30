@@ -32,14 +32,13 @@ const MAX_WEBHOOK_AGE_MS = 5 * 60 * 1000;
 
 export async function POST(request: Request) {
   const body = await request.text();
-  const headersList = await headers();
 
-  const razorpaySignature = headersList.get('x-razorpay-signature');
+  const razorpaySignature = request.headers.get('x-razorpay-signature');
   const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
 
   const ip =
-    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    headersList.get('x-real-ip') ||
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
     '0.0.0.0';
 
   if (webhookSecret) {

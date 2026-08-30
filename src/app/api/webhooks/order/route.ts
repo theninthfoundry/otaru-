@@ -1,4 +1,4 @@
-import { NextResponse } from 'next';
+import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import crypto from 'crypto';
 import { sendOrderConfirmationWhatsApp, sendShippingUpdateWhatsApp } from '@/lib/interakt';

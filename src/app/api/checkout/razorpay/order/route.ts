@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
 import { validateBody, OrderRequestSchema } from '@/lib/payments/schemas';
 import { checkPaymentRateLimit } from '@/lib/payments/payment-rate-limiter';
 import { checkIdempotencyAsync, registerIdempotencyKey } from '@/lib/payments/idempotency';
@@ -11,12 +10,11 @@ import { auditLog } from '@/lib/payments/audit-trail';
 import { logger } from '@/lib/security/logger';
 
 export async function POST(request: Request) {
-  const headersList = await headers();
   const ip =
-    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    headersList.get('x-real-ip') ||
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
     '127.0.0.1';
-  const idempotencyKey = headersList.get('Idempotency-Key') ?? headersList.get('idempotency-key');
+  const idempotencyKey = request.headers.get('Idempotency-Key') ?? request.headers.get('idempotency-key');
   const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true';
 
   let email = '';
@@ -45,7 +43,7 @@ export async function POST(request: Request) {
     }
 
     const validation = validateBody(OrderRequestSchema, rawBody);
-    if (validation.error) {
+    if (!validation.success) {
       auditLog({
         type: 'SCHEMA_VALIDATION_FAILED',
         details: `Order schema validation failed: ${validation.error}`,
