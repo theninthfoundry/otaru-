@@ -99,9 +99,8 @@ export async function middleware(request: NextRequest) {
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), browsing-topics=()');
 
-  const scriptSrc = isProduction
-    ? `'self' 'nonce-${nonce}' https://www.googletagmanager.com https://connect.facebook.net https://app.posthog.com https://www.clarity.ms https://checkout.razorpay.com`
-    : `'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://app.posthog.com https://www.clarity.ms https://checkout.razorpay.com`;
+  const scriptSrc =
+    "'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://connect.facebook.net https://app.posthog.com https://www.clarity.ms https://checkout.razorpay.com";
 
   const csp = [
     "default-src 'self'",

@@ -11,6 +11,17 @@
   --otaru-torii: #b54932;
   --otaru-line: rgba(248, 245, 238, 0.12);
   --otaru-line-strong: rgba(248, 245, 238, 0.24);
+
+  --color-ink: var(--otaru-ink);
+  --color-ink-muted: var(--otaru-dusk);
+  --color-ink-subtle: var(--otaru-dusk-2);
+  --color-chalk: var(--otaru-parchment);
+  --color-chalk-warm: var(--otaru-parchment-dim);
+  --color-cream: var(--otaru-parchment);
+  --color-stone: var(--otaru-horizon);
+  --color-stone-light: var(--otaru-parchment-dim);
+  --color-stone-dark: var(--otaru-dusk);
+  --color-chapter-accent: var(--otaru-gold);
   
   --font-display: "Newsreader", "Iowan Old Style", "Playfair Display", serif;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
