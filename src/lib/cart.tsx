@@ -25,10 +25,8 @@ interface CartContextType {
   clearCart: () => void;
 }
 
-const INITIAL_CART: CartLineItem[] = [
-  { id: '042-M', name: 'Kiryū Wrap Trouser', meta: 'Washed silk blend', price: 310, qty: 1, size: 'M' },
-  { id: '044-One Size', name: 'Ōmi Hemp Tote', meta: 'Raw hemp canvas', price: 165, qty: 2, size: 'One Size' }
-];
+// Initial cart starts strictly empty for real collectors
+const INITIAL_CART: CartLineItem[] = [];
 
 const CartContext = createContext<CartContextType>({
   items: [],
@@ -47,77 +45,107 @@ const CartContext = createContext<CartContextType>({
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartLineItem[]>(INITIAL_CART);
   const [isOpen, setIsOpen] = useState(false);
-  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem('otaru_cart');
       if (saved) {
-        setItems(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        // Clear out old legacy development mock items if present
+        const isLegacyMock =
+          Array.isArray(parsed) &&
+          parsed.some((item) => item.id === '042-M' || item.name === 'Kiryū Wrap Trouser');
+
+        if (isLegacyMock) {
+          localStorage.removeItem('otaru_cart');
+          setItems([]);
+        } else if (Array.isArray(parsed)) {
+          setItems(parsed);
+        }
       }
     } catch {
       // Ignore localStorage errors
     }
-    setIsHydrated(true);
   }, []);
 
-  useEffect(() => {
-    if (isHydrated) {
-      try {
-        localStorage.setItem('otaru_cart', JSON.stringify(items));
-      } catch {
-        // Ignore localStorage errors
-      }
-    }
-  }, [items, isHydrated]);
+  const itemCount = useMemo(
+    () => items.reduce((sum, item) => sum + item.qty, 0),
+    [items]
+  );
+
+  const subtotal = useMemo(
+    () => items.reduce((sum, item) => sum + item.price * item.qty, 0),
+    [items]
+  );
 
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
   const toggleCart = () => setIsOpen((prev) => !prev);
 
   const addToCart = (newItem: Omit<CartLineItem, 'qty'> & { qty?: number }) => {
-    const quantity = newItem.qty ?? 1;
     setItems((prev) => {
       const existing = prev.find((item) => item.id === newItem.id);
+      let updated: CartLineItem[];
       if (existing) {
-        return prev.map((item) =>
-          item.id === newItem.id ? { ...item, qty: item.qty + quantity } : item
+        updated = prev.map((item) =>
+          item.id === newItem.id
+            ? { ...item, qty: item.qty + (newItem.qty ?? 1) }
+            : item
         );
+      } else {
+        updated = [...prev, { ...newItem, qty: newItem.qty ?? 1 }];
       }
-      return [...prev, { ...newItem, qty: quantity }];
+      try {
+        localStorage.setItem('otaru_cart', JSON.stringify(updated));
+      } catch {
+        // Ignore localStorage errors
+      }
+      return updated;
     });
-    openCart();
+    setIsOpen(true);
   };
 
   const updateQty = (id: string, delta: number) => {
-    setItems((prev) =>
-      prev
+    setItems((prev) => {
+      const updated = prev
         .map((item) => {
           if (item.id === id) {
-            const nextQty = item.qty + delta;
-            return nextQty > 0 ? { ...item, qty: nextQty } : null;
+            const newQty = item.qty + delta;
+            return newQty > 0 ? { ...item, qty: newQty } : null;
           }
           return item;
         })
-        .filter((item): item is CartLineItem => item !== null)
-    );
+        .filter((item): item is CartLineItem => item !== null);
+
+      try {
+        localStorage.setItem('otaru_cart', JSON.stringify(updated));
+      } catch {
+        // Ignore localStorage errors
+      }
+      return updated;
+    });
   };
 
   const removeFromCart = (id: string) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+    setItems((prev) => {
+      const updated = prev.filter((item) => item.id !== id);
+      try {
+        localStorage.setItem('otaru_cart', JSON.stringify(updated));
+      } catch {
+        // Ignore localStorage errors
+      }
+      return updated;
+    });
   };
 
   const clearCart = () => {
     setItems([]);
+    try {
+      localStorage.removeItem('otaru_cart');
+    } catch {
+      // Ignore localStorage errors
+    }
   };
-
-  const itemCount = useMemo(() => {
-    return items.reduce((sum, item) => sum + item.qty, 0);
-  }, [items]);
-
-  const subtotal = useMemo(() => {
-    return items.reduce((sum, item) => sum + item.price * item.qty, 0);
-  }, [items]);
 
   return (
     <CartContext.Provider
@@ -141,5 +169,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useCart() {
-  return useContext(CartContext);
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
 }

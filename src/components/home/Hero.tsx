@@ -60,7 +60,7 @@ const SLIDE_DURATION = 8500;
 export function Hero() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [isReady, setIsReady] = useState(false);
-  const [isTextTransitioning, setIsTextTransitioning] = useState(false);
+  const [textAnimState, setTextAnimState] = useState<'idle' | 'exit' | 'enter'>('idle');
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
   const [windowHeight, setWindowHeight] = useState(900);
@@ -70,7 +70,7 @@ export function Hero() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsReady(true);
-    }, 80);
+    }, 60);
 
     const interval = setInterval(() => {
       handleSlideChange((prev) => (prev + 1) % HERO_SLIDES.length);
@@ -82,7 +82,7 @@ export function Hero() {
     };
   }, []);
 
-  // 2. High-Performance 60fps Scroll-Responsive Tracking
+  // 2. High-Performance 60fps Scroll Tracking
   useEffect(() => {
     setWindowHeight(window.innerHeight || 900);
 
@@ -111,14 +111,17 @@ export function Hero() {
   }, []);
 
   const handleSlideChange = (newIndexOrFn: number | ((prev: number) => number)) => {
-    setIsTextTransitioning(true);
+    setTextAnimState('exit');
     setTimeout(() => {
       setActiveSlide(newIndexOrFn);
-      setIsTextTransitioning(false);
-    }, 320);
+      setTextAnimState('enter');
+      setTimeout(() => {
+        setTextAnimState('idle');
+      }, 480);
+    }, 260);
   };
 
-  // Subtle Mouse Parallax & Perspective Tilt
+  // Subtle Mouse Parallax
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
@@ -126,8 +129,8 @@ export function Hero() {
     const normalizedY = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
 
     setMouseOffset({
-      x: Math.max(-1, Math.min(1, normalizedX)) * 12,
-      y: Math.max(-1, Math.min(1, normalizedY)) * 12,
+      x: Math.max(-1, Math.min(1, normalizedX)) * 10,
+      y: Math.max(-1, Math.min(1, normalizedY)) * 10,
     });
   };
 
@@ -137,24 +140,25 @@ export function Hero() {
 
   const currentSlide = HERO_SLIDES[activeSlide] ?? HERO_SLIDES[0]!;
 
-  // Scroll Progress (0 at top, 1 when hero scrolled out)
+  // Refined Scroll Kinematics:
   const scrollFraction = Math.min(1, Math.max(0, scrollY / (windowHeight || 900)));
 
-  // Dynamic Scroll-Responsive Transformations:
-  // - Background Zoom: zooms from 1.0 up to 1.32x as collector scrolls
-  const backgroundZoomScale = 1.0 + scrollFraction * 0.32;
-  const backgroundParallaxY = scrollY * 0.32; // Gentle downward counter-drift
-  const backgroundOpacity = Math.max(0.2, 0.82 - scrollFraction * 0.55);
+  // Background: subtle zoom from 1.0 to 1.14x, slow atmospheric drift
+  const backgroundZoomScale = 1.0 + scrollFraction * 0.14;
+  const backgroundParallaxY = scrollY * 0.22;
+  const backgroundOpacity = Math.max(0.32, 0.85 - scrollFraction * 0.45);
 
-  // - Text Transition: moves upward faster, scales down, blurs, and fades
-  const textTranslateY = -scrollY * 0.52;
-  const textScale = Math.max(0.82, 1 - scrollFraction * 0.22);
-  const textOpacity = Math.max(0, 1 - scrollFraction * 1.6);
-  const textBlur = scrollFraction * 8;
+  // Text: stays razor crisp in top 25% of scroll, then lifts gently upward
+  const textTranslateY = -scrollY * 0.32;
+  const textOpacity =
+    scrollFraction < 0.25
+      ? 1
+      : Math.max(0, 1 - Math.pow((scrollFraction - 0.25) / 0.75, 1.25));
+  const textBlur = scrollFraction > 0.45 ? (scrollFraction - 0.45) * 5 : 0;
 
-  // - Floating Calligraphy Parallax
-  const kanjiParallaxY = -scrollY * 0.75;
-  const kanjiScale = 1 + scrollFraction * 0.25;
+  // Floating Calligraphy Parallax Drift
+  const kanjiParallaxY = -scrollY * 0.45;
+  const kanjiOpacity = Math.max(0.015, 0.045 - scrollFraction * 0.035);
 
   return (
     <div
@@ -169,7 +173,7 @@ export function Hero() {
         backgroundColor: '#070d14',
       }}
     >
-      {/* Scroll-Responsive Background Visual Layer with Zoom In */}
+      {/* Scroll-Responsive Background Visual Layer */}
       {HERO_SLIDES.map((slide, idx) => {
         const isActive = idx === activeSlide;
         return (
@@ -186,10 +190,10 @@ export function Hero() {
               opacity: isActive ? backgroundOpacity : 0,
               pointerEvents: 'none',
               transform: isActive
-                ? `translate3d(${mouseOffset.x * -0.4}px, ${backgroundParallaxY + mouseOffset.y * -0.4}px, 0) scale(${backgroundZoomScale})`
-                : 'none',
+                ? `translate3d(${mouseOffset.x * -0.3}px, ${backgroundParallaxY + mouseOffset.y * -0.3}px, 0) scale(${backgroundZoomScale})`
+                : 'scale(1.02)',
               transition: isActive
-                ? 'opacity 1.2s ease, transform 0.08s linear'
+                ? 'opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 0.08s linear'
                 : 'opacity 0.8s ease',
               willChange: 'transform, opacity',
             }}
@@ -197,7 +201,7 @@ export function Hero() {
         );
       })}
 
-      {/* Atmospheric Gradients */}
+      {/* Vignette Atmosphere Gradients */}
       <div
         className="hero-vignette-overlay"
         aria-hidden="true"
@@ -207,11 +211,11 @@ export function Hero() {
           pointerEvents: 'none',
           zIndex: 1,
           background:
-            'linear-gradient(90deg, rgba(7,13,20,0.74) 0%, rgba(7,13,20,0.35) 48%, rgba(7,13,20,0.12) 75%), linear-gradient(0deg, rgba(7,13,20,0.9) 0%, transparent 35%), linear-gradient(180deg, rgba(7,13,20,0.55) 0%, transparent 22%)',
+            'linear-gradient(90deg, rgba(7,13,20,0.78) 0%, rgba(7,13,20,0.38) 48%, rgba(7,13,20,0.14) 75%), linear-gradient(0deg, rgba(7,13,20,0.92) 0%, transparent 35%), linear-gradient(180deg, rgba(7,13,20,0.55) 0%, transparent 22%)',
         }}
       />
 
-      {/* Floating Calligraphy Watermark with Scroll Parallax Drift */}
+      {/* Floating Calligraphy Watermark with Parallax Drift */}
       <div
         aria-hidden="true"
         style={{
@@ -224,29 +228,30 @@ export function Hero() {
           fontFamily: 'var(--font-display)',
           fontSize: 'clamp(5rem, 14vw, 13rem)',
           letterSpacing: '0.25em',
-          color: 'rgba(244, 240, 235, 0.038)',
+          color: 'var(--otaru-parchment)',
+          opacity: kanjiOpacity,
           userSelect: 'none',
-          transform: `translate3d(${mouseOffset.x * 0.8}px, ${kanjiParallaxY + mouseOffset.y * 0.8}px, 0) scale(${kanjiScale})`,
-          transition: 'transform 0.1s linear',
-          willChange: 'transform',
+          transform: `translate3d(0, ${kanjiParallaxY}px, 0)`,
+          transition: 'transform 0.08s linear, opacity 0.3s ease',
+          willChange: 'transform, opacity',
         }}
       >
         {currentSlide.kanji}
       </div>
 
-      {/* Hero Content with Direct Scroll-Responsive Zoom/Fade Transition */}
+      {/* Kinetic Hero Content Container */}
       <div
         id="heroContent"
         className={clsx('hero-content', isReady && 'is-ready')}
         style={{
           opacity: textOpacity,
-          transform: `translate3d(0, ${textTranslateY}px, 0) scale(${textScale})`,
+          transform: `translate3d(0, ${textTranslateY}px, 0)`,
           filter: textBlur > 0.1 ? `blur(${textBlur}px)` : 'none',
           willChange: 'transform, opacity, filter',
-          transition: 'transform 0.08s linear, opacity 0.08s linear',
+          transition: 'transform 0.08s linear, opacity 0.1s linear',
         }}
       >
-        {/* Topbar */}
+        {/* Topbar Metadata */}
         <div className="hero-topbar">
           <span className="tracking-widest">Otaru / Design House</span>
           <span className="text-[var(--otaru-gold)] opacity-90">{currentSlide.campaign}</span>
@@ -257,10 +262,18 @@ export function Hero() {
         <div
           className="hero-main"
           style={{
-            transform: isTextTransitioning ? 'scale(0.96) translateY(10px)' : 'scale(1) translateY(0)',
-            opacity: isTextTransitioning ? 0.2 : 1,
-            filter: isTextTransitioning ? 'blur(3px)' : 'none',
-            transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, filter 0.35s ease',
+            transform:
+              textAnimState === 'exit'
+                ? 'translate3d(0, -12px, 0)'
+                : textAnimState === 'enter'
+                ? 'translate3d(0, 12px, 0)'
+                : 'translate3d(0, 0, 0)',
+            opacity: textAnimState === 'exit' ? 0.15 : 1,
+            filter: textAnimState === 'exit' ? 'blur(3px)' : 'none',
+            transition:
+              textAnimState === 'exit'
+                ? 'transform 0.26s cubic-bezier(0.4, 0, 1, 1), opacity 0.26s ease, filter 0.26s ease'
+                : 'transform 0.48s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.48s ease, filter 0.48s ease',
             willChange: 'transform, opacity, filter',
           }}
         >
@@ -269,7 +282,7 @@ export function Hero() {
             className="hero-title"
             style={{
               whiteSpace: 'pre-line',
-              textShadow: '0 4px 24px rgba(0,0,0,0.6)',
+              textShadow: '0 4px 28px rgba(0,0,0,0.65), 0 0 50px rgba(217,189,131,0.06)',
             }}
           >
             {currentSlide.title}
@@ -321,7 +334,8 @@ export function Hero() {
                     border: 'none',
                     padding: 0,
                     cursor: 'pointer',
-                    transition: 'width 0.45s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease',
+                    transition:
+                      'width 0.45s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease',
                   }}
                 >
                   {isSelected && (
@@ -343,7 +357,6 @@ export function Hero() {
             })}
           </div>
 
-          {/* Bottom Bar */}
           <div className="hero-bottom">
             <span>Kyoto · Tokyo · Otaru</span>
             <span>{currentSlide.stats}</span>
@@ -352,7 +365,6 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Vertical Origin Stamp */}
       <span className="hero-origin" aria-hidden="true">
         {currentSlide.origin}
       </span>
