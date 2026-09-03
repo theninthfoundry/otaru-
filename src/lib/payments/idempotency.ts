@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { prisma } from '@/lib/db/prisma';
+import { Prisma } from '@prisma/client';
 
 const KEY_TTL_MS = 24 * 60 * 60 * 1000;
 
@@ -108,7 +109,7 @@ export function registerIdempotencyKey(
         key,
         email: email.toLowerCase(),
         orderId,
-        responseBody: responsePayload as any,
+        responseBody: responsePayload as Prisma.InputJsonValue,
         expiresAt: new Date(Date.now() + KEY_TTL_MS),
         status: 'COMPLETED',
       },

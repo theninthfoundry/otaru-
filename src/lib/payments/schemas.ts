@@ -96,6 +96,10 @@ export const VerifyRequestSchema = z.object({
   mock: z.boolean().optional().default(false),
   nonce: z.string().uuid('Nonce must be a valid UUID.').optional(),
   cartToken: z.string().min(10).optional(),
+  customerEmail: z.string().email().optional(),
+  customerPhone: z.string().optional(),
+  customerName: z.string().optional(),
+  amount: z.string().optional(),
 }).strict();
 
 export type VerifyRequest = z.infer<typeof VerifyRequestSchema>;

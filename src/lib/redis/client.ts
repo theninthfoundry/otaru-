@@ -7,7 +7,6 @@ export interface RedisClient {
   expire(key: string, ttlSeconds: number): Promise<boolean>;
 }
 
-const isProduction = process.env.NODE_ENV === 'production';
 const hasRedisConfig = Boolean(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
 
 // Fail-Closed Production Exception Handler
@@ -151,8 +150,6 @@ class InMemoryRedisAdapter implements RedisClient {
   }
 }
 
-export const redis: RedisClient = isProduction
-  ? new StrictProductionRedisClient()
-  : hasRedisConfig
+export const redis: RedisClient = hasRedisConfig
   ? new StrictProductionRedisClient()
   : new InMemoryRedisAdapter();

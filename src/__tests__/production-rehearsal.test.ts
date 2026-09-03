@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { transitionOrderState, transitionPaymentState, transitionInventoryState, InvalidStateTransitionError } from '@/lib/commerce/state-machine';
+import { transitionOrderState, transitionInventoryState, InvalidStateTransitionError } from '@/lib/commerce/state-machine';
 import { executeDropRehearsal } from '@/lib/testing/drop-rehearsal';
 import { runProductionVerification } from '@/lib/testing/production-verifier';
 

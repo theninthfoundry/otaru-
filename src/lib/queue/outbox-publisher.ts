@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db/prisma';
 import { queueClient } from './client';
-import { DomainEventEnvelope } from './domain-events';
+import { DomainEventEnvelope, DomainEventType, AggregateType } from './domain-events';
 
 export async function processPendingOutboxEvents(
   batchSize = 20,
@@ -51,12 +51,12 @@ export async function processPendingOutboxEvents(
       try {
         const domainEvt: DomainEventEnvelope = {
           eventId: record.eventId,
-          eventType: record.type as any,
+          eventType: record.type as DomainEventType,
           version: 1,
           occurredAt: record.createdAt.toISOString(),
-          aggregateType: (record.aggregateType as any) ?? 'Order',
+          aggregateType: (record.aggregateType as AggregateType) ?? 'Order',
           aggregateId: record.aggregateId ?? record.eventId,
-          payload: record.payload as any,
+          payload: (record.payload as Record<string, unknown>) ?? {},
           metadata: {},
         };
 

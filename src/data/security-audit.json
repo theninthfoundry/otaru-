@@ -1527,5 +1527,4454 @@
     "details": "Drop checkout successful for purchaser_24@otaru.in",
     "prevHash": "ab10fa72c0de11d1dd10e7bc22c05aeba6d30d0b63ba55b15fae12f439b7a88b",
     "hash": "221ca949b67d9ac43075f99636688d7232f1d4003a1fe2ab408116b3bf509b95"
+  },
+  {
+    "seq": 152,
+    "timestamp": "2026-08-31T09:12:18.198Z",
+    "type": "ORDER_CREATED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Order 1",
+    "prevHash": "221ca949b67d9ac43075f99636688d7232f1d4003a1fe2ab408116b3bf509b95",
+    "hash": "82979f680697a33be5a60727a93a7756cd9915e8252718ac829393c98e2239f5"
+  },
+  {
+    "seq": 153,
+    "timestamp": "2026-08-31T09:12:18.202Z",
+    "type": "PAYMENT_VERIFIED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Payment Verified 1",
+    "prevHash": "82979f680697a33be5a60727a93a7756cd9915e8252718ac829393c98e2239f5",
+    "hash": "fafeb8fb554c432cfee3b3c7c7c80b952194822961288611b6c47a19f0319e45"
+  },
+  {
+    "seq": 154,
+    "timestamp": "2026-08-31T09:12:18.204Z",
+    "type": "NONCE_CONSUMED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Nonce Consumed 1",
+    "prevHash": "fafeb8fb554c432cfee3b3c7c7c80b952194822961288611b6c47a19f0319e45",
+    "hash": "5be1c762fa032aba370c0d7e2c8e60a776a256aa4b171687ac239c56b0e0a017"
+  },
+  {
+    "seq": 155,
+    "timestamp": "2026-08-31T09:12:18.274Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "5be1c762fa032aba370c0d7e2c8e60a776a256aa4b171687ac239c56b0e0a017",
+    "hash": "60e00f8ffc3cf595a376a3d243c1c94707f8108caef151a2241f9b698c085290"
+  },
+  {
+    "seq": 156,
+    "timestamp": "2026-08-31T09:12:18.278Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "60e00f8ffc3cf595a376a3d243c1c94707f8108caef151a2241f9b698c085290",
+    "hash": "200f8132305bce795c739c8a7feac6b748a0e6b6854f81a08eb6d1de6b89e2e7"
+  },
+  {
+    "seq": 157,
+    "timestamp": "2026-08-31T09:12:18.285Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "200f8132305bce795c739c8a7feac6b748a0e6b6854f81a08eb6d1de6b89e2e7",
+    "hash": "a8700cdea38cf4280200c1e69d546bee6f6ed0098eb58db17b65abc1a8ca090d"
+  },
+  {
+    "seq": 158,
+    "timestamp": "2026-08-31T09:12:18.289Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "a8700cdea38cf4280200c1e69d546bee6f6ed0098eb58db17b65abc1a8ca090d",
+    "hash": "8044a1ca0df386a8bcfd10dc6ef85fc4a58a322ebce2efac1be266c9a671e152"
+  },
+  {
+    "seq": 159,
+    "timestamp": "2026-08-31T09:12:18.291Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "8044a1ca0df386a8bcfd10dc6ef85fc4a58a322ebce2efac1be266c9a671e152",
+    "hash": "e3c0d065abdb8c533b8199b87bd8800674df92570629fa71db2a5d15a67c4e27"
+  },
+  {
+    "seq": 160,
+    "timestamp": "2026-08-31T09:12:18.295Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "e3c0d065abdb8c533b8199b87bd8800674df92570629fa71db2a5d15a67c4e27",
+    "hash": "2d14bdb83bcba7fe3e762a6299a72e56fb4374ceea8aecf8d31a9e827942727c"
+  },
+  {
+    "seq": 161,
+    "timestamp": "2026-08-31T09:12:18.297Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "2d14bdb83bcba7fe3e762a6299a72e56fb4374ceea8aecf8d31a9e827942727c",
+    "hash": "3030b02380eade23614269d0fb81edb6f0f00f1967576c2ed6fc73d3053813e2"
+  },
+  {
+    "seq": 162,
+    "timestamp": "2026-08-31T09:12:18.300Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "3030b02380eade23614269d0fb81edb6f0f00f1967576c2ed6fc73d3053813e2",
+    "hash": "b132ff32cac2c3f8af58645fbe110f27059d2a661ee45e6d9d7a656066afb8c0"
+  },
+  {
+    "seq": 163,
+    "timestamp": "2026-08-31T09:12:18.302Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "b132ff32cac2c3f8af58645fbe110f27059d2a661ee45e6d9d7a656066afb8c0",
+    "hash": "5653773505d214f90a2f24b4a5783d84fee14c36967ee9937ed3221e2fb36816"
+  },
+  {
+    "seq": 164,
+    "timestamp": "2026-08-31T09:12:18.306Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "5653773505d214f90a2f24b4a5783d84fee14c36967ee9937ed3221e2fb36816",
+    "hash": "403390713c55cffee0cb60198e90b7c4a83371b86c6aaba603e8557da1801dcb"
+  },
+  {
+    "seq": 165,
+    "timestamp": "2026-08-31T09:12:18.310Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "403390713c55cffee0cb60198e90b7c4a83371b86c6aaba603e8557da1801dcb",
+    "hash": "c05ab13e5580d1afa52b53eca51457f5cf05b046ebe9abc9291acd65b06f3922"
+  },
+  {
+    "seq": 166,
+    "timestamp": "2026-08-31T09:12:18.313Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "c05ab13e5580d1afa52b53eca51457f5cf05b046ebe9abc9291acd65b06f3922",
+    "hash": "5fadf1c8ee1d8ea1a932e6b9ea2f566ec2cf18b42eefb2492ac218c21ddbf1a0"
+  },
+  {
+    "seq": 167,
+    "timestamp": "2026-08-31T09:12:18.316Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "5fadf1c8ee1d8ea1a932e6b9ea2f566ec2cf18b42eefb2492ac218c21ddbf1a0",
+    "hash": "9de7feb25f44495a50a6a5908af45f5bd82c46b4d0beb53ac24a094543f0386a"
+  },
+  {
+    "seq": 168,
+    "timestamp": "2026-08-31T09:12:18.318Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "9de7feb25f44495a50a6a5908af45f5bd82c46b4d0beb53ac24a094543f0386a",
+    "hash": "300db678aad3b727027106ea09efec43166be28ddc8b4cda96d50028efb88f3b"
+  },
+  {
+    "seq": 169,
+    "timestamp": "2026-08-31T09:12:18.320Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "300db678aad3b727027106ea09efec43166be28ddc8b4cda96d50028efb88f3b",
+    "hash": "9d21bf07bc32e023d797ec48496b526a94b1bfa391ead744ca7d62d5a12f4ccd"
+  },
+  {
+    "seq": 170,
+    "timestamp": "2026-08-31T09:12:18.323Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "9d21bf07bc32e023d797ec48496b526a94b1bfa391ead744ca7d62d5a12f4ccd",
+    "hash": "ca1417dc6c201af1507e5f9c437dc67dcf673da9f7477929776c4790de22aca1"
+  },
+  {
+    "seq": 171,
+    "timestamp": "2026-08-31T09:12:18.330Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "ca1417dc6c201af1507e5f9c437dc67dcf673da9f7477929776c4790de22aca1",
+    "hash": "8d5454c1e684210776cc87a60b70eada3209988c06aff0aac13f6db8ef3ca0ce"
+  },
+  {
+    "seq": 172,
+    "timestamp": "2026-08-31T09:12:18.334Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "8d5454c1e684210776cc87a60b70eada3209988c06aff0aac13f6db8ef3ca0ce",
+    "hash": "e49e74c4ee3341c0975a6917bdc5dfc781751ecab5356ac77715538f367d313f"
+  },
+  {
+    "seq": 173,
+    "timestamp": "2026-08-31T09:12:18.337Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "e49e74c4ee3341c0975a6917bdc5dfc781751ecab5356ac77715538f367d313f",
+    "hash": "02e0dcd1df484248c9a3f3623d45673fc34c9751b2ae98bdb4623ba260836c12"
+  },
+  {
+    "seq": 174,
+    "timestamp": "2026-08-31T09:12:18.339Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "02e0dcd1df484248c9a3f3623d45673fc34c9751b2ae98bdb4623ba260836c12",
+    "hash": "6a79d3105c91d4bee5e78281cb9170c0a3f7c0b1b69a538c18023a7e43e38e6c"
+  },
+  {
+    "seq": 175,
+    "timestamp": "2026-08-31T09:12:18.344Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1010",
+    "email": "purchaser_10@otaru.in",
+    "details": "Drop checkout successful for purchaser_10@otaru.in",
+    "prevHash": "6a79d3105c91d4bee5e78281cb9170c0a3f7c0b1b69a538c18023a7e43e38e6c",
+    "hash": "f2ee83d732e08a5271fdd24c1cf82d44b44a4e5e11cca85612e0aeedde44a48c"
+  },
+  {
+    "seq": 176,
+    "timestamp": "2026-08-31T09:12:18.347Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1011",
+    "email": "purchaser_11@otaru.in",
+    "details": "Drop checkout successful for purchaser_11@otaru.in",
+    "prevHash": "f2ee83d732e08a5271fdd24c1cf82d44b44a4e5e11cca85612e0aeedde44a48c",
+    "hash": "6b1bc9e22c63e380993f0b710ca3c79fd816a3a965316356e7e53bc2610c2e35"
+  },
+  {
+    "seq": 177,
+    "timestamp": "2026-08-31T09:12:18.349Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1012",
+    "email": "purchaser_12@otaru.in",
+    "details": "Drop checkout successful for purchaser_12@otaru.in",
+    "prevHash": "6b1bc9e22c63e380993f0b710ca3c79fd816a3a965316356e7e53bc2610c2e35",
+    "hash": "19478243f73f7a1d29b63badf4e9753ce7d2e9d43a542e39bd18e396f43f631b"
+  },
+  {
+    "seq": 178,
+    "timestamp": "2026-08-31T09:12:18.353Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1013",
+    "email": "purchaser_13@otaru.in",
+    "details": "Drop checkout successful for purchaser_13@otaru.in",
+    "prevHash": "19478243f73f7a1d29b63badf4e9753ce7d2e9d43a542e39bd18e396f43f631b",
+    "hash": "328b096d7329d41e36a2527912f92f1a5242ad3aa9614ae6fe43d2ab6f358520"
+  },
+  {
+    "seq": 179,
+    "timestamp": "2026-08-31T09:12:18.358Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1014",
+    "email": "purchaser_14@otaru.in",
+    "details": "Drop checkout successful for purchaser_14@otaru.in",
+    "prevHash": "328b096d7329d41e36a2527912f92f1a5242ad3aa9614ae6fe43d2ab6f358520",
+    "hash": "0b47d29c1becfbc9a4c992ce2c1f461ba8fecd3c942c969540dd3aa624f4ca3c"
+  },
+  {
+    "seq": 180,
+    "timestamp": "2026-08-31T09:12:18.368Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1015",
+    "email": "purchaser_15@otaru.in",
+    "details": "Drop checkout successful for purchaser_15@otaru.in",
+    "prevHash": "0b47d29c1becfbc9a4c992ce2c1f461ba8fecd3c942c969540dd3aa624f4ca3c",
+    "hash": "161b79087fc636fd5f7f9efab5be63a8f9ed480381b34b61fba9075cdc3bd0dc"
+  },
+  {
+    "seq": 181,
+    "timestamp": "2026-08-31T09:12:18.371Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1016",
+    "email": "purchaser_16@otaru.in",
+    "details": "Drop checkout successful for purchaser_16@otaru.in",
+    "prevHash": "161b79087fc636fd5f7f9efab5be63a8f9ed480381b34b61fba9075cdc3bd0dc",
+    "hash": "9ddaf45656c2c902425e350de1717e9edb9aa98a19379fd9b8fd33600ce8823a"
+  },
+  {
+    "seq": 182,
+    "timestamp": "2026-08-31T09:12:18.374Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1017",
+    "email": "purchaser_17@otaru.in",
+    "details": "Drop checkout successful for purchaser_17@otaru.in",
+    "prevHash": "9ddaf45656c2c902425e350de1717e9edb9aa98a19379fd9b8fd33600ce8823a",
+    "hash": "c86fe1a6664380e9b2f87e11a5f5d7af5fe3b18634891158ffd47c7edb9a197a"
+  },
+  {
+    "seq": 183,
+    "timestamp": "2026-08-31T09:12:18.378Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1018",
+    "email": "purchaser_18@otaru.in",
+    "details": "Drop checkout successful for purchaser_18@otaru.in",
+    "prevHash": "c86fe1a6664380e9b2f87e11a5f5d7af5fe3b18634891158ffd47c7edb9a197a",
+    "hash": "b27a6ee30ab45a0aaa7dab26b13da1acd44d9a5be8e1b613b67f9e3fa0126359"
+  },
+  {
+    "seq": 184,
+    "timestamp": "2026-08-31T09:12:18.380Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1019",
+    "email": "purchaser_19@otaru.in",
+    "details": "Drop checkout successful for purchaser_19@otaru.in",
+    "prevHash": "b27a6ee30ab45a0aaa7dab26b13da1acd44d9a5be8e1b613b67f9e3fa0126359",
+    "hash": "ac2feb00f2f6d8b3f9a7a5c0213244305e990223a93d74caa39aa6411a70d6bb"
+  },
+  {
+    "seq": 184,
+    "timestamp": "2026-08-31T09:12:18.384Z",
+    "type": "PAYMENT_FAILED",
+    "ref": "order_TEST_101",
+    "ip": "127.0.0.1",
+    "details": "Mock verification attempt FORBIDDEN in production. Order: order_TEST_101",
+    "prevHash": "b27a6ee30ab45a0aaa7dab26b13da1acd44d9a5be8e1b613b67f9e3fa0126359",
+    "hash": "78df2eb30c5423a3cdefcc3aa1612985ab5d74e78a7f3ba4898a688c17cc7b91"
+  },
+  {
+    "seq": 185,
+    "timestamp": "2026-08-31T09:12:18.385Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1020",
+    "email": "purchaser_20@otaru.in",
+    "details": "Drop checkout successful for purchaser_20@otaru.in",
+    "prevHash": "ac2feb00f2f6d8b3f9a7a5c0213244305e990223a93d74caa39aa6411a70d6bb",
+    "hash": "e746a009c49cb6b8b5fbc4b24b46355a1e2e84bb6473c468fe82d3475c774882"
+  },
+  {
+    "seq": 186,
+    "timestamp": "2026-08-31T09:12:18.388Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1021",
+    "email": "purchaser_21@otaru.in",
+    "details": "Drop checkout successful for purchaser_21@otaru.in",
+    "prevHash": "e746a009c49cb6b8b5fbc4b24b46355a1e2e84bb6473c468fe82d3475c774882",
+    "hash": "3ca7ca6decbb5ebbd67221669b6df81b587efb83da0c91ec35a1f76446b5e180"
+  },
+  {
+    "seq": 187,
+    "timestamp": "2026-08-31T09:12:18.392Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1022",
+    "email": "purchaser_22@otaru.in",
+    "details": "Drop checkout successful for purchaser_22@otaru.in",
+    "prevHash": "3ca7ca6decbb5ebbd67221669b6df81b587efb83da0c91ec35a1f76446b5e180",
+    "hash": "463d83b4954af7344ed1f344d676124789c18f84295136e5ada3e8e614c367b6"
+  },
+  {
+    "seq": 185,
+    "timestamp": "2026-08-31T09:12:18.398Z",
+    "type": "ORDER_BLOCKED",
+    "ip": "127.0.0.1",
+    "email": "adversary@test.com",
+    "details": "Order creation rejected: Razorpay gateway unavailable in production mode. Email: adversary@test.com",
+    "prevHash": "78df2eb30c5423a3cdefcc3aa1612985ab5d74e78a7f3ba4898a688c17cc7b91",
+    "hash": "15447883d4b9bb6ee2f2e4843559dad9befce6c1b44202aefd3c5b5d900b19a8"
+  },
+  {
+    "seq": 189,
+    "timestamp": "2026-08-31T09:12:18.398Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1024",
+    "email": "purchaser_24@otaru.in",
+    "details": "Drop checkout successful for purchaser_24@otaru.in",
+    "prevHash": "da2782023ea20c12a3d8dd39d41df3f1da6db3c66a9d563b9322176859934c46",
+    "hash": "2924a73b9f2dbe066249cf9682f0334831a2580038ff2158a5d8a7b09b4fd804"
+  },
+  {
+    "seq": 190,
+    "timestamp": "2026-08-31T09:26:20.142Z",
+    "type": "ORDER_CREATED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Order 1",
+    "prevHash": "2924a73b9f2dbe066249cf9682f0334831a2580038ff2158a5d8a7b09b4fd804",
+    "hash": "fec75f5c8e400ce88f2d86c523664d349adca160c15d8210cdf165a29dbcfe58"
+  },
+  {
+    "seq": 191,
+    "timestamp": "2026-08-31T09:26:20.145Z",
+    "type": "PAYMENT_VERIFIED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Payment Verified 1",
+    "prevHash": "fec75f5c8e400ce88f2d86c523664d349adca160c15d8210cdf165a29dbcfe58",
+    "hash": "93e616325c0e8f14e9705fa4afae623e0be53ee9cb0d3a9923d06dda733051e8"
+  },
+  {
+    "seq": 192,
+    "timestamp": "2026-08-31T09:26:20.148Z",
+    "type": "NONCE_CONSUMED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Nonce Consumed 1",
+    "prevHash": "93e616325c0e8f14e9705fa4afae623e0be53ee9cb0d3a9923d06dda733051e8",
+    "hash": "b1d20cac1ca43ca0b9dcce1d5a66fbc02706e8849fbb0b45789f4661914c0ea3"
+  },
+  {
+    "seq": 193,
+    "timestamp": "2026-08-31T09:26:20.217Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "b1d20cac1ca43ca0b9dcce1d5a66fbc02706e8849fbb0b45789f4661914c0ea3",
+    "hash": "2530287d4ef6ba8174bb5b48247b9c5055fe55008c40f9ee2612bfcb1252c001"
+  },
+  {
+    "seq": 194,
+    "timestamp": "2026-08-31T09:26:20.221Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "2530287d4ef6ba8174bb5b48247b9c5055fe55008c40f9ee2612bfcb1252c001",
+    "hash": "798cb7adb3ab989d05227b157f7db147c81bdbc0057daddc3324c576dce2addb"
+  },
+  {
+    "seq": 195,
+    "timestamp": "2026-08-31T09:26:20.224Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "798cb7adb3ab989d05227b157f7db147c81bdbc0057daddc3324c576dce2addb",
+    "hash": "584299739ca6e094b72e9ef5db6a99e932fa9e437be43a2c9f548d002c4a22e3"
+  },
+  {
+    "seq": 196,
+    "timestamp": "2026-08-31T09:26:20.227Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "584299739ca6e094b72e9ef5db6a99e932fa9e437be43a2c9f548d002c4a22e3",
+    "hash": "c25d6e722adcfa497a5a40abff375fdc6f80e8f53b3d3cc763f449233ba752ae"
+  },
+  {
+    "seq": 197,
+    "timestamp": "2026-08-31T09:26:20.232Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "c25d6e722adcfa497a5a40abff375fdc6f80e8f53b3d3cc763f449233ba752ae",
+    "hash": "bf81d3e13c87d58fc2aa8ac567f86df809630ed9ef8a429ec71150ab8b09876b"
+  },
+  {
+    "seq": 198,
+    "timestamp": "2026-08-31T09:26:20.235Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "bf81d3e13c87d58fc2aa8ac567f86df809630ed9ef8a429ec71150ab8b09876b",
+    "hash": "2e53a6afea0add2f10532399929d4196a937d2bf8dad3700665f541d4a67ea5f"
+  },
+  {
+    "seq": 199,
+    "timestamp": "2026-08-31T09:26:20.239Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "2e53a6afea0add2f10532399929d4196a937d2bf8dad3700665f541d4a67ea5f",
+    "hash": "da4ea107454e83869dcba96979bc455cac8ea1709b6d8270a0d3d12455df2e63"
+  },
+  {
+    "seq": 200,
+    "timestamp": "2026-08-31T09:26:20.242Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "da4ea107454e83869dcba96979bc455cac8ea1709b6d8270a0d3d12455df2e63",
+    "hash": "d12565eb47761d0e404fc53a3c98c7bee298d9424878fc217a39363c9bcdb381"
+  },
+  {
+    "seq": 201,
+    "timestamp": "2026-08-31T09:26:20.245Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "d12565eb47761d0e404fc53a3c98c7bee298d9424878fc217a39363c9bcdb381",
+    "hash": "ecc29962f48e7e425c9e96f90f1457befb5fdcac38609238524a609a08c8e09a"
+  },
+  {
+    "seq": 202,
+    "timestamp": "2026-08-31T09:26:20.250Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "ecc29962f48e7e425c9e96f90f1457befb5fdcac38609238524a609a08c8e09a",
+    "hash": "9c5f99a1c8627a80679c61cec21249e3c9b0e5234e8442126021a7d5395d44d2"
+  },
+  {
+    "seq": 203,
+    "timestamp": "2026-08-31T09:26:20.254Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "9c5f99a1c8627a80679c61cec21249e3c9b0e5234e8442126021a7d5395d44d2",
+    "hash": "4dbbe296a42b203ca3ac701992946e179eaec123afcbd65b463f0f9d1429c55b"
+  },
+  {
+    "seq": 204,
+    "timestamp": "2026-08-31T09:26:20.258Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "4dbbe296a42b203ca3ac701992946e179eaec123afcbd65b463f0f9d1429c55b",
+    "hash": "e60da971fd87c46883f4369524c7d041c317ab23c2487d8ef07a4e23433c275d"
+  },
+  {
+    "seq": 205,
+    "timestamp": "2026-08-31T09:26:20.261Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "e60da971fd87c46883f4369524c7d041c317ab23c2487d8ef07a4e23433c275d",
+    "hash": "4900553bd24f6c69268b6591ee4f6de848861a285214ec32a9c742434a8aabd1"
+  },
+  {
+    "seq": 206,
+    "timestamp": "2026-08-31T09:26:20.264Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "4900553bd24f6c69268b6591ee4f6de848861a285214ec32a9c742434a8aabd1",
+    "hash": "631bd59403ac322036150da842b7bc505faed56967ff3f50206cfabd732fae20"
+  },
+  {
+    "seq": 207,
+    "timestamp": "2026-08-31T09:26:20.268Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "631bd59403ac322036150da842b7bc505faed56967ff3f50206cfabd732fae20",
+    "hash": "cd1836a3eb30658c7e50957275f668dc4a0c62d2e96378e8eb056b4fdabd8c21"
+  },
+  {
+    "seq": 208,
+    "timestamp": "2026-08-31T09:26:20.272Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "cd1836a3eb30658c7e50957275f668dc4a0c62d2e96378e8eb056b4fdabd8c21",
+    "hash": "aa1fb46210166de4ca403e420b3af35f2db24b15ff03924e68116e9ecf844605"
+  },
+  {
+    "seq": 209,
+    "timestamp": "2026-08-31T09:26:20.275Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "aa1fb46210166de4ca403e420b3af35f2db24b15ff03924e68116e9ecf844605",
+    "hash": "079232c8ab82e5d98fcc3940610118c9cd720914e60da14dc92c99c23980249a"
+  },
+  {
+    "seq": 210,
+    "timestamp": "2026-08-31T09:26:20.277Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "079232c8ab82e5d98fcc3940610118c9cd720914e60da14dc92c99c23980249a",
+    "hash": "e3c979dad2c0394c36d2cfd5cbba316d4ddedaff2e22378a60d56f43a037915f"
+  },
+  {
+    "seq": 211,
+    "timestamp": "2026-08-31T09:26:20.282Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "e3c979dad2c0394c36d2cfd5cbba316d4ddedaff2e22378a60d56f43a037915f",
+    "hash": "6c7794ced0510b67593d8d5cebbe461f8e66418f889511639833648129fc164d"
+  },
+  {
+    "seq": 212,
+    "timestamp": "2026-08-31T09:26:20.286Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "6c7794ced0510b67593d8d5cebbe461f8e66418f889511639833648129fc164d",
+    "hash": "6d489c079779d40ccc81452f5e9563ff244e590f9bf93a2447c12bcf1ffe5a5c"
+  },
+  {
+    "seq": 213,
+    "timestamp": "2026-08-31T09:26:20.289Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1010",
+    "email": "purchaser_10@otaru.in",
+    "details": "Drop checkout successful for purchaser_10@otaru.in",
+    "prevHash": "6d489c079779d40ccc81452f5e9563ff244e590f9bf93a2447c12bcf1ffe5a5c",
+    "hash": "d179660a18ece118874506feed709c9ab359f95244895caaace61800524135b5"
+  },
+  {
+    "seq": 214,
+    "timestamp": "2026-08-31T09:26:20.295Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1011",
+    "email": "purchaser_11@otaru.in",
+    "details": "Drop checkout successful for purchaser_11@otaru.in",
+    "prevHash": "d179660a18ece118874506feed709c9ab359f95244895caaace61800524135b5",
+    "hash": "ea27cc42be717eb9329091c875d770e19de05f734fcbe683a4b47b038801e572"
+  },
+  {
+    "seq": 215,
+    "timestamp": "2026-08-31T09:26:20.348Z",
+    "type": "PAYMENT_FAILED",
+    "ref": "order_TEST_101",
+    "ip": "127.0.0.1",
+    "details": "Mock verification attempt FORBIDDEN in production. Order: order_TEST_101",
+    "prevHash": "ea27cc42be717eb9329091c875d770e19de05f734fcbe683a4b47b038801e572",
+    "hash": "a722065ef11afe09b4b7142bd88eda755f21124f2bf64f818a98192f5075eb64"
+  },
+  {
+    "seq": 216,
+    "timestamp": "2026-08-31T09:26:20.361Z",
+    "type": "ORDER_BLOCKED",
+    "ip": "127.0.0.1",
+    "email": "adversary@test.com",
+    "details": "Order creation rejected: Razorpay gateway unavailable in production mode. Email: adversary@test.com",
+    "prevHash": "a722065ef11afe09b4b7142bd88eda755f21124f2bf64f818a98192f5075eb64",
+    "hash": "35c644126eaeb3bc09c5eeabd8022c91456742949d390b70689cba0fd546da58"
+  },
+  {
+    "seq": 215,
+    "timestamp": "2026-08-31T09:26:20.311Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1012",
+    "email": "purchaser_12@otaru.in",
+    "details": "Drop checkout successful for purchaser_12@otaru.in",
+    "prevHash": "ea27cc42be717eb9329091c875d770e19de05f734fcbe683a4b47b038801e572",
+    "hash": "6917bb8408ab764edef6345ca83101663979000ceb027195d3461a3efbcba269"
+  },
+  {
+    "seq": 216,
+    "timestamp": "2026-08-31T09:26:20.378Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1013",
+    "email": "purchaser_13@otaru.in",
+    "details": "Drop checkout successful for purchaser_13@otaru.in",
+    "prevHash": "6917bb8408ab764edef6345ca83101663979000ceb027195d3461a3efbcba269",
+    "hash": "5cb5299c8e0c1b8ae0f06c5eac8fc0e9f8ba74ffd7edb1601a9bfb72c0f6bb36"
+  },
+  {
+    "seq": 217,
+    "timestamp": "2026-08-31T09:26:20.382Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1014",
+    "email": "purchaser_14@otaru.in",
+    "details": "Drop checkout successful for purchaser_14@otaru.in",
+    "prevHash": "5cb5299c8e0c1b8ae0f06c5eac8fc0e9f8ba74ffd7edb1601a9bfb72c0f6bb36",
+    "hash": "1ee4244c02cf4f459fa9a3836eea868149836392ebea492dda42139b3e055fe7"
+  },
+  {
+    "seq": 218,
+    "timestamp": "2026-08-31T09:26:20.414Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1015",
+    "email": "purchaser_15@otaru.in",
+    "details": "Drop checkout successful for purchaser_15@otaru.in",
+    "prevHash": "1ee4244c02cf4f459fa9a3836eea868149836392ebea492dda42139b3e055fe7",
+    "hash": "1e775f13126a2a04a175e54872a379d36db52a75acc80f18ec615a1a068a0d92"
+  },
+  {
+    "seq": 219,
+    "timestamp": "2026-08-31T09:26:20.419Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1016",
+    "email": "purchaser_16@otaru.in",
+    "details": "Drop checkout successful for purchaser_16@otaru.in",
+    "prevHash": "1e775f13126a2a04a175e54872a379d36db52a75acc80f18ec615a1a068a0d92",
+    "hash": "240cb5d78f84ea5aabe3dd2622d7e9d0741026d808838dda050e2a4e16dad83d"
+  },
+  {
+    "seq": 220,
+    "timestamp": "2026-08-31T09:26:20.424Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1017",
+    "email": "purchaser_17@otaru.in",
+    "details": "Drop checkout successful for purchaser_17@otaru.in",
+    "prevHash": "240cb5d78f84ea5aabe3dd2622d7e9d0741026d808838dda050e2a4e16dad83d",
+    "hash": "28c1a7fdc8dbe253d1715eb351619229812c6142120fdd71c226f105710b2fe2"
+  },
+  {
+    "seq": 221,
+    "timestamp": "2026-08-31T09:26:20.429Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1018",
+    "email": "purchaser_18@otaru.in",
+    "details": "Drop checkout successful for purchaser_18@otaru.in",
+    "prevHash": "28c1a7fdc8dbe253d1715eb351619229812c6142120fdd71c226f105710b2fe2",
+    "hash": "c9a599484925964568559f1f160f765ee585fca976640463229fc744e29f4967"
+  },
+  {
+    "seq": 222,
+    "timestamp": "2026-08-31T09:26:20.433Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1019",
+    "email": "purchaser_19@otaru.in",
+    "details": "Drop checkout successful for purchaser_19@otaru.in",
+    "prevHash": "c9a599484925964568559f1f160f765ee585fca976640463229fc744e29f4967",
+    "hash": "2bd0978f8f3173fd7ce29aa65d12e5c7c340a4cfdb60112e1436d82d26cda336"
+  },
+  {
+    "seq": 223,
+    "timestamp": "2026-08-31T09:26:20.439Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1020",
+    "email": "purchaser_20@otaru.in",
+    "details": "Drop checkout successful for purchaser_20@otaru.in",
+    "prevHash": "2bd0978f8f3173fd7ce29aa65d12e5c7c340a4cfdb60112e1436d82d26cda336",
+    "hash": "e72eb0c44f8615cc79203d1b59a15f52afd1962d2af0da49d735b6075d96b124"
+  },
+  {
+    "seq": 224,
+    "timestamp": "2026-08-31T09:26:20.443Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1021",
+    "email": "purchaser_21@otaru.in",
+    "details": "Drop checkout successful for purchaser_21@otaru.in",
+    "prevHash": "e72eb0c44f8615cc79203d1b59a15f52afd1962d2af0da49d735b6075d96b124",
+    "hash": "6c1f0c6795c5947c38425812f853803906b08820809973b9adc061d7bfc63cf8"
+  },
+  {
+    "seq": 225,
+    "timestamp": "2026-08-31T09:26:20.447Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1022",
+    "email": "purchaser_22@otaru.in",
+    "details": "Drop checkout successful for purchaser_22@otaru.in",
+    "prevHash": "6c1f0c6795c5947c38425812f853803906b08820809973b9adc061d7bfc63cf8",
+    "hash": "a4d68b8e39130d577b24762b33811c21f55eac0821b65d5a596fb024276a9703"
+  },
+  {
+    "seq": 226,
+    "timestamp": "2026-08-31T09:26:20.450Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1023",
+    "email": "purchaser_23@otaru.in",
+    "details": "Drop checkout successful for purchaser_23@otaru.in",
+    "prevHash": "a4d68b8e39130d577b24762b33811c21f55eac0821b65d5a596fb024276a9703",
+    "hash": "375bee60ac7ea30b57c3a3ed3ff9df5fe7e3cdb8fb81720daef525db2f7db1bc"
+  },
+  {
+    "seq": 227,
+    "timestamp": "2026-08-31T09:26:20.456Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1024",
+    "email": "purchaser_24@otaru.in",
+    "details": "Drop checkout successful for purchaser_24@otaru.in",
+    "prevHash": "375bee60ac7ea30b57c3a3ed3ff9df5fe7e3cdb8fb81720daef525db2f7db1bc",
+    "hash": "96ef6f4a2442443cd57dcd91ed6dbe3b99e419b71fd9b18c4cfd7595233832a0"
+  },
+  {
+    "seq": 228,
+    "timestamp": "2026-09-03T15:56:31.299Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "96ef6f4a2442443cd57dcd91ed6dbe3b99e419b71fd9b18c4cfd7595233832a0",
+    "hash": "50d21ef2c996a1c48bc8162e44e7a7008731d9e1326aa7e3440f4252de0dc93e"
+  },
+  {
+    "seq": 229,
+    "timestamp": "2026-09-03T15:56:31.304Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "50d21ef2c996a1c48bc8162e44e7a7008731d9e1326aa7e3440f4252de0dc93e",
+    "hash": "c7f3206a3a0c4f06311238a0ec59d54ab30854d076c6900cdc597521c768f261"
+  },
+  {
+    "seq": 230,
+    "timestamp": "2026-09-03T15:56:31.307Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "c7f3206a3a0c4f06311238a0ec59d54ab30854d076c6900cdc597521c768f261",
+    "hash": "73da21af7814a5c5d755e2edca9a97fc89c5b19c3579ef28daafea1f58f78132"
+  },
+  {
+    "seq": 231,
+    "timestamp": "2026-09-03T15:56:31.310Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "73da21af7814a5c5d755e2edca9a97fc89c5b19c3579ef28daafea1f58f78132",
+    "hash": "d0637333d9a425a0c5265c2130e9dcb12a9aa576ef2e5b852d78493e9a61a9ea"
+  },
+  {
+    "seq": 232,
+    "timestamp": "2026-09-03T15:56:31.313Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "d0637333d9a425a0c5265c2130e9dcb12a9aa576ef2e5b852d78493e9a61a9ea",
+    "hash": "686dd8531b04f8595a678eab84f416d6d6d61893fe7ad0377e645e2e48e03b19"
+  },
+  {
+    "seq": 233,
+    "timestamp": "2026-09-03T15:56:31.316Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "686dd8531b04f8595a678eab84f416d6d6d61893fe7ad0377e645e2e48e03b19",
+    "hash": "35c3ab4849f9a99a83005274317abc118f8ab7c8236342507a5b5112310ab57c"
+  },
+  {
+    "seq": 234,
+    "timestamp": "2026-09-03T15:56:31.320Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "35c3ab4849f9a99a83005274317abc118f8ab7c8236342507a5b5112310ab57c",
+    "hash": "dd40ddc87c649a087cce264e1e9e047b1da58c0753562d973d80f4d2e2b72721"
+  },
+  {
+    "seq": 235,
+    "timestamp": "2026-09-03T15:56:31.324Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "dd40ddc87c649a087cce264e1e9e047b1da58c0753562d973d80f4d2e2b72721",
+    "hash": "2aa4895a4c79ea0f9e203ea56e3789bec3f303103f75261b88c8d15b4226a9b2"
+  },
+  {
+    "seq": 236,
+    "timestamp": "2026-09-03T15:56:31.329Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "2aa4895a4c79ea0f9e203ea56e3789bec3f303103f75261b88c8d15b4226a9b2",
+    "hash": "56c6cef9c9a69671dd4a297285db716780af6d803dfe00c60401b7a46d5af00d"
+  },
+  {
+    "seq": 237,
+    "timestamp": "2026-09-03T15:56:31.333Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "56c6cef9c9a69671dd4a297285db716780af6d803dfe00c60401b7a46d5af00d",
+    "hash": "ece903ecb611823d40d7c6af63a615419bce0d0c05aa46cc3fc0de0863aba3f0"
+  },
+  {
+    "seq": 238,
+    "timestamp": "2026-09-03T15:56:31.339Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "ece903ecb611823d40d7c6af63a615419bce0d0c05aa46cc3fc0de0863aba3f0",
+    "hash": "be50f3bf8ecb086e8394a3a124cccf5b3183428ab2df5b049a885446635f64aa"
+  },
+  {
+    "seq": 239,
+    "timestamp": "2026-09-03T15:56:31.344Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "be50f3bf8ecb086e8394a3a124cccf5b3183428ab2df5b049a885446635f64aa",
+    "hash": "630d7929270e092d6b428d0a6737c30ad43e27c29a96d6f006d4f5f75b04a533"
+  },
+  {
+    "seq": 240,
+    "timestamp": "2026-09-03T15:56:31.348Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "630d7929270e092d6b428d0a6737c30ad43e27c29a96d6f006d4f5f75b04a533",
+    "hash": "8891869de682b2cda759fbb247c51b663f3077e6ae573ab22adc03489f2edc98"
+  },
+  {
+    "seq": 241,
+    "timestamp": "2026-09-03T15:56:31.351Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "8891869de682b2cda759fbb247c51b663f3077e6ae573ab22adc03489f2edc98",
+    "hash": "87cb76377ee8cc47e094f1c8f20d261985508aab9f13f299a5644732818f2149"
+  },
+  {
+    "seq": 242,
+    "timestamp": "2026-09-03T15:56:31.356Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "87cb76377ee8cc47e094f1c8f20d261985508aab9f13f299a5644732818f2149",
+    "hash": "2ac5286b844cb77921cf85c93ef88aea1145171e0d32119a26fb13c46afcf735"
+  },
+  {
+    "seq": 243,
+    "timestamp": "2026-09-03T15:56:31.362Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "2ac5286b844cb77921cf85c93ef88aea1145171e0d32119a26fb13c46afcf735",
+    "hash": "e98dc3fdd01ae41ae022e4ed0705c248f69ad2e3ae16ac6111a0a319a722f139"
+  },
+  {
+    "seq": 244,
+    "timestamp": "2026-09-03T15:56:31.367Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "e98dc3fdd01ae41ae022e4ed0705c248f69ad2e3ae16ac6111a0a319a722f139",
+    "hash": "ef3e15c2d430959f6d1ca0725ab9f8d22db7e4a9390bb01a4d2ea0485b3c2c78"
+  },
+  {
+    "seq": 245,
+    "timestamp": "2026-09-03T15:56:31.372Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "ef3e15c2d430959f6d1ca0725ab9f8d22db7e4a9390bb01a4d2ea0485b3c2c78",
+    "hash": "8dfd014b48bc963600d6064619a2f2e2f088176a88b979cbdd0ef64f16810249"
+  },
+  {
+    "seq": 246,
+    "timestamp": "2026-09-03T15:56:31.376Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "8dfd014b48bc963600d6064619a2f2e2f088176a88b979cbdd0ef64f16810249",
+    "hash": "b5b460a59c071f81428519ff5d9d7f236a79812e8ef576ac57befeeb9b038ff7"
+  },
+  {
+    "seq": 247,
+    "timestamp": "2026-09-03T15:56:31.379Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "b5b460a59c071f81428519ff5d9d7f236a79812e8ef576ac57befeeb9b038ff7",
+    "hash": "c12dbd4d7ce3018b610e6b4da5db375cca85f0b3c90b505734ca9d05a5753e90"
+  },
+  {
+    "seq": 248,
+    "timestamp": "2026-09-03T15:56:31.383Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1010",
+    "email": "purchaser_10@otaru.in",
+    "details": "Drop checkout successful for purchaser_10@otaru.in",
+    "prevHash": "c12dbd4d7ce3018b610e6b4da5db375cca85f0b3c90b505734ca9d05a5753e90",
+    "hash": "3f09cdeab35fa1dbd34bc8d08c4f3bfc14cd3f665928d9c985bfe8d93d32aeb6"
+  },
+  {
+    "seq": 249,
+    "timestamp": "2026-09-03T15:56:31.386Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1011",
+    "email": "purchaser_11@otaru.in",
+    "details": "Drop checkout successful for purchaser_11@otaru.in",
+    "prevHash": "3f09cdeab35fa1dbd34bc8d08c4f3bfc14cd3f665928d9c985bfe8d93d32aeb6",
+    "hash": "8b1f0594bd766cf0e41959d7e46d3c700c121d31346bd22c30814b8a3cbfe2ca"
+  },
+  {
+    "seq": 250,
+    "timestamp": "2026-09-03T15:56:31.390Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1012",
+    "email": "purchaser_12@otaru.in",
+    "details": "Drop checkout successful for purchaser_12@otaru.in",
+    "prevHash": "8b1f0594bd766cf0e41959d7e46d3c700c121d31346bd22c30814b8a3cbfe2ca",
+    "hash": "dcff57079735a0b4f31bf2230b2eff6ae97fdc5228f2f401ae87d917a82cb748"
+  },
+  {
+    "seq": 251,
+    "timestamp": "2026-09-03T15:56:31.394Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1013",
+    "email": "purchaser_13@otaru.in",
+    "details": "Drop checkout successful for purchaser_13@otaru.in",
+    "prevHash": "dcff57079735a0b4f31bf2230b2eff6ae97fdc5228f2f401ae87d917a82cb748",
+    "hash": "87a63215508097ac3eb756b131616db66f19777a46f475842422f27a215aab5b"
+  },
+  {
+    "seq": 252,
+    "timestamp": "2026-09-03T15:56:31.397Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1014",
+    "email": "purchaser_14@otaru.in",
+    "details": "Drop checkout successful for purchaser_14@otaru.in",
+    "prevHash": "87a63215508097ac3eb756b131616db66f19777a46f475842422f27a215aab5b",
+    "hash": "20d4e3aaa8eab6f52f13b7bcf4bfeee48e10618ce4a796201f8809b47a5f1945"
+  },
+  {
+    "seq": 253,
+    "timestamp": "2026-09-03T15:56:31.401Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1015",
+    "email": "purchaser_15@otaru.in",
+    "details": "Drop checkout successful for purchaser_15@otaru.in",
+    "prevHash": "20d4e3aaa8eab6f52f13b7bcf4bfeee48e10618ce4a796201f8809b47a5f1945",
+    "hash": "2c9d93476c4427023829dde3db9296a10ec9174f64690dab26e9a73f1aae5643"
+  },
+  {
+    "seq": 254,
+    "timestamp": "2026-09-03T15:56:31.406Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1016",
+    "email": "purchaser_16@otaru.in",
+    "details": "Drop checkout successful for purchaser_16@otaru.in",
+    "prevHash": "2c9d93476c4427023829dde3db9296a10ec9174f64690dab26e9a73f1aae5643",
+    "hash": "875802594f1f0cdfc54954e2c22351f912558f949488597341e17b9b804dae8c"
+  },
+  {
+    "seq": 255,
+    "timestamp": "2026-09-03T15:56:31.409Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1017",
+    "email": "purchaser_17@otaru.in",
+    "details": "Drop checkout successful for purchaser_17@otaru.in",
+    "prevHash": "875802594f1f0cdfc54954e2c22351f912558f949488597341e17b9b804dae8c",
+    "hash": "23659425878882abb39877e11d17649cba450921dbc537db4c8b3502d259cb25"
+  },
+  {
+    "seq": 256,
+    "timestamp": "2026-09-03T15:56:31.413Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1018",
+    "email": "purchaser_18@otaru.in",
+    "details": "Drop checkout successful for purchaser_18@otaru.in",
+    "prevHash": "23659425878882abb39877e11d17649cba450921dbc537db4c8b3502d259cb25",
+    "hash": "80b232c6cfa7ab0656bfcdfeadfdd954d2fec64712b7338a864a799308f9c73d"
+  },
+  {
+    "seq": 257,
+    "timestamp": "2026-09-03T15:56:31.416Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1019",
+    "email": "purchaser_19@otaru.in",
+    "details": "Drop checkout successful for purchaser_19@otaru.in",
+    "prevHash": "80b232c6cfa7ab0656bfcdfeadfdd954d2fec64712b7338a864a799308f9c73d",
+    "hash": "baeac078c82a800a1242dc5782a9fe5ec6e5963567c5b574836ec898c2eefe9b"
+  },
+  {
+    "seq": 258,
+    "timestamp": "2026-09-03T15:56:31.421Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1020",
+    "email": "purchaser_20@otaru.in",
+    "details": "Drop checkout successful for purchaser_20@otaru.in",
+    "prevHash": "baeac078c82a800a1242dc5782a9fe5ec6e5963567c5b574836ec898c2eefe9b",
+    "hash": "49a794229c8aec59de8c9188e9882f9e781ec9071e2df20569a10f3568c15f08"
+  },
+  {
+    "seq": 259,
+    "timestamp": "2026-09-03T15:56:31.426Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1021",
+    "email": "purchaser_21@otaru.in",
+    "details": "Drop checkout successful for purchaser_21@otaru.in",
+    "prevHash": "49a794229c8aec59de8c9188e9882f9e781ec9071e2df20569a10f3568c15f08",
+    "hash": "89f90bc8bc3391e7035b3ed8473c5bee0408e5ee42e08f29356564b637f5d3b7"
+  },
+  {
+    "seq": 260,
+    "timestamp": "2026-09-03T15:56:31.430Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1022",
+    "email": "purchaser_22@otaru.in",
+    "details": "Drop checkout successful for purchaser_22@otaru.in",
+    "prevHash": "89f90bc8bc3391e7035b3ed8473c5bee0408e5ee42e08f29356564b637f5d3b7",
+    "hash": "3b7e9e3c5d11b0489c660dcbad6d6d80f32a7d7f49853a18734f1cdaf3440696"
+  },
+  {
+    "seq": 261,
+    "timestamp": "2026-09-03T15:56:31.433Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1023",
+    "email": "purchaser_23@otaru.in",
+    "details": "Drop checkout successful for purchaser_23@otaru.in",
+    "prevHash": "3b7e9e3c5d11b0489c660dcbad6d6d80f32a7d7f49853a18734f1cdaf3440696",
+    "hash": "7ffa5406d4f7ea2feda69aec84517d03a34e16e575b6d6570ba493bed61d8320"
+  },
+  {
+    "seq": 262,
+    "timestamp": "2026-09-03T15:56:31.436Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1024",
+    "email": "purchaser_24@otaru.in",
+    "details": "Drop checkout successful for purchaser_24@otaru.in",
+    "prevHash": "7ffa5406d4f7ea2feda69aec84517d03a34e16e575b6d6570ba493bed61d8320",
+    "hash": "b127c60807224e2626b6df2ba4cf01c3021fb5631823c8c8ba25bd61092fa301"
+  },
+  {
+    "seq": 263,
+    "timestamp": "2026-09-03T15:56:44.890Z",
+    "type": "ORDER_CREATED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Order 1",
+    "prevHash": "b127c60807224e2626b6df2ba4cf01c3021fb5631823c8c8ba25bd61092fa301",
+    "hash": "1c44efc8beb8dd55a00b5699f9ee001cc51e98c023dd41aa3eb04d3214a11d96"
+  },
+  {
+    "seq": 264,
+    "timestamp": "2026-09-03T15:56:44.894Z",
+    "type": "PAYMENT_VERIFIED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Payment Verified 1",
+    "prevHash": "1c44efc8beb8dd55a00b5699f9ee001cc51e98c023dd41aa3eb04d3214a11d96",
+    "hash": "9a09893005124ad4be5377751ed3f27e4b10dc0e803f6331e86e76eb57090290"
+  },
+  {
+    "seq": 265,
+    "timestamp": "2026-09-03T15:56:44.897Z",
+    "type": "NONCE_CONSUMED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Nonce Consumed 1",
+    "prevHash": "9a09893005124ad4be5377751ed3f27e4b10dc0e803f6331e86e76eb57090290",
+    "hash": "a9e984d2bc0901fea451418428502995579a9bde5a70a9ff626a022acee98dda"
+  },
+  {
+    "seq": 266,
+    "timestamp": "2026-09-03T15:56:44.973Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "a9e984d2bc0901fea451418428502995579a9bde5a70a9ff626a022acee98dda",
+    "hash": "6e1cca8d2934df658ca7ea8f272952f1e9e1271bab72b80b90deb238825e2b1b"
+  },
+  {
+    "seq": 267,
+    "timestamp": "2026-09-03T15:56:44.979Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "6e1cca8d2934df658ca7ea8f272952f1e9e1271bab72b80b90deb238825e2b1b",
+    "hash": "db806ba39c9d2ac9cf191df13604935434df828814dc5129f42063b6ad497c8e"
+  },
+  {
+    "seq": 268,
+    "timestamp": "2026-09-03T15:56:44.983Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "db806ba39c9d2ac9cf191df13604935434df828814dc5129f42063b6ad497c8e",
+    "hash": "035e0a7445c06039f732f8a5d638dfc85daac2d6ee81bd3ab7ab3e6903bcfee4"
+  },
+  {
+    "seq": 269,
+    "timestamp": "2026-09-03T15:56:44.986Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "035e0a7445c06039f732f8a5d638dfc85daac2d6ee81bd3ab7ab3e6903bcfee4",
+    "hash": "896e4488a1175513fddf6951b645128f7e77c1922bce6398530b718b2da1e563"
+  },
+  {
+    "seq": 270,
+    "timestamp": "2026-09-03T15:56:44.990Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "896e4488a1175513fddf6951b645128f7e77c1922bce6398530b718b2da1e563",
+    "hash": "9c9800967d66505ee9405be78fcc46e49eba7e74acb1e11ecec4e765ac92530c"
+  },
+  {
+    "seq": 271,
+    "timestamp": "2026-09-03T15:56:44.994Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "9c9800967d66505ee9405be78fcc46e49eba7e74acb1e11ecec4e765ac92530c",
+    "hash": "39e55935ef4887cfb60cea1bdf07fe49d437c6e8448fe8a00cf858fd6c40a254"
+  },
+  {
+    "seq": 272,
+    "timestamp": "2026-09-03T15:56:44.999Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "39e55935ef4887cfb60cea1bdf07fe49d437c6e8448fe8a00cf858fd6c40a254",
+    "hash": "2d7cc7741f34f39777ea77056e7410e5e41e610dd1cef9789f0a44a3925f6a29"
+  },
+  {
+    "seq": 273,
+    "timestamp": "2026-09-03T15:56:45.004Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "2d7cc7741f34f39777ea77056e7410e5e41e610dd1cef9789f0a44a3925f6a29",
+    "hash": "060a2ac3f3a0282caaaba9fd2a5d48acf835f615300e7c1d81ffd418c8716dcf"
+  },
+  {
+    "seq": 274,
+    "timestamp": "2026-09-03T15:56:45.009Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "060a2ac3f3a0282caaaba9fd2a5d48acf835f615300e7c1d81ffd418c8716dcf",
+    "hash": "43f6ba3314b40c5debd14d785c6be08f82c987b2777096fc7e87daeb2134e3b7"
+  },
+  {
+    "seq": 275,
+    "timestamp": "2026-09-03T15:56:45.015Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "43f6ba3314b40c5debd14d785c6be08f82c987b2777096fc7e87daeb2134e3b7",
+    "hash": "6d73bfc0c00d628dea61e4843bd16aa2fe91b38303a81c11e28eff11bd9286c4"
+  },
+  {
+    "seq": 276,
+    "timestamp": "2026-09-03T15:56:45.020Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "6d73bfc0c00d628dea61e4843bd16aa2fe91b38303a81c11e28eff11bd9286c4",
+    "hash": "2720d9d3390111947ffb112ec129cf3b4e2ab09c57c1e3e89f2c697c46e9417c"
+  },
+  {
+    "seq": 277,
+    "timestamp": "2026-09-03T15:56:45.028Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "2720d9d3390111947ffb112ec129cf3b4e2ab09c57c1e3e89f2c697c46e9417c",
+    "hash": "bbc211f88a06fc35529385da3436081512c96b0f5c97a3ec791d1bd745944730"
+  },
+  {
+    "seq": 278,
+    "timestamp": "2026-09-03T15:56:45.034Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "bbc211f88a06fc35529385da3436081512c96b0f5c97a3ec791d1bd745944730",
+    "hash": "30551a7b53e0531fb2fd859e05815e053fbf5c0d4a91dceed102216b154f37c7"
+  },
+  {
+    "seq": 279,
+    "timestamp": "2026-09-03T15:56:45.039Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "30551a7b53e0531fb2fd859e05815e053fbf5c0d4a91dceed102216b154f37c7",
+    "hash": "87aeee98f397ed5fa9b63a3e9d63397d428f26ae55b056126787304f516e6e62"
+  },
+  {
+    "seq": 280,
+    "timestamp": "2026-09-03T15:56:45.045Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "87aeee98f397ed5fa9b63a3e9d63397d428f26ae55b056126787304f516e6e62",
+    "hash": "06813fc73173b99c177b51339d28dbd3563f4b57efed14014cd17d0eb2df32cd"
+  },
+  {
+    "seq": 281,
+    "timestamp": "2026-09-03T15:56:45.051Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "06813fc73173b99c177b51339d28dbd3563f4b57efed14014cd17d0eb2df32cd",
+    "hash": "0e40c77feecd934c8bb747ade089a272198e1a4cf73e4899f1447f6b3f503198"
+  },
+  {
+    "seq": 282,
+    "timestamp": "2026-09-03T15:56:45.056Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "0e40c77feecd934c8bb747ade089a272198e1a4cf73e4899f1447f6b3f503198",
+    "hash": "a9e85d8caf9530334aba9d23251bc18be6e16cef084b9d7b7d32f9436b0122dd"
+  },
+  {
+    "seq": 283,
+    "timestamp": "2026-09-03T15:56:45.069Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "a9e85d8caf9530334aba9d23251bc18be6e16cef084b9d7b7d32f9436b0122dd",
+    "hash": "ebc3ab8c477434a26959056924d9ea17d99523da6218a6ba494e22f49b07f60f"
+  },
+  {
+    "seq": 284,
+    "timestamp": "2026-09-03T15:56:45.077Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "ebc3ab8c477434a26959056924d9ea17d99523da6218a6ba494e22f49b07f60f",
+    "hash": "ab709c2176587dc10e8fbf0363e2276ea5185bbb3535184c3739ef94b2867645"
+  },
+  {
+    "seq": 285,
+    "timestamp": "2026-09-03T15:56:45.096Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "ab709c2176587dc10e8fbf0363e2276ea5185bbb3535184c3739ef94b2867645",
+    "hash": "7c61c608b18eee97fb2e9033f8b722088c628f788b71d6980a22b693bbb90034"
+  },
+  {
+    "seq": 286,
+    "timestamp": "2026-09-03T15:56:45.105Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1010",
+    "email": "purchaser_10@otaru.in",
+    "details": "Drop checkout successful for purchaser_10@otaru.in",
+    "prevHash": "7c61c608b18eee97fb2e9033f8b722088c628f788b71d6980a22b693bbb90034",
+    "hash": "cbc3058c6dae9b204c67df970b3fc515bde31640576bd8a9c1bea207d9b09ed4"
+  },
+  {
+    "seq": 287,
+    "timestamp": "2026-09-03T15:56:45.116Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1011",
+    "email": "purchaser_11@otaru.in",
+    "details": "Drop checkout successful for purchaser_11@otaru.in",
+    "prevHash": "cbc3058c6dae9b204c67df970b3fc515bde31640576bd8a9c1bea207d9b09ed4",
+    "hash": "4f9d5305c5375c507cd9afcf1b00314efb30190f9b391b0ce71368095753769f"
+  },
+  {
+    "seq": 288,
+    "timestamp": "2026-09-03T15:56:45.126Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1012",
+    "email": "purchaser_12@otaru.in",
+    "details": "Drop checkout successful for purchaser_12@otaru.in",
+    "prevHash": "4f9d5305c5375c507cd9afcf1b00314efb30190f9b391b0ce71368095753769f",
+    "hash": "9986425bcf8af0b27ed0484dbc9e437a6870bf979df322d87bc20ed7d9270563"
+  },
+  {
+    "seq": 289,
+    "timestamp": "2026-09-03T15:56:45.135Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1013",
+    "email": "purchaser_13@otaru.in",
+    "details": "Drop checkout successful for purchaser_13@otaru.in",
+    "prevHash": "9986425bcf8af0b27ed0484dbc9e437a6870bf979df322d87bc20ed7d9270563",
+    "hash": "d855503fd40a7471c8cd79a18e0e709ec546964aedc0234a35924299f14cecb9"
+  },
+  {
+    "seq": 290,
+    "timestamp": "2026-09-03T15:56:45.146Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1014",
+    "email": "purchaser_14@otaru.in",
+    "details": "Drop checkout successful for purchaser_14@otaru.in",
+    "prevHash": "d855503fd40a7471c8cd79a18e0e709ec546964aedc0234a35924299f14cecb9",
+    "hash": "08b096fea52d432e51d9e79fef675da60bd2d7a07fef7cb20da28014898c2270"
+  },
+  {
+    "seq": 291,
+    "timestamp": "2026-09-03T15:56:45.154Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1015",
+    "email": "purchaser_15@otaru.in",
+    "details": "Drop checkout successful for purchaser_15@otaru.in",
+    "prevHash": "08b096fea52d432e51d9e79fef675da60bd2d7a07fef7cb20da28014898c2270",
+    "hash": "bc85ddaac32dcab4a1a81c1531ce36132e5173a629d2713805df86bd76eee3ef"
+  },
+  {
+    "seq": 292,
+    "timestamp": "2026-09-03T15:56:45.158Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1016",
+    "email": "purchaser_16@otaru.in",
+    "details": "Drop checkout successful for purchaser_16@otaru.in",
+    "prevHash": "bc85ddaac32dcab4a1a81c1531ce36132e5173a629d2713805df86bd76eee3ef",
+    "hash": "37411bacd5722989ed3e44637a4aa29e42df91cb1f58df8092cc06ae39987107"
+  },
+  {
+    "seq": 293,
+    "timestamp": "2026-09-03T15:56:45.163Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1017",
+    "email": "purchaser_17@otaru.in",
+    "details": "Drop checkout successful for purchaser_17@otaru.in",
+    "prevHash": "37411bacd5722989ed3e44637a4aa29e42df91cb1f58df8092cc06ae39987107",
+    "hash": "8e5f01211708b5a2e4c3a0a7c173a4eefa0457997895234a539c01e44c03edb8"
+  },
+  {
+    "seq": 294,
+    "timestamp": "2026-09-03T15:56:45.167Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1018",
+    "email": "purchaser_18@otaru.in",
+    "details": "Drop checkout successful for purchaser_18@otaru.in",
+    "prevHash": "8e5f01211708b5a2e4c3a0a7c173a4eefa0457997895234a539c01e44c03edb8",
+    "hash": "590d096673062f376a6a8cb83e0d3bc589d8b0ee92ea4a8280eac0080afceb33"
+  },
+  {
+    "seq": 295,
+    "timestamp": "2026-09-03T15:56:45.172Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1019",
+    "email": "purchaser_19@otaru.in",
+    "details": "Drop checkout successful for purchaser_19@otaru.in",
+    "prevHash": "590d096673062f376a6a8cb83e0d3bc589d8b0ee92ea4a8280eac0080afceb33",
+    "hash": "a9c08827dc508740a45b6a1b875b5df8207ca2fb843a40c6beafb5a02ab5cbb2"
+  },
+  {
+    "seq": 296,
+    "timestamp": "2026-09-03T15:56:45.175Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1020",
+    "email": "purchaser_20@otaru.in",
+    "details": "Drop checkout successful for purchaser_20@otaru.in",
+    "prevHash": "a9c08827dc508740a45b6a1b875b5df8207ca2fb843a40c6beafb5a02ab5cbb2",
+    "hash": "bcc9d9fc109de5b37c48ffe3cbed0b2628bb449813a8aed64ab2aa45ebc0a39e"
+  },
+  {
+    "seq": 297,
+    "timestamp": "2026-09-03T15:56:45.187Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1021",
+    "email": "purchaser_21@otaru.in",
+    "details": "Drop checkout successful for purchaser_21@otaru.in",
+    "prevHash": "bcc9d9fc109de5b37c48ffe3cbed0b2628bb449813a8aed64ab2aa45ebc0a39e",
+    "hash": "9b8c01750361559f4c83675ef172638cfb1b727381ff48532ef66ca63be01be1"
+  },
+  {
+    "seq": 298,
+    "timestamp": "2026-09-03T15:56:45.192Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1022",
+    "email": "purchaser_22@otaru.in",
+    "details": "Drop checkout successful for purchaser_22@otaru.in",
+    "prevHash": "9b8c01750361559f4c83675ef172638cfb1b727381ff48532ef66ca63be01be1",
+    "hash": "74d427e01dfe28ed5477ec9ec5f654b46c7429983670ec1d7cf4a1d751cfc9d2"
+  },
+  {
+    "seq": 299,
+    "timestamp": "2026-09-03T15:56:45.196Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1023",
+    "email": "purchaser_23@otaru.in",
+    "details": "Drop checkout successful for purchaser_23@otaru.in",
+    "prevHash": "74d427e01dfe28ed5477ec9ec5f654b46c7429983670ec1d7cf4a1d751cfc9d2",
+    "hash": "63cd0430ef330826131ff8e0d62bfeae4c69731dfac99dc7e79fb8ee123fc042"
+  },
+  {
+    "seq": 300,
+    "timestamp": "2026-09-03T15:56:45.202Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1024",
+    "email": "purchaser_24@otaru.in",
+    "details": "Drop checkout successful for purchaser_24@otaru.in",
+    "prevHash": "63cd0430ef330826131ff8e0d62bfeae4c69731dfac99dc7e79fb8ee123fc042",
+    "hash": "e3e653e0e08168d200935c0be1145ff26ab39c5aad003e81747b69650e037918"
+  },
+  {
+    "seq": 301,
+    "timestamp": "2026-09-03T15:56:47.171Z",
+    "type": "PAYMENT_FAILED",
+    "ref": "order_TEST_101",
+    "ip": "127.0.0.1",
+    "details": "Mock verification attempt FORBIDDEN in production. Order: order_TEST_101",
+    "prevHash": "e3e653e0e08168d200935c0be1145ff26ab39c5aad003e81747b69650e037918",
+    "hash": "e48b5609fbf182491f72eeb076ae83e2b7dea99298c084154575ac287d21811b"
+  },
+  {
+    "seq": 302,
+    "timestamp": "2026-09-03T15:56:47.192Z",
+    "type": "ORDER_BLOCKED",
+    "ip": "127.0.0.1",
+    "email": "adversary@test.com",
+    "details": "Order creation rejected: Razorpay gateway unavailable in production mode. Email: adversary@test.com",
+    "prevHash": "e48b5609fbf182491f72eeb076ae83e2b7dea99298c084154575ac287d21811b",
+    "hash": "ec3ad7fddbe12e328135cf2952f28a55eac6bd0ef3ff69ab4da2ccf60ed90ba1"
+  },
+  {
+    "seq": 303,
+    "timestamp": "2026-09-03T16:06:24.214Z",
+    "type": "ORDER_CREATED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Order 1",
+    "prevHash": "ec3ad7fddbe12e328135cf2952f28a55eac6bd0ef3ff69ab4da2ccf60ed90ba1",
+    "hash": "0f077a293ca7627d2de8abe7f326a67b8b9cbb91c42877a88e6e978dbbd57d2c"
+  },
+  {
+    "seq": 304,
+    "timestamp": "2026-09-03T16:06:24.219Z",
+    "type": "PAYMENT_VERIFIED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Payment Verified 1",
+    "prevHash": "0f077a293ca7627d2de8abe7f326a67b8b9cbb91c42877a88e6e978dbbd57d2c",
+    "hash": "f8108ddcbd0dad62c81feeaf7c842e73f49d4df924bc913f01f989ced93f2d0f"
+  },
+  {
+    "seq": 305,
+    "timestamp": "2026-09-03T16:06:24.223Z",
+    "type": "NONCE_CONSUMED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Nonce Consumed 1",
+    "prevHash": "f8108ddcbd0dad62c81feeaf7c842e73f49d4df924bc913f01f989ced93f2d0f",
+    "hash": "007cc4da37e28eb44f4560ef71a83e67dbf2972c4683c62bc11526fe6cb13ead"
+  },
+  {
+    "seq": 306,
+    "timestamp": "2026-09-03T16:06:24.251Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "007cc4da37e28eb44f4560ef71a83e67dbf2972c4683c62bc11526fe6cb13ead",
+    "hash": "c6811b1ad2d8a55b2c9a5219b8278df034b0edd9da9d323a950051bdffe12f21"
+  },
+  {
+    "seq": 307,
+    "timestamp": "2026-09-03T16:06:24.256Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "c6811b1ad2d8a55b2c9a5219b8278df034b0edd9da9d323a950051bdffe12f21",
+    "hash": "f5983343032a96ef8ea32e83fc4414c3ee6dee927eed0428b2bad648eca6887d"
+  },
+  {
+    "seq": 308,
+    "timestamp": "2026-09-03T16:06:24.262Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "f5983343032a96ef8ea32e83fc4414c3ee6dee927eed0428b2bad648eca6887d",
+    "hash": "a4b2ae7e0164249a92d6bda70d136da03991f8df9b9401a21f754d4a8b0f531c"
+  },
+  {
+    "seq": 309,
+    "timestamp": "2026-09-03T16:06:24.266Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "a4b2ae7e0164249a92d6bda70d136da03991f8df9b9401a21f754d4a8b0f531c",
+    "hash": "c4fb38963b392d2e4fb0992a9765b6935d193beb92c816015698b2b2c0ea818d"
+  },
+  {
+    "seq": 310,
+    "timestamp": "2026-09-03T16:06:24.271Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "c4fb38963b392d2e4fb0992a9765b6935d193beb92c816015698b2b2c0ea818d",
+    "hash": "7c90b816f3ba8bbb69fa23d9905ceb082c1f2e09c62e40b656fbb200df7b81ec"
+  },
+  {
+    "seq": 311,
+    "timestamp": "2026-09-03T16:06:24.276Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "7c90b816f3ba8bbb69fa23d9905ceb082c1f2e09c62e40b656fbb200df7b81ec",
+    "hash": "9972dd74af877bc1f7cc891e31d472f9f9ca0d8e3b274700057d30842932b322"
+  },
+  {
+    "seq": 312,
+    "timestamp": "2026-09-03T16:06:24.280Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "9972dd74af877bc1f7cc891e31d472f9f9ca0d8e3b274700057d30842932b322",
+    "hash": "84d78d3a91f2a068936857da4e2ba6a9848674e7962f1fa75302abc3a1c2891a"
+  },
+  {
+    "seq": 313,
+    "timestamp": "2026-09-03T16:06:24.285Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "84d78d3a91f2a068936857da4e2ba6a9848674e7962f1fa75302abc3a1c2891a",
+    "hash": "31dedba7cf7d19b11401da4ed6ebd88bb28ad89f92c2428ffd3df2cd99df8b60"
+  },
+  {
+    "seq": 314,
+    "timestamp": "2026-09-03T16:06:24.289Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "31dedba7cf7d19b11401da4ed6ebd88bb28ad89f92c2428ffd3df2cd99df8b60",
+    "hash": "a495d96e2e14c6f85ba339d536814635a6a64b0bdf5c1b14d69ec598e798316e"
+  },
+  {
+    "seq": 315,
+    "timestamp": "2026-09-03T16:06:24.294Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "a495d96e2e14c6f85ba339d536814635a6a64b0bdf5c1b14d69ec598e798316e",
+    "hash": "0478c40c1e483bc84cb556bdfca6e18252cd4dc49db102966df06c2388c27398"
+  },
+  {
+    "seq": 316,
+    "timestamp": "2026-09-03T16:06:24.300Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "0478c40c1e483bc84cb556bdfca6e18252cd4dc49db102966df06c2388c27398",
+    "hash": "a4ed0d8b4fcb88467df8e53a8a2f72ba40720814525b02d970a931d24fd96b87"
+  },
+  {
+    "seq": 317,
+    "timestamp": "2026-09-03T16:06:24.303Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "a4ed0d8b4fcb88467df8e53a8a2f72ba40720814525b02d970a931d24fd96b87",
+    "hash": "1a9213fb55bc2302522a640ceed778d46605d63e2051695b89c4ce7912a92f79"
+  },
+  {
+    "seq": 318,
+    "timestamp": "2026-09-03T16:06:24.311Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "1a9213fb55bc2302522a640ceed778d46605d63e2051695b89c4ce7912a92f79",
+    "hash": "aa24e83455be825d9b248a7e5e57e4a10220ad49ad01b6cc44dccbbcb62a9886"
+  },
+  {
+    "seq": 319,
+    "timestamp": "2026-09-03T16:06:24.319Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "aa24e83455be825d9b248a7e5e57e4a10220ad49ad01b6cc44dccbbcb62a9886",
+    "hash": "dea22e8cba684ff865f41c9761795f957d85461b67690eac58703eaf246cfe28"
+  },
+  {
+    "seq": 320,
+    "timestamp": "2026-09-03T16:06:24.324Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "dea22e8cba684ff865f41c9761795f957d85461b67690eac58703eaf246cfe28",
+    "hash": "4e2e12b4cac320932059cff278f7d8f2cdf5e9b7d0d0cc94b125576d87157f3a"
+  },
+  {
+    "seq": 321,
+    "timestamp": "2026-09-03T16:06:24.338Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "4e2e12b4cac320932059cff278f7d8f2cdf5e9b7d0d0cc94b125576d87157f3a",
+    "hash": "83b33f380a97ab350f50bf30d8cc58e38870ca83f3ab2343e42a377094b57908"
+  },
+  {
+    "seq": 322,
+    "timestamp": "2026-09-03T16:06:24.347Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "83b33f380a97ab350f50bf30d8cc58e38870ca83f3ab2343e42a377094b57908",
+    "hash": "82e64c3a22eae7315060a1307cc58b8c6d793bcd2067f7b1eae5796c4eec37c1"
+  },
+  {
+    "seq": 323,
+    "timestamp": "2026-09-03T16:06:24.358Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "82e64c3a22eae7315060a1307cc58b8c6d793bcd2067f7b1eae5796c4eec37c1",
+    "hash": "c6a3a358fba3ec6706cc12e49f64271de1f4ca7f03581699fea9a70ee9c1fc34"
+  },
+  {
+    "seq": 324,
+    "timestamp": "2026-09-03T16:06:24.366Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "c6a3a358fba3ec6706cc12e49f64271de1f4ca7f03581699fea9a70ee9c1fc34",
+    "hash": "31f3a8783c03ff044c05786c6ed946471038c6afe4f0e52cae446fcc36515724"
+  },
+  {
+    "seq": 325,
+    "timestamp": "2026-09-03T16:06:24.372Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "31f3a8783c03ff044c05786c6ed946471038c6afe4f0e52cae446fcc36515724",
+    "hash": "b4282e0306dda72ded5802b1b08bb92686cd557fe126dc87f16c460ef2084847"
+  },
+  {
+    "seq": 326,
+    "timestamp": "2026-09-03T16:06:24.384Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1010",
+    "email": "purchaser_10@otaru.in",
+    "details": "Drop checkout successful for purchaser_10@otaru.in",
+    "prevHash": "b4282e0306dda72ded5802b1b08bb92686cd557fe126dc87f16c460ef2084847",
+    "hash": "8a1b1ff0e75df6e07f9a4e658bf65410d6dd5b9f846dfb27cd227e940ab39b78"
+  },
+  {
+    "seq": 327,
+    "timestamp": "2026-09-03T16:06:24.389Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1011",
+    "email": "purchaser_11@otaru.in",
+    "details": "Drop checkout successful for purchaser_11@otaru.in",
+    "prevHash": "8a1b1ff0e75df6e07f9a4e658bf65410d6dd5b9f846dfb27cd227e940ab39b78",
+    "hash": "acf33911332a3de3247d0a76c97c3c4f45670ad3a0315afae56625dc40ef9c19"
+  },
+  {
+    "seq": 328,
+    "timestamp": "2026-09-03T16:06:24.393Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1012",
+    "email": "purchaser_12@otaru.in",
+    "details": "Drop checkout successful for purchaser_12@otaru.in",
+    "prevHash": "acf33911332a3de3247d0a76c97c3c4f45670ad3a0315afae56625dc40ef9c19",
+    "hash": "aece186c647e44c7348389a324671b311eb916ca217f3d16a94fc7496e2c1cb5"
+  },
+  {
+    "seq": 329,
+    "timestamp": "2026-09-03T16:06:24.398Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1013",
+    "email": "purchaser_13@otaru.in",
+    "details": "Drop checkout successful for purchaser_13@otaru.in",
+    "prevHash": "aece186c647e44c7348389a324671b311eb916ca217f3d16a94fc7496e2c1cb5",
+    "hash": "8c1f5c6d91b0fe1318e4b089e150d58278c7ca9a0861a2df7a2f4c23a5167e67"
+  },
+  {
+    "seq": 330,
+    "timestamp": "2026-09-03T16:06:24.404Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1014",
+    "email": "purchaser_14@otaru.in",
+    "details": "Drop checkout successful for purchaser_14@otaru.in",
+    "prevHash": "8c1f5c6d91b0fe1318e4b089e150d58278c7ca9a0861a2df7a2f4c23a5167e67",
+    "hash": "3ba26e655538970f4dd00d0a182c818e61b0390161fcd9f07ca0e8a6a0a357b9"
+  },
+  {
+    "seq": 331,
+    "timestamp": "2026-09-03T16:06:24.412Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1015",
+    "email": "purchaser_15@otaru.in",
+    "details": "Drop checkout successful for purchaser_15@otaru.in",
+    "prevHash": "3ba26e655538970f4dd00d0a182c818e61b0390161fcd9f07ca0e8a6a0a357b9",
+    "hash": "4570ae33bf2c20353ad370a58c5692fd4299d6f723873425c66c48d97bde2898"
+  },
+  {
+    "seq": 332,
+    "timestamp": "2026-09-03T16:06:24.418Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1016",
+    "email": "purchaser_16@otaru.in",
+    "details": "Drop checkout successful for purchaser_16@otaru.in",
+    "prevHash": "4570ae33bf2c20353ad370a58c5692fd4299d6f723873425c66c48d97bde2898",
+    "hash": "05850f51fad8a8c01241f278d7c58ec433c19716435527259cf6482230d20fe1"
+  },
+  {
+    "seq": 333,
+    "timestamp": "2026-09-03T16:06:24.422Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1017",
+    "email": "purchaser_17@otaru.in",
+    "details": "Drop checkout successful for purchaser_17@otaru.in",
+    "prevHash": "05850f51fad8a8c01241f278d7c58ec433c19716435527259cf6482230d20fe1",
+    "hash": "3dc3c818a1820a9b23c55e87dd0a6b3f9fb5b62f53501d118e4465cf561243e5"
+  },
+  {
+    "seq": 334,
+    "timestamp": "2026-09-03T16:06:24.458Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1018",
+    "email": "purchaser_18@otaru.in",
+    "details": "Drop checkout successful for purchaser_18@otaru.in",
+    "prevHash": "3dc3c818a1820a9b23c55e87dd0a6b3f9fb5b62f53501d118e4465cf561243e5",
+    "hash": "0535826f00792a9d41bd678e7b19ba7d683a02fded7acfebf262c142cb2c8d7d"
+  },
+  {
+    "seq": 335,
+    "timestamp": "2026-09-03T16:06:24.467Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1019",
+    "email": "purchaser_19@otaru.in",
+    "details": "Drop checkout successful for purchaser_19@otaru.in",
+    "prevHash": "0535826f00792a9d41bd678e7b19ba7d683a02fded7acfebf262c142cb2c8d7d",
+    "hash": "377c8cbd2417f40a78c2e4e54fdc323a431e293f897c3319bc4c612db148fcba"
+  },
+  {
+    "seq": 336,
+    "timestamp": "2026-09-03T16:06:24.481Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1020",
+    "email": "purchaser_20@otaru.in",
+    "details": "Drop checkout successful for purchaser_20@otaru.in",
+    "prevHash": "377c8cbd2417f40a78c2e4e54fdc323a431e293f897c3319bc4c612db148fcba",
+    "hash": "6cd39dc0b67844f59ad39dbc57ca88ddc6ed40f6de884fb1ffb170c549428042"
+  },
+  {
+    "seq": 337,
+    "timestamp": "2026-09-03T16:06:24.487Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1021",
+    "email": "purchaser_21@otaru.in",
+    "details": "Drop checkout successful for purchaser_21@otaru.in",
+    "prevHash": "6cd39dc0b67844f59ad39dbc57ca88ddc6ed40f6de884fb1ffb170c549428042",
+    "hash": "456b74339b6e3cff191fb51bdd13590ec9ed6281fee5ac16593f0298605caf93"
+  },
+  {
+    "seq": 338,
+    "timestamp": "2026-09-03T16:06:24.496Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1022",
+    "email": "purchaser_22@otaru.in",
+    "details": "Drop checkout successful for purchaser_22@otaru.in",
+    "prevHash": "456b74339b6e3cff191fb51bdd13590ec9ed6281fee5ac16593f0298605caf93",
+    "hash": "e4aabf767371cf552b735f684679f4f35fd766b72e7943e2c8e4beacdc31316b"
+  },
+  {
+    "seq": 339,
+    "timestamp": "2026-09-03T16:06:24.507Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1023",
+    "email": "purchaser_23@otaru.in",
+    "details": "Drop checkout successful for purchaser_23@otaru.in",
+    "prevHash": "e4aabf767371cf552b735f684679f4f35fd766b72e7943e2c8e4beacdc31316b",
+    "hash": "70cc6eb60f6ce47e6de3a25ee335d2744de3f17f1af620c9d5e7d32e46db988d"
+  },
+  {
+    "seq": 340,
+    "timestamp": "2026-09-03T16:06:24.526Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1024",
+    "email": "purchaser_24@otaru.in",
+    "details": "Drop checkout successful for purchaser_24@otaru.in",
+    "prevHash": "70cc6eb60f6ce47e6de3a25ee335d2744de3f17f1af620c9d5e7d32e46db988d",
+    "hash": "5fb916aff4b4a87b9aeb6a74c8e6939392c1828cd8baf3849fc82da51c4a5fcb"
+  },
+  {
+    "seq": 341,
+    "timestamp": "2026-09-03T16:06:24.555Z",
+    "type": "PAYMENT_FAILED",
+    "ref": "order_TEST_101",
+    "ip": "127.0.0.1",
+    "details": "Mock verification attempt FORBIDDEN in production. Order: order_TEST_101",
+    "prevHash": "5fb916aff4b4a87b9aeb6a74c8e6939392c1828cd8baf3849fc82da51c4a5fcb",
+    "hash": "1310b73e9ccc391609d201e6b895bb07d49a5d9c597695b48e4f177ea605c71f"
+  },
+  {
+    "seq": 342,
+    "timestamp": "2026-09-03T16:06:24.577Z",
+    "type": "ORDER_BLOCKED",
+    "ip": "127.0.0.1",
+    "email": "adversary@test.com",
+    "details": "Order creation rejected: Razorpay gateway unavailable in production mode. Email: adversary@test.com",
+    "prevHash": "1310b73e9ccc391609d201e6b895bb07d49a5d9c597695b48e4f177ea605c71f",
+    "hash": "d4afcb5ea744732cc194b9c260923dcb1b7b194a63003182a5043367f3625b3c"
+  },
+  {
+    "seq": 343,
+    "timestamp": "2026-09-03T16:06:51.091Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "d4afcb5ea744732cc194b9c260923dcb1b7b194a63003182a5043367f3625b3c",
+    "hash": "e755ce8b1b75a47af081da2a7ea08c3bf1c186427d0ffd59184c3b17c0ca38b3"
+  },
+  {
+    "seq": 344,
+    "timestamp": "2026-09-03T16:06:51.096Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "e755ce8b1b75a47af081da2a7ea08c3bf1c186427d0ffd59184c3b17c0ca38b3",
+    "hash": "ab6398a77ab6c882dd32b8b4d3baca51087a272803fc34e08513f306d38145ad"
+  },
+  {
+    "seq": 345,
+    "timestamp": "2026-09-03T16:06:51.101Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "ab6398a77ab6c882dd32b8b4d3baca51087a272803fc34e08513f306d38145ad",
+    "hash": "97b3e8cfede4547feb2ec7e42bc984fb70448b794cfbb384799d7e0704643353"
+  },
+  {
+    "seq": 346,
+    "timestamp": "2026-09-03T16:06:51.108Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "97b3e8cfede4547feb2ec7e42bc984fb70448b794cfbb384799d7e0704643353",
+    "hash": "b63f7b36de00ae555eca194650219480605fb8693212bc6c097300de75011a6f"
+  },
+  {
+    "seq": 347,
+    "timestamp": "2026-09-03T16:06:51.113Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "b63f7b36de00ae555eca194650219480605fb8693212bc6c097300de75011a6f",
+    "hash": "347bf11e89125dc77169152c6915fe7e8bf5288e1912e8cbe84c37bf6f4c2f1a"
+  },
+  {
+    "seq": 348,
+    "timestamp": "2026-09-03T16:06:51.118Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "347bf11e89125dc77169152c6915fe7e8bf5288e1912e8cbe84c37bf6f4c2f1a",
+    "hash": "0be161e0763bf34dd77e4290b6209c938ca52b7fb9622fcc26b6084af22b6a93"
+  },
+  {
+    "seq": 349,
+    "timestamp": "2026-09-03T16:06:51.124Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "0be161e0763bf34dd77e4290b6209c938ca52b7fb9622fcc26b6084af22b6a93",
+    "hash": "4fca1aa827e20331b19645fc85311f7ef635ae350a7a7003187fbb9095159a84"
+  },
+  {
+    "seq": 350,
+    "timestamp": "2026-09-03T16:06:51.129Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "4fca1aa827e20331b19645fc85311f7ef635ae350a7a7003187fbb9095159a84",
+    "hash": "72ad5aa4518d6a133098bc68e6ca13083d170f518abbf59eb8c008a171f3fc96"
+  },
+  {
+    "seq": 351,
+    "timestamp": "2026-09-03T16:06:51.137Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "72ad5aa4518d6a133098bc68e6ca13083d170f518abbf59eb8c008a171f3fc96",
+    "hash": "5654421db7552d5a460b5baa0cceaff3ce3baf2a598589ac0a3644abddfcdf63"
+  },
+  {
+    "seq": 352,
+    "timestamp": "2026-09-03T16:06:51.142Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "5654421db7552d5a460b5baa0cceaff3ce3baf2a598589ac0a3644abddfcdf63",
+    "hash": "d349614c8d765272eef8d87e27a6db0de96450bf638c69cfae196609b53c22a6"
+  },
+  {
+    "seq": 353,
+    "timestamp": "2026-09-03T16:06:51.151Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "d349614c8d765272eef8d87e27a6db0de96450bf638c69cfae196609b53c22a6",
+    "hash": "7f29f13bed3ca90fcf050fa7f560aeb97a4221905d475fd49d71e8985fe0e8b9"
+  },
+  {
+    "seq": 354,
+    "timestamp": "2026-09-03T16:06:51.156Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "7f29f13bed3ca90fcf050fa7f560aeb97a4221905d475fd49d71e8985fe0e8b9",
+    "hash": "5e4dba0e057663f58804d1953fe52bba9d1aff77a70d13544db1ac5955803d66"
+  },
+  {
+    "seq": 355,
+    "timestamp": "2026-09-03T16:06:51.160Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "5e4dba0e057663f58804d1953fe52bba9d1aff77a70d13544db1ac5955803d66",
+    "hash": "5c9c74d2f6d101ba07e24e2c9dee29a225a47409ff7327a648807a7e9c6c826e"
+  },
+  {
+    "seq": 356,
+    "timestamp": "2026-09-03T16:06:51.167Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "5c9c74d2f6d101ba07e24e2c9dee29a225a47409ff7327a648807a7e9c6c826e",
+    "hash": "4f214ded25193a76bcc28e2d20a79a204d72090351ef042a50dfc6421caf7e88"
+  },
+  {
+    "seq": 357,
+    "timestamp": "2026-09-03T16:06:51.171Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "4f214ded25193a76bcc28e2d20a79a204d72090351ef042a50dfc6421caf7e88",
+    "hash": "25396330a12dd261f52dc0228c7a392b5f446c6ece85eff6b67bbeff7047843c"
+  },
+  {
+    "seq": 358,
+    "timestamp": "2026-09-03T16:06:51.176Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "25396330a12dd261f52dc0228c7a392b5f446c6ece85eff6b67bbeff7047843c",
+    "hash": "6fc32952387ceadb3afd9877bac428e3e7c95e527bec767e21bbe7d3ca108dd3"
+  },
+  {
+    "seq": 359,
+    "timestamp": "2026-09-03T16:06:51.182Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "6fc32952387ceadb3afd9877bac428e3e7c95e527bec767e21bbe7d3ca108dd3",
+    "hash": "ab9a76d3ad42f74666f53bc78814053bafc784177d8adf1bf1842d33dc7b63a1"
+  },
+  {
+    "seq": 360,
+    "timestamp": "2026-09-03T16:06:51.186Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "ab9a76d3ad42f74666f53bc78814053bafc784177d8adf1bf1842d33dc7b63a1",
+    "hash": "413df79cf8628ecb707d8bb37cb1a79348bf1146757ec4f267cc1f08389a786b"
+  },
+  {
+    "seq": 361,
+    "timestamp": "2026-09-03T16:06:51.191Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "413df79cf8628ecb707d8bb37cb1a79348bf1146757ec4f267cc1f08389a786b",
+    "hash": "cf582dde5e98f37f82275eaaf26be66205f65175ab324417ed1d9ab284f780fa"
+  },
+  {
+    "seq": 362,
+    "timestamp": "2026-09-03T16:06:51.195Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "cf582dde5e98f37f82275eaaf26be66205f65175ab324417ed1d9ab284f780fa",
+    "hash": "04db51e7a1856870377e6773919c97da3bc56cb801ebcfc2057f9614857f793b"
+  },
+  {
+    "seq": 363,
+    "timestamp": "2026-09-03T16:06:51.199Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1010",
+    "email": "purchaser_10@otaru.in",
+    "details": "Drop checkout successful for purchaser_10@otaru.in",
+    "prevHash": "04db51e7a1856870377e6773919c97da3bc56cb801ebcfc2057f9614857f793b",
+    "hash": "57ef7d3ed13c635c80536c21c9c5b565c8725a72d6fe9484ef1165312a8b76f2"
+  },
+  {
+    "seq": 364,
+    "timestamp": "2026-09-03T16:06:51.204Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1011",
+    "email": "purchaser_11@otaru.in",
+    "details": "Drop checkout successful for purchaser_11@otaru.in",
+    "prevHash": "57ef7d3ed13c635c80536c21c9c5b565c8725a72d6fe9484ef1165312a8b76f2",
+    "hash": "14429ebcd5e29b5d8c78544f0b34090912565e8512ae3c4f34927cad6baeee29"
+  },
+  {
+    "seq": 365,
+    "timestamp": "2026-09-03T16:06:51.207Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1012",
+    "email": "purchaser_12@otaru.in",
+    "details": "Drop checkout successful for purchaser_12@otaru.in",
+    "prevHash": "14429ebcd5e29b5d8c78544f0b34090912565e8512ae3c4f34927cad6baeee29",
+    "hash": "b9d808be4d078375f3913ca7e8fd189811ed9d2f8a079d51ba8c9972d13c8dc1"
+  },
+  {
+    "seq": 366,
+    "timestamp": "2026-09-03T16:06:51.211Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1013",
+    "email": "purchaser_13@otaru.in",
+    "details": "Drop checkout successful for purchaser_13@otaru.in",
+    "prevHash": "b9d808be4d078375f3913ca7e8fd189811ed9d2f8a079d51ba8c9972d13c8dc1",
+    "hash": "538ef8c8096745c3cb34b4557684d85a8e28cce9fe53ab4996db41a9c7ad3f2a"
+  },
+  {
+    "seq": 367,
+    "timestamp": "2026-09-03T16:06:51.217Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1014",
+    "email": "purchaser_14@otaru.in",
+    "details": "Drop checkout successful for purchaser_14@otaru.in",
+    "prevHash": "538ef8c8096745c3cb34b4557684d85a8e28cce9fe53ab4996db41a9c7ad3f2a",
+    "hash": "3ccd73a73df873a3f465220b440411bde7a3e42d591c41363ffc3704ea81ec6e"
+  },
+  {
+    "seq": 368,
+    "timestamp": "2026-09-03T16:06:51.225Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1015",
+    "email": "purchaser_15@otaru.in",
+    "details": "Drop checkout successful for purchaser_15@otaru.in",
+    "prevHash": "3ccd73a73df873a3f465220b440411bde7a3e42d591c41363ffc3704ea81ec6e",
+    "hash": "aaec678d768f4cb8721abd1de9befe7692b69122c7f778aa47c15ee3848744b8"
+  },
+  {
+    "seq": 369,
+    "timestamp": "2026-09-03T16:06:51.231Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1016",
+    "email": "purchaser_16@otaru.in",
+    "details": "Drop checkout successful for purchaser_16@otaru.in",
+    "prevHash": "aaec678d768f4cb8721abd1de9befe7692b69122c7f778aa47c15ee3848744b8",
+    "hash": "800429d9ca67760f29a69b53e306e86f833fb3b88110371bd569dd52dacef491"
+  },
+  {
+    "seq": 370,
+    "timestamp": "2026-09-03T16:06:51.235Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1017",
+    "email": "purchaser_17@otaru.in",
+    "details": "Drop checkout successful for purchaser_17@otaru.in",
+    "prevHash": "800429d9ca67760f29a69b53e306e86f833fb3b88110371bd569dd52dacef491",
+    "hash": "273d131bd4ec6238e3bb8b8a8493a4f52cd86b8d34533e34a203b8cb4d3f61d5"
+  },
+  {
+    "seq": 371,
+    "timestamp": "2026-09-03T16:06:51.238Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1018",
+    "email": "purchaser_18@otaru.in",
+    "details": "Drop checkout successful for purchaser_18@otaru.in",
+    "prevHash": "273d131bd4ec6238e3bb8b8a8493a4f52cd86b8d34533e34a203b8cb4d3f61d5",
+    "hash": "cf061565dd31f2c4582b182361f8b08b1ae245ef01c80903927eeba644e02e10"
+  },
+  {
+    "seq": 372,
+    "timestamp": "2026-09-03T16:06:51.242Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1019",
+    "email": "purchaser_19@otaru.in",
+    "details": "Drop checkout successful for purchaser_19@otaru.in",
+    "prevHash": "cf061565dd31f2c4582b182361f8b08b1ae245ef01c80903927eeba644e02e10",
+    "hash": "2ed83747421dc853d06269e02398b29d49f3bb8854ab54e9512c5d0d74eaea74"
+  },
+  {
+    "seq": 373,
+    "timestamp": "2026-09-03T16:06:51.246Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1020",
+    "email": "purchaser_20@otaru.in",
+    "details": "Drop checkout successful for purchaser_20@otaru.in",
+    "prevHash": "2ed83747421dc853d06269e02398b29d49f3bb8854ab54e9512c5d0d74eaea74",
+    "hash": "cf801bb77dfca69f88b7085209be9d867f9059f1e43f7e6142bc424f49e3ee66"
+  },
+  {
+    "seq": 374,
+    "timestamp": "2026-09-03T16:06:51.250Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1021",
+    "email": "purchaser_21@otaru.in",
+    "details": "Drop checkout successful for purchaser_21@otaru.in",
+    "prevHash": "cf801bb77dfca69f88b7085209be9d867f9059f1e43f7e6142bc424f49e3ee66",
+    "hash": "166e193a3960206bd3a3c33ddd23277b4c0c938d69be7fafbccce3c5522252db"
+  },
+  {
+    "seq": 375,
+    "timestamp": "2026-09-03T16:06:51.254Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1022",
+    "email": "purchaser_22@otaru.in",
+    "details": "Drop checkout successful for purchaser_22@otaru.in",
+    "prevHash": "166e193a3960206bd3a3c33ddd23277b4c0c938d69be7fafbccce3c5522252db",
+    "hash": "bcb1bbe26919b0fc6217d910a4f9437b63dbda52f01c6b72aca2f25a1456da04"
+  },
+  {
+    "seq": 376,
+    "timestamp": "2026-09-03T16:06:51.258Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1023",
+    "email": "purchaser_23@otaru.in",
+    "details": "Drop checkout successful for purchaser_23@otaru.in",
+    "prevHash": "bcb1bbe26919b0fc6217d910a4f9437b63dbda52f01c6b72aca2f25a1456da04",
+    "hash": "eaaa6c2905c9bfa531a5c41c25320d121580fd1f3bcc1f95801178ba3898c155"
+  },
+  {
+    "seq": 377,
+    "timestamp": "2026-09-03T16:06:51.262Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1024",
+    "email": "purchaser_24@otaru.in",
+    "details": "Drop checkout successful for purchaser_24@otaru.in",
+    "prevHash": "eaaa6c2905c9bfa531a5c41c25320d121580fd1f3bcc1f95801178ba3898c155",
+    "hash": "67d23ae19554bdc1ad34c39c4079ea3b23275d540440faed0f96a62ce9137231"
+  },
+  {
+    "seq": 378,
+    "timestamp": "2026-09-03T16:22:07.077Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "67d23ae19554bdc1ad34c39c4079ea3b23275d540440faed0f96a62ce9137231",
+    "hash": "495c27a1e8a7710771147e9081805dace7d200c5d63e0b5b2bb6f5b23b03acbd"
+  },
+  {
+    "seq": 379,
+    "timestamp": "2026-09-03T16:22:07.084Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "495c27a1e8a7710771147e9081805dace7d200c5d63e0b5b2bb6f5b23b03acbd",
+    "hash": "2ab119efcfc409466af2271560dea96f4bfaf11302e8dc2e8a61dcdf8bdc9a0c"
+  },
+  {
+    "seq": 380,
+    "timestamp": "2026-09-03T16:22:07.091Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "2ab119efcfc409466af2271560dea96f4bfaf11302e8dc2e8a61dcdf8bdc9a0c",
+    "hash": "843b4437780ae1cb187d5926347035ae7bb13ac7581e5823302ede596c00a15d"
+  },
+  {
+    "seq": 381,
+    "timestamp": "2026-09-03T16:22:07.096Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "843b4437780ae1cb187d5926347035ae7bb13ac7581e5823302ede596c00a15d",
+    "hash": "aa1df98599daf94769387a539026439a1c3784a53985c48b20b604f0bf79b565"
+  },
+  {
+    "seq": 382,
+    "timestamp": "2026-09-03T16:22:07.104Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "aa1df98599daf94769387a539026439a1c3784a53985c48b20b604f0bf79b565",
+    "hash": "cafff58475f37b69144fe7669c86cb00d54a4535d06e6349283bc2b074803543"
+  },
+  {
+    "seq": 383,
+    "timestamp": "2026-09-03T16:22:07.111Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "cafff58475f37b69144fe7669c86cb00d54a4535d06e6349283bc2b074803543",
+    "hash": "dfef3d9b631ad31c01fd5b66108848b7b20d259ae41ed0cddac0ada7ef0ff95e"
+  },
+  {
+    "seq": 384,
+    "timestamp": "2026-09-03T16:22:07.117Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "dfef3d9b631ad31c01fd5b66108848b7b20d259ae41ed0cddac0ada7ef0ff95e",
+    "hash": "2e05f1414d60098499b1bc7177c1f6ec2e9a46ea68b38f1218efd9c6700edcdb"
+  },
+  {
+    "seq": 385,
+    "timestamp": "2026-09-03T16:22:07.122Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "2e05f1414d60098499b1bc7177c1f6ec2e9a46ea68b38f1218efd9c6700edcdb",
+    "hash": "b8fabba7e6a0c91613370391af241fc8602b68cb7dbfdc3fa5e89d70291082ef"
+  },
+  {
+    "seq": 386,
+    "timestamp": "2026-09-03T16:22:07.128Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "b8fabba7e6a0c91613370391af241fc8602b68cb7dbfdc3fa5e89d70291082ef",
+    "hash": "c5425940586e30d37e78b1b036ea197f19be217d55c2683f1b99dbf00b5d54e7"
+  },
+  {
+    "seq": 387,
+    "timestamp": "2026-09-03T16:22:07.134Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "c5425940586e30d37e78b1b036ea197f19be217d55c2683f1b99dbf00b5d54e7",
+    "hash": "0bc8e2af9209e56e9a16a56caa567ddca41017972e39dad43447e7dd4e90076f"
+  },
+  {
+    "seq": 388,
+    "timestamp": "2026-09-03T16:22:07.143Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "0bc8e2af9209e56e9a16a56caa567ddca41017972e39dad43447e7dd4e90076f",
+    "hash": "b0a77de499ddbecf3b8dc5bc3a6cd71ff24bd7e6b3e76baf3ea8b34e7fe10031"
+  },
+  {
+    "seq": 389,
+    "timestamp": "2026-09-03T16:22:07.148Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "b0a77de499ddbecf3b8dc5bc3a6cd71ff24bd7e6b3e76baf3ea8b34e7fe10031",
+    "hash": "fb9ca152a0f39e1f9cd29dfae04b02f1454d92c27e2ccc7cbfe6efd884aee233"
+  },
+  {
+    "seq": 390,
+    "timestamp": "2026-09-03T16:22:07.249Z",
+    "type": "SCHEMA_VALIDATION_FAILED",
+    "ip": "127.0.0.1",
+    "details": "Order schema validation failed: Validation failed: customer.address — Required",
+    "prevHash": "fb9ca152a0f39e1f9cd29dfae04b02f1454d92c27e2ccc7cbfe6efd884aee233",
+    "hash": "54ef8bb6f00ae078fa196214216a38f6e78778f4ce0ce66730951ec15daf50de"
+  },
+  {
+    "seq": 391,
+    "timestamp": "2026-09-03T16:22:07.263Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "e3f1a66a19b9638f2b7a0e3589306ebd1d90f10c91e1a14c1c0a4c0bd1d040db",
+    "hash": "6eb3d9819f18d4041a16f250aa6b6ec856ceb0d0f43b952c3240bbadbe75982d"
+  },
+  {
+    "seq": 392,
+    "timestamp": "2026-09-03T16:22:07.273Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "6eb3d9819f18d4041a16f250aa6b6ec856ceb0d0f43b952c3240bbadbe75982d",
+    "hash": "41e67285ce88e4a6df2866bb936e4f9afe57e3b0fc5f0fd34af1cdafa6dd5aaf"
+  },
+  {
+    "seq": 393,
+    "timestamp": "2026-09-03T16:22:07.279Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "41e67285ce88e4a6df2866bb936e4f9afe57e3b0fc5f0fd34af1cdafa6dd5aaf",
+    "hash": "bceb2d766fcb8f36eea3cd34751e95f53d30d1ad71af4e0d20fb60d6aa088df5"
+  },
+  {
+    "seq": 394,
+    "timestamp": "2026-09-03T16:22:07.289Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "bceb2d766fcb8f36eea3cd34751e95f53d30d1ad71af4e0d20fb60d6aa088df5",
+    "hash": "ed53b199a7226a8dfbf1cb99a4822f31ba2e2fcb265f09fb2cb91563238d043f"
+  },
+  {
+    "seq": 395,
+    "timestamp": "2026-09-03T16:22:07.308Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "ed53b199a7226a8dfbf1cb99a4822f31ba2e2fcb265f09fb2cb91563238d043f",
+    "hash": "59dea610bc63e4b762b0aa335c55bc8ad4c77eb8e8add227165841dda620cfa6"
+  },
+  {
+    "seq": 396,
+    "timestamp": "2026-09-03T16:22:07.326Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "59dea610bc63e4b762b0aa335c55bc8ad4c77eb8e8add227165841dda620cfa6",
+    "hash": "c1565db6d1eaefdce8bde2885592e85f94853503abfb6ee03337140709cae896"
+  },
+  {
+    "seq": 397,
+    "timestamp": "2026-09-03T16:22:07.332Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "c1565db6d1eaefdce8bde2885592e85f94853503abfb6ee03337140709cae896",
+    "hash": "2be82981a8de493dcf760d8cc1686c7ede93ce23e2992ddd7186fd3285c8eaf3"
+  },
+  {
+    "seq": 398,
+    "timestamp": "2026-09-03T16:22:07.341Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1010",
+    "email": "purchaser_10@otaru.in",
+    "details": "Drop checkout successful for purchaser_10@otaru.in",
+    "prevHash": "2be82981a8de493dcf760d8cc1686c7ede93ce23e2992ddd7186fd3285c8eaf3",
+    "hash": "b072fe4fb665dea9d7074578cd5728dc4948c1cf6b2e7b09d15fb57d6051b841"
+  },
+  {
+    "seq": 399,
+    "timestamp": "2026-09-03T16:22:07.346Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1011",
+    "email": "purchaser_11@otaru.in",
+    "details": "Drop checkout successful for purchaser_11@otaru.in",
+    "prevHash": "b072fe4fb665dea9d7074578cd5728dc4948c1cf6b2e7b09d15fb57d6051b841",
+    "hash": "13395c65b40238b3ce255be23a10d4ebf50b1364ee3bc8075f7c5886887ea4c2"
+  },
+  {
+    "seq": 400,
+    "timestamp": "2026-09-03T16:22:07.352Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1012",
+    "email": "purchaser_12@otaru.in",
+    "details": "Drop checkout successful for purchaser_12@otaru.in",
+    "prevHash": "13395c65b40238b3ce255be23a10d4ebf50b1364ee3bc8075f7c5886887ea4c2",
+    "hash": "dab60e338f460298b5045a83011175f534160f1f8b120fff87bc4a619d893a69"
+  },
+  {
+    "seq": 401,
+    "timestamp": "2026-09-03T16:22:07.361Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1013",
+    "email": "purchaser_13@otaru.in",
+    "details": "Drop checkout successful for purchaser_13@otaru.in",
+    "prevHash": "dab60e338f460298b5045a83011175f534160f1f8b120fff87bc4a619d893a69",
+    "hash": "b9bf44bf58cf45a2ae47510a477a870e3823923760d27ca0e655f3f6106ea75c"
+  },
+  {
+    "seq": 402,
+    "timestamp": "2026-09-03T16:22:07.369Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1014",
+    "email": "purchaser_14@otaru.in",
+    "details": "Drop checkout successful for purchaser_14@otaru.in",
+    "prevHash": "b9bf44bf58cf45a2ae47510a477a870e3823923760d27ca0e655f3f6106ea75c",
+    "hash": "486455c689aba864d06fff98f9ced95d74b177a6efe774d579c8e55b87120292"
+  },
+  {
+    "seq": 403,
+    "timestamp": "2026-09-03T16:22:07.378Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1015",
+    "email": "purchaser_15@otaru.in",
+    "details": "Drop checkout successful for purchaser_15@otaru.in",
+    "prevHash": "486455c689aba864d06fff98f9ced95d74b177a6efe774d579c8e55b87120292",
+    "hash": "ce6f20c2959b387e432fda70e1d8f00e93fed0a61456cd2cf958fc7a1ff7848e"
+  },
+  {
+    "seq": 404,
+    "timestamp": "2026-09-03T16:22:07.384Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1016",
+    "email": "purchaser_16@otaru.in",
+    "details": "Drop checkout successful for purchaser_16@otaru.in",
+    "prevHash": "ce6f20c2959b387e432fda70e1d8f00e93fed0a61456cd2cf958fc7a1ff7848e",
+    "hash": "2953b99b281a9156bb93c81b6bac56da9df156628eca719a19a614668b6b085e"
+  },
+  {
+    "seq": 405,
+    "timestamp": "2026-09-03T16:22:07.393Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1017",
+    "email": "purchaser_17@otaru.in",
+    "details": "Drop checkout successful for purchaser_17@otaru.in",
+    "prevHash": "2953b99b281a9156bb93c81b6bac56da9df156628eca719a19a614668b6b085e",
+    "hash": "6937d76696e409e0587c86ab6048adf214da260b0c205f455f84becb0b84c8d6"
+  },
+  {
+    "seq": 406,
+    "timestamp": "2026-09-03T16:22:07.398Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1018",
+    "email": "purchaser_18@otaru.in",
+    "details": "Drop checkout successful for purchaser_18@otaru.in",
+    "prevHash": "6937d76696e409e0587c86ab6048adf214da260b0c205f455f84becb0b84c8d6",
+    "hash": "5af4d9271924defcc5080eb55f6a5e811d53d8aa04747cda9981c5767eaea3ea"
+  },
+  {
+    "seq": 407,
+    "timestamp": "2026-09-03T16:22:07.408Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1019",
+    "email": "purchaser_19@otaru.in",
+    "details": "Drop checkout successful for purchaser_19@otaru.in",
+    "prevHash": "5af4d9271924defcc5080eb55f6a5e811d53d8aa04747cda9981c5767eaea3ea",
+    "hash": "af2d9a718ed70c44de3467acf1478ab1de2adc0615ee2a2caaf1a0656002c265"
+  },
+  {
+    "seq": 408,
+    "timestamp": "2026-09-03T16:22:07.414Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1020",
+    "email": "purchaser_20@otaru.in",
+    "details": "Drop checkout successful for purchaser_20@otaru.in",
+    "prevHash": "af2d9a718ed70c44de3467acf1478ab1de2adc0615ee2a2caaf1a0656002c265",
+    "hash": "2502acdc691407a0c8f2502c61afd3cb916b8d54befbd17cfa31aae09d3dfe23"
+  },
+  {
+    "seq": 409,
+    "timestamp": "2026-09-03T16:22:07.426Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1021",
+    "email": "purchaser_21@otaru.in",
+    "details": "Drop checkout successful for purchaser_21@otaru.in",
+    "prevHash": "2502acdc691407a0c8f2502c61afd3cb916b8d54befbd17cfa31aae09d3dfe23",
+    "hash": "f2e4433cc97833227b2e5f24575028fc8333ee5da9a8804ade3f3db8fbe567bc"
+  },
+  {
+    "seq": 410,
+    "timestamp": "2026-09-03T16:22:07.447Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1022",
+    "email": "purchaser_22@otaru.in",
+    "details": "Drop checkout successful for purchaser_22@otaru.in",
+    "prevHash": "f2e4433cc97833227b2e5f24575028fc8333ee5da9a8804ade3f3db8fbe567bc",
+    "hash": "16ee959b9e1b3e148b775e211ed33c1c1dd8fbec0924f35e50b86995bdbdd696"
+  },
+  {
+    "seq": 411,
+    "timestamp": "2026-09-03T16:22:07.463Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1023",
+    "email": "purchaser_23@otaru.in",
+    "details": "Drop checkout successful for purchaser_23@otaru.in",
+    "prevHash": "16ee959b9e1b3e148b775e211ed33c1c1dd8fbec0924f35e50b86995bdbdd696",
+    "hash": "316f2e8b52c01a45a4271a9891a7ea15782bc27e32b72613ab80bd8513aed60b"
+  },
+  {
+    "seq": 412,
+    "timestamp": "2026-09-03T16:22:07.494Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1024",
+    "email": "purchaser_24@otaru.in",
+    "details": "Drop checkout successful for purchaser_24@otaru.in",
+    "prevHash": "316f2e8b52c01a45a4271a9891a7ea15782bc27e32b72613ab80bd8513aed60b",
+    "hash": "5a8225e28ede60cc397396eff6c5b0af64216082c998a463f7c09a4e19e4c11a"
+  },
+  {
+    "seq": 413,
+    "timestamp": "2026-09-03T16:22:33.654Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "5a8225e28ede60cc397396eff6c5b0af64216082c998a463f7c09a4e19e4c11a",
+    "hash": "4a974b50a9ac564d5b8a2d0590f0553b38fe45d900fabe06f50c35df677699f3"
+  },
+  {
+    "seq": 414,
+    "timestamp": "2026-09-03T16:22:33.659Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "4a974b50a9ac564d5b8a2d0590f0553b38fe45d900fabe06f50c35df677699f3",
+    "hash": "6f9aee49d61216a5fbae362233c93ac5eaf81e04a748ee50b2a2ceacb76cf083"
+  },
+  {
+    "seq": 415,
+    "timestamp": "2026-09-03T16:22:33.662Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "6f9aee49d61216a5fbae362233c93ac5eaf81e04a748ee50b2a2ceacb76cf083",
+    "hash": "724f95269e4a8e362f2c47dd584b79f2eece49e5da2c22cba9ee12da76a93f86"
+  },
+  {
+    "seq": 416,
+    "timestamp": "2026-09-03T16:22:33.666Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "724f95269e4a8e362f2c47dd584b79f2eece49e5da2c22cba9ee12da76a93f86",
+    "hash": "d80261e178809abd9897989d1d815a9880a1e415a45322e6e1957e8069011db6"
+  },
+  {
+    "seq": 417,
+    "timestamp": "2026-09-03T16:22:33.670Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "d80261e178809abd9897989d1d815a9880a1e415a45322e6e1957e8069011db6",
+    "hash": "67136d4e992a1bf1868d9920e1fcff4ef93ef05fb5554000e5fcf446109d3438"
+  },
+  {
+    "seq": 418,
+    "timestamp": "2026-09-03T16:22:33.675Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "67136d4e992a1bf1868d9920e1fcff4ef93ef05fb5554000e5fcf446109d3438",
+    "hash": "82393360932021c3af0056073b82bd1d0c99907a2cb996495eee064596c7623e"
+  },
+  {
+    "seq": 419,
+    "timestamp": "2026-09-03T16:22:33.680Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "82393360932021c3af0056073b82bd1d0c99907a2cb996495eee064596c7623e",
+    "hash": "f9248c12b143f5eda252beee9c3c18653b1ef64267ed7219d9412d5408d5c403"
+  },
+  {
+    "seq": 420,
+    "timestamp": "2026-09-03T16:22:33.685Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "f9248c12b143f5eda252beee9c3c18653b1ef64267ed7219d9412d5408d5c403",
+    "hash": "27c16d1f335d56e0c436bfb841402f844ea14743e1593568962a7561c0390c3a"
+  },
+  {
+    "seq": 421,
+    "timestamp": "2026-09-03T16:22:33.690Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "27c16d1f335d56e0c436bfb841402f844ea14743e1593568962a7561c0390c3a",
+    "hash": "d91d5d521f9a3b155f393e779e401688438f25ec14ca2ec33e20e0a49dcc1d4c"
+  },
+  {
+    "seq": 422,
+    "timestamp": "2026-09-03T16:22:33.694Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "d91d5d521f9a3b155f393e779e401688438f25ec14ca2ec33e20e0a49dcc1d4c",
+    "hash": "ec8dec11bbbacf90997e712193b1a76aca6d3c4c709284750ebc55838b46bb33"
+  },
+  {
+    "seq": 423,
+    "timestamp": "2026-09-03T16:22:33.702Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "ec8dec11bbbacf90997e712193b1a76aca6d3c4c709284750ebc55838b46bb33",
+    "hash": "45f908d4f2e4de05748791c93879df03a6c96170675ca23c2a8fd21f9f272c35"
+  },
+  {
+    "seq": 424,
+    "timestamp": "2026-09-03T16:22:33.707Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "45f908d4f2e4de05748791c93879df03a6c96170675ca23c2a8fd21f9f272c35",
+    "hash": "0ad5fc813ced4659881d504179255bb0d0daeeb57da9d5775d4ba3db17734a98"
+  },
+  {
+    "seq": 425,
+    "timestamp": "2026-09-03T16:22:33.712Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "0ad5fc813ced4659881d504179255bb0d0daeeb57da9d5775d4ba3db17734a98",
+    "hash": "35298d83469b682e9006f9647e7f79a42c291afed469b100f866024503249581"
+  },
+  {
+    "seq": 426,
+    "timestamp": "2026-09-03T16:22:33.717Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "35298d83469b682e9006f9647e7f79a42c291afed469b100f866024503249581",
+    "hash": "ad9726c87d7a7d77c20fb1498a408accbb830a31ebca04cb8786cf67f38ace02"
+  },
+  {
+    "seq": 427,
+    "timestamp": "2026-09-03T16:22:33.725Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "ad9726c87d7a7d77c20fb1498a408accbb830a31ebca04cb8786cf67f38ace02",
+    "hash": "d6f4a2bf3aca27d877540c4c2827d7f91fd065d3046b8123ead87320ae615a34"
+  },
+  {
+    "seq": 428,
+    "timestamp": "2026-09-03T16:22:33.729Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "d6f4a2bf3aca27d877540c4c2827d7f91fd065d3046b8123ead87320ae615a34",
+    "hash": "1926259f1b5c9b3fad2013527eba08e09a59c06446c988cce5d4a5622c2b78da"
+  },
+  {
+    "seq": 429,
+    "timestamp": "2026-09-03T16:22:33.734Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "1926259f1b5c9b3fad2013527eba08e09a59c06446c988cce5d4a5622c2b78da",
+    "hash": "63c21ca6e8e2521419b782b9d4aa31de779a685b4f928476d566f3dffffc1c88"
+  },
+  {
+    "seq": 430,
+    "timestamp": "2026-09-03T16:22:33.738Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "63c21ca6e8e2521419b782b9d4aa31de779a685b4f928476d566f3dffffc1c88",
+    "hash": "8d27f0e219cedcdf743f800ed5190ec8c373690504798312bd3b63c173abef91"
+  },
+  {
+    "seq": 431,
+    "timestamp": "2026-09-03T16:22:33.743Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "8d27f0e219cedcdf743f800ed5190ec8c373690504798312bd3b63c173abef91",
+    "hash": "8222bb0e475ea060aba8793b60dad85ea1dc54799be52ff316436338e6dd89e9"
+  },
+  {
+    "seq": 432,
+    "timestamp": "2026-09-03T16:22:33.747Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "8222bb0e475ea060aba8793b60dad85ea1dc54799be52ff316436338e6dd89e9",
+    "hash": "62f2f91745632b5b0c79931e62dc9eb3f1fa37c9fd3f564351085548283ce10b"
+  },
+  {
+    "seq": 433,
+    "timestamp": "2026-09-03T16:22:33.752Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1010",
+    "email": "purchaser_10@otaru.in",
+    "details": "Drop checkout successful for purchaser_10@otaru.in",
+    "prevHash": "62f2f91745632b5b0c79931e62dc9eb3f1fa37c9fd3f564351085548283ce10b",
+    "hash": "19156ea9fc644a0fe82ad2cbf2d8b807465c83c7b7afe2a01c1044c37c7edc2d"
+  },
+  {
+    "seq": 434,
+    "timestamp": "2026-09-03T16:22:33.757Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1011",
+    "email": "purchaser_11@otaru.in",
+    "details": "Drop checkout successful for purchaser_11@otaru.in",
+    "prevHash": "19156ea9fc644a0fe82ad2cbf2d8b807465c83c7b7afe2a01c1044c37c7edc2d",
+    "hash": "14453abe2635b696927da585125c2adbcdbd91eb1c8f47e080869ec7745b6756"
+  },
+  {
+    "seq": 435,
+    "timestamp": "2026-09-03T16:22:33.761Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1012",
+    "email": "purchaser_12@otaru.in",
+    "details": "Drop checkout successful for purchaser_12@otaru.in",
+    "prevHash": "14453abe2635b696927da585125c2adbcdbd91eb1c8f47e080869ec7745b6756",
+    "hash": "f725946f283530a283543d3f547d17643914b5fad269a923cc0632732e78fdb2"
+  },
+  {
+    "seq": 436,
+    "timestamp": "2026-09-03T16:22:33.766Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1013",
+    "email": "purchaser_13@otaru.in",
+    "details": "Drop checkout successful for purchaser_13@otaru.in",
+    "prevHash": "f725946f283530a283543d3f547d17643914b5fad269a923cc0632732e78fdb2",
+    "hash": "d364e643dd77825771146d42a743a0f7196e9c772647cc1f91013526c19ad96e"
+  },
+  {
+    "seq": 437,
+    "timestamp": "2026-09-03T16:22:33.771Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1014",
+    "email": "purchaser_14@otaru.in",
+    "details": "Drop checkout successful for purchaser_14@otaru.in",
+    "prevHash": "d364e643dd77825771146d42a743a0f7196e9c772647cc1f91013526c19ad96e",
+    "hash": "3fe84cfbebed365d51e0fdd6dfa3eca211ea4912a918f23f06c6a81b756e0955"
+  },
+  {
+    "seq": 438,
+    "timestamp": "2026-09-03T16:22:33.775Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1015",
+    "email": "purchaser_15@otaru.in",
+    "details": "Drop checkout successful for purchaser_15@otaru.in",
+    "prevHash": "3fe84cfbebed365d51e0fdd6dfa3eca211ea4912a918f23f06c6a81b756e0955",
+    "hash": "518e431ad5703e71eebdfc2b079d5fbb2d233d9f8fba7bb40d3c39b132a1ed2a"
+  },
+  {
+    "seq": 439,
+    "timestamp": "2026-09-03T16:22:33.779Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1016",
+    "email": "purchaser_16@otaru.in",
+    "details": "Drop checkout successful for purchaser_16@otaru.in",
+    "prevHash": "518e431ad5703e71eebdfc2b079d5fbb2d233d9f8fba7bb40d3c39b132a1ed2a",
+    "hash": "01e1a97199a434bf5dac788c5d5f6099b8f5bd2c8418cf586369a632b681bddc"
+  },
+  {
+    "seq": 440,
+    "timestamp": "2026-09-03T16:22:33.785Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1017",
+    "email": "purchaser_17@otaru.in",
+    "details": "Drop checkout successful for purchaser_17@otaru.in",
+    "prevHash": "01e1a97199a434bf5dac788c5d5f6099b8f5bd2c8418cf586369a632b681bddc",
+    "hash": "45b076316aa8e39bff88861d21d83fb1f126feaa464ab6785bb88d82d6497fc0"
+  },
+  {
+    "seq": 441,
+    "timestamp": "2026-09-03T16:22:33.789Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1018",
+    "email": "purchaser_18@otaru.in",
+    "details": "Drop checkout successful for purchaser_18@otaru.in",
+    "prevHash": "45b076316aa8e39bff88861d21d83fb1f126feaa464ab6785bb88d82d6497fc0",
+    "hash": "44cad9ce5436b7daf6da62563b87fd09bac49c9f6490096156f17c4156a6403d"
+  },
+  {
+    "seq": 442,
+    "timestamp": "2026-09-03T16:22:33.794Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1019",
+    "email": "purchaser_19@otaru.in",
+    "details": "Drop checkout successful for purchaser_19@otaru.in",
+    "prevHash": "44cad9ce5436b7daf6da62563b87fd09bac49c9f6490096156f17c4156a6403d",
+    "hash": "3effdc441380dfb464a68e8f71b01f7d20c16da91b7de8a7c98f1b328964bfd6"
+  },
+  {
+    "seq": 443,
+    "timestamp": "2026-09-03T16:22:33.800Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1020",
+    "email": "purchaser_20@otaru.in",
+    "details": "Drop checkout successful for purchaser_20@otaru.in",
+    "prevHash": "3effdc441380dfb464a68e8f71b01f7d20c16da91b7de8a7c98f1b328964bfd6",
+    "hash": "66ec5cbcde5b010bccfca7934c94c863ba4ca47ebf627cb7f7f5d0f92c4deafc"
+  },
+  {
+    "seq": 444,
+    "timestamp": "2026-09-03T16:22:33.804Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1021",
+    "email": "purchaser_21@otaru.in",
+    "details": "Drop checkout successful for purchaser_21@otaru.in",
+    "prevHash": "66ec5cbcde5b010bccfca7934c94c863ba4ca47ebf627cb7f7f5d0f92c4deafc",
+    "hash": "0dfd0cc886f2d554d50ca93a5ad4ff2a0c6af79acbf001b8325b1be93e8b9c2b"
+  },
+  {
+    "seq": 445,
+    "timestamp": "2026-09-03T16:22:33.810Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1022",
+    "email": "purchaser_22@otaru.in",
+    "details": "Drop checkout successful for purchaser_22@otaru.in",
+    "prevHash": "0dfd0cc886f2d554d50ca93a5ad4ff2a0c6af79acbf001b8325b1be93e8b9c2b",
+    "hash": "99e52d7c70404b29903a1c1f861886203de3761d0b20e3f16e37ad698cb62bd3"
+  },
+  {
+    "seq": 446,
+    "timestamp": "2026-09-03T16:22:33.814Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1023",
+    "email": "purchaser_23@otaru.in",
+    "details": "Drop checkout successful for purchaser_23@otaru.in",
+    "prevHash": "99e52d7c70404b29903a1c1f861886203de3761d0b20e3f16e37ad698cb62bd3",
+    "hash": "aa24caf87dcdf0214706f6d3eb348c88be10d0d183df906521517c5c4873352d"
+  },
+  {
+    "seq": 447,
+    "timestamp": "2026-09-03T16:22:33.818Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1024",
+    "email": "purchaser_24@otaru.in",
+    "details": "Drop checkout successful for purchaser_24@otaru.in",
+    "prevHash": "aa24caf87dcdf0214706f6d3eb348c88be10d0d183df906521517c5c4873352d",
+    "hash": "3e7eec50541393feab6a4466c98df1e8155a750253a737ed4d9994b44eaccf3b"
+  },
+  {
+    "seq": 448,
+    "timestamp": "2026-09-03T16:24:48.362Z",
+    "type": "ORDER_CREATED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Order 1",
+    "prevHash": "3e7eec50541393feab6a4466c98df1e8155a750253a737ed4d9994b44eaccf3b",
+    "hash": "5b72cd9ea1eef42989aa692e7265a9d4bbfa77e62538cb1a3bc2e623fc31bb14"
+  },
+  {
+    "seq": 449,
+    "timestamp": "2026-09-03T16:24:48.368Z",
+    "type": "PAYMENT_VERIFIED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Payment Verified 1",
+    "prevHash": "5b72cd9ea1eef42989aa692e7265a9d4bbfa77e62538cb1a3bc2e623fc31bb14",
+    "hash": "580631b18bef519520b2690fd157508d2e5ccc67c33deacdbd653d870cd2d452"
+  },
+  {
+    "seq": 450,
+    "timestamp": "2026-09-03T16:24:48.374Z",
+    "type": "NONCE_CONSUMED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Nonce Consumed 1",
+    "prevHash": "580631b18bef519520b2690fd157508d2e5ccc67c33deacdbd653d870cd2d452",
+    "hash": "89ed5efd80625d10909d46506961f5b6c4bc8a3386f6b073fb6e45dac5cc82de"
+  },
+  {
+    "seq": 451,
+    "timestamp": "2026-09-03T16:24:48.411Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "89ed5efd80625d10909d46506961f5b6c4bc8a3386f6b073fb6e45dac5cc82de",
+    "hash": "1f4a06da2c4ecb51753e833a6e2596441fae37d7e5582afda42a0b29f36362a8"
+  },
+  {
+    "seq": 452,
+    "timestamp": "2026-09-03T16:24:48.418Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "1f4a06da2c4ecb51753e833a6e2596441fae37d7e5582afda42a0b29f36362a8",
+    "hash": "ad06e450b56c52ba16e71051c138d15f5eef14da8801958233eef2d3cce19fe1"
+  },
+  {
+    "seq": 453,
+    "timestamp": "2026-09-03T16:24:48.423Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "ad06e450b56c52ba16e71051c138d15f5eef14da8801958233eef2d3cce19fe1",
+    "hash": "6e2f8005fbd64facf5d9e33cb032a007ce7d1c7c63aac29cca693bd15c921cf4"
+  },
+  {
+    "seq": 454,
+    "timestamp": "2026-09-03T16:24:48.428Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "6e2f8005fbd64facf5d9e33cb032a007ce7d1c7c63aac29cca693bd15c921cf4",
+    "hash": "126e08972f67a3dcf21aed21936922a5e288878b0745a2a81f50023dbe4c4a2a"
+  },
+  {
+    "seq": 455,
+    "timestamp": "2026-09-03T16:24:48.435Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "126e08972f67a3dcf21aed21936922a5e288878b0745a2a81f50023dbe4c4a2a",
+    "hash": "f9437dabf39b0db37c3d3a1b72e26dd243a31dea3b4530196de3fe87ff534e34"
+  },
+  {
+    "seq": 456,
+    "timestamp": "2026-09-03T16:24:48.440Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "f9437dabf39b0db37c3d3a1b72e26dd243a31dea3b4530196de3fe87ff534e34",
+    "hash": "707497a005584d4d90f3e33404a2bd33dc54932b8d3c2fd904c94b9a1f6afd49"
+  },
+  {
+    "seq": 457,
+    "timestamp": "2026-09-03T16:24:48.446Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "707497a005584d4d90f3e33404a2bd33dc54932b8d3c2fd904c94b9a1f6afd49",
+    "hash": "9c1c2d9fb71209bcf80b948dd49dfe40275ee28480116eccc3878b9feade8bbb"
+  },
+  {
+    "seq": 458,
+    "timestamp": "2026-09-03T16:24:48.452Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "9c1c2d9fb71209bcf80b948dd49dfe40275ee28480116eccc3878b9feade8bbb",
+    "hash": "a7b1fd7e2bb94ca6276dbb8f81eb4874c958a2705f721ccb51679b21c056e9f2"
+  },
+  {
+    "seq": 459,
+    "timestamp": "2026-09-03T16:24:48.459Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "a7b1fd7e2bb94ca6276dbb8f81eb4874c958a2705f721ccb51679b21c056e9f2",
+    "hash": "04209bdd7e9c227f6dbfc2e38d26509751c6c1da6b8931af9d56463080cffc18"
+  },
+  {
+    "seq": 460,
+    "timestamp": "2026-09-03T16:24:48.467Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "04209bdd7e9c227f6dbfc2e38d26509751c6c1da6b8931af9d56463080cffc18",
+    "hash": "f0f7aab55ba1183ee7f0ae403a70b3ac5046f98933b47742c97d0d2e80caeade"
+  },
+  {
+    "seq": 461,
+    "timestamp": "2026-09-03T16:24:48.478Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "f0f7aab55ba1183ee7f0ae403a70b3ac5046f98933b47742c97d0d2e80caeade",
+    "hash": "43a1ce02b45c8954085560d6bf49ad2076187cc2ba39d565fb3bf181fbcc7cc9"
+  },
+  {
+    "seq": 462,
+    "timestamp": "2026-09-03T16:24:48.491Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "43a1ce02b45c8954085560d6bf49ad2076187cc2ba39d565fb3bf181fbcc7cc9",
+    "hash": "969cf8b4a2abf1f586a97aee949efb8dcb168e5ba58041a5bba2256d49a277b5"
+  },
+  {
+    "seq": 463,
+    "timestamp": "2026-09-03T16:24:48.502Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "969cf8b4a2abf1f586a97aee949efb8dcb168e5ba58041a5bba2256d49a277b5",
+    "hash": "da93ef52995c9ce9d4c8f035ede9a00725401d8e89ca0f93fd151558152afe68"
+  },
+  {
+    "seq": 464,
+    "timestamp": "2026-09-03T16:24:48.516Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "da93ef52995c9ce9d4c8f035ede9a00725401d8e89ca0f93fd151558152afe68",
+    "hash": "dfdca2df20a4c2111ee78d01c6801ccc600d4f35a9a5bf0be62aa124a110aca1"
+  },
+  {
+    "seq": 465,
+    "timestamp": "2026-09-03T16:24:48.523Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "dfdca2df20a4c2111ee78d01c6801ccc600d4f35a9a5bf0be62aa124a110aca1",
+    "hash": "9ae83ce40f8b7646ec4c5eee5858ca7005f3686d140233baa7fe832a6393db4d"
+  },
+  {
+    "seq": 466,
+    "timestamp": "2026-09-03T16:24:48.530Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "9ae83ce40f8b7646ec4c5eee5858ca7005f3686d140233baa7fe832a6393db4d",
+    "hash": "35d17e19662edbe7e9ca62a8fa4ee34bdef4da88fab666809c9362bbe83f9795"
+  },
+  {
+    "seq": 467,
+    "timestamp": "2026-09-03T16:24:48.539Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "35d17e19662edbe7e9ca62a8fa4ee34bdef4da88fab666809c9362bbe83f9795",
+    "hash": "3a26fb6707862b0429215b91488dffc52c21284807c82da805889c8ddad2c1cf"
+  },
+  {
+    "seq": 468,
+    "timestamp": "2026-09-03T16:24:48.548Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "3a26fb6707862b0429215b91488dffc52c21284807c82da805889c8ddad2c1cf",
+    "hash": "5b4525b01c5a59af76dd91857112d6bf86cba19c767303ef2233e252c3819c0d"
+  },
+  {
+    "seq": 469,
+    "timestamp": "2026-09-03T16:24:48.553Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "5b4525b01c5a59af76dd91857112d6bf86cba19c767303ef2233e252c3819c0d",
+    "hash": "fb5be51843c3660ed56bcae325efee62e2e0112fadd51947e9711f3f17ac8c84"
+  },
+  {
+    "seq": 470,
+    "timestamp": "2026-09-03T16:24:48.567Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "fb5be51843c3660ed56bcae325efee62e2e0112fadd51947e9711f3f17ac8c84",
+    "hash": "99f9b2a727efae65bd813918b140c9d2ebacfeeb140d7438baf632d1df77ed13"
+  },
+  {
+    "seq": 471,
+    "timestamp": "2026-09-03T16:24:48.573Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1010",
+    "email": "purchaser_10@otaru.in",
+    "details": "Drop checkout successful for purchaser_10@otaru.in",
+    "prevHash": "99f9b2a727efae65bd813918b140c9d2ebacfeeb140d7438baf632d1df77ed13",
+    "hash": "75427d410d847b28949302314ce833a306a0038edc4bd866f359ac9f5140172b"
+  },
+  {
+    "seq": 1,
+    "timestamp": "2026-09-03T16:24:48.581Z",
+    "type": "PAYMENT_FAILED",
+    "ref": "order_TEST_101",
+    "ip": "127.0.0.1",
+    "details": "Mock verification attempt FORBIDDEN in production. Order: order_TEST_101",
+    "prevHash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "hash": "386ddfe01338e2d63f8aea24135ee190ebec496b3103e57b16938630f0083751"
+  },
+  {
+    "seq": 472,
+    "timestamp": "2026-09-03T16:24:48.585Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1011",
+    "email": "purchaser_11@otaru.in",
+    "details": "Drop checkout successful for purchaser_11@otaru.in",
+    "prevHash": "75427d410d847b28949302314ce833a306a0038edc4bd866f359ac9f5140172b",
+    "hash": "bb48dd918b98f881fde64057afb0977d0d50740e1c81318f1aea0c7a570f585b"
+  },
+  {
+    "seq": 2,
+    "timestamp": "2026-09-03T16:24:48.602Z",
+    "type": "ORDER_BLOCKED",
+    "ip": "127.0.0.1",
+    "email": "adversary@test.com",
+    "details": "Order creation rejected: Razorpay gateway unavailable in production mode. Email: adversary@test.com",
+    "prevHash": "386ddfe01338e2d63f8aea24135ee190ebec496b3103e57b16938630f0083751",
+    "hash": "f30747c0622274264326b05aa033e339d7c12825f15d780636e352a1a125a104"
+  },
+  {
+    "seq": 474,
+    "timestamp": "2026-09-03T16:24:48.610Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1013",
+    "email": "purchaser_13@otaru.in",
+    "details": "Drop checkout successful for purchaser_13@otaru.in",
+    "prevHash": "77cdca5c31a91a0a5f15621642acd83b782c405e658f661e437afa6fe400d481",
+    "hash": "3e6735e2e0271e23a01f48c570203590315db5d5a8d6f46a33d1465819ee54a9"
+  },
+  {
+    "seq": 475,
+    "timestamp": "2026-09-03T16:24:48.617Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1014",
+    "email": "purchaser_14@otaru.in",
+    "details": "Drop checkout successful for purchaser_14@otaru.in",
+    "prevHash": "3e6735e2e0271e23a01f48c570203590315db5d5a8d6f46a33d1465819ee54a9",
+    "hash": "e8fed8ca2427d9e10fbf7a0be6c7e218bed7d211ccb2caa234fe3817f5c38e50"
+  },
+  {
+    "seq": 476,
+    "timestamp": "2026-09-03T16:24:48.624Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1015",
+    "email": "purchaser_15@otaru.in",
+    "details": "Drop checkout successful for purchaser_15@otaru.in",
+    "prevHash": "e8fed8ca2427d9e10fbf7a0be6c7e218bed7d211ccb2caa234fe3817f5c38e50",
+    "hash": "9074f27ce63463cd64cb47191a875b3bf358e6699dd7ef05a34af187b3139766"
+  },
+  {
+    "seq": 477,
+    "timestamp": "2026-09-03T16:24:48.632Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1016",
+    "email": "purchaser_16@otaru.in",
+    "details": "Drop checkout successful for purchaser_16@otaru.in",
+    "prevHash": "9074f27ce63463cd64cb47191a875b3bf358e6699dd7ef05a34af187b3139766",
+    "hash": "9943b60ca30a4512b9913c6f034fcb15358f202a2ecaa4c7be7af1438ee5010f"
+  },
+  {
+    "seq": 478,
+    "timestamp": "2026-09-03T16:24:48.639Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1017",
+    "email": "purchaser_17@otaru.in",
+    "details": "Drop checkout successful for purchaser_17@otaru.in",
+    "prevHash": "9943b60ca30a4512b9913c6f034fcb15358f202a2ecaa4c7be7af1438ee5010f",
+    "hash": "d9d2737b0f03490502e1aa7f5f4fa07463941ce95a2e686974a0bd181db57ae5"
+  },
+  {
+    "seq": 479,
+    "timestamp": "2026-09-03T16:24:48.649Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1018",
+    "email": "purchaser_18@otaru.in",
+    "details": "Drop checkout successful for purchaser_18@otaru.in",
+    "prevHash": "d9d2737b0f03490502e1aa7f5f4fa07463941ce95a2e686974a0bd181db57ae5",
+    "hash": "a7de643f8a4da30014af0ce699f9e5a33f7cf45a163a9a7b158d3d7406027e42"
+  },
+  {
+    "seq": 480,
+    "timestamp": "2026-09-03T16:24:48.672Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1019",
+    "email": "purchaser_19@otaru.in",
+    "details": "Drop checkout successful for purchaser_19@otaru.in",
+    "prevHash": "a7de643f8a4da30014af0ce699f9e5a33f7cf45a163a9a7b158d3d7406027e42",
+    "hash": "d653ff81e5a7d510cbc979bd419b75c0f99f49bdec1a89956bc7e8ad979b9559"
+  },
+  {
+    "seq": 481,
+    "timestamp": "2026-09-03T16:24:48.703Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1020",
+    "email": "purchaser_20@otaru.in",
+    "details": "Drop checkout successful for purchaser_20@otaru.in",
+    "prevHash": "d653ff81e5a7d510cbc979bd419b75c0f99f49bdec1a89956bc7e8ad979b9559",
+    "hash": "73f73901ea2e55902486f8e33d114a8cc1dcd61b044821d5c98741eba5891982"
+  },
+  {
+    "seq": 482,
+    "timestamp": "2026-09-03T16:24:48.714Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1021",
+    "email": "purchaser_21@otaru.in",
+    "details": "Drop checkout successful for purchaser_21@otaru.in",
+    "prevHash": "73f73901ea2e55902486f8e33d114a8cc1dcd61b044821d5c98741eba5891982",
+    "hash": "2e73d83c8e8c722b60e1c3aacbc3a2d2cb0d7c65ed232cd06f57904056691562"
+  },
+  {
+    "seq": 483,
+    "timestamp": "2026-09-03T16:24:48.751Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1022",
+    "email": "purchaser_22@otaru.in",
+    "details": "Drop checkout successful for purchaser_22@otaru.in",
+    "prevHash": "2e73d83c8e8c722b60e1c3aacbc3a2d2cb0d7c65ed232cd06f57904056691562",
+    "hash": "ebc2df876af01d8ad35d9dd46b6d8a68862c091f027c1f6fa0abe1e25446893b"
+  },
+  {
+    "seq": 484,
+    "timestamp": "2026-09-03T16:24:48.759Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1023",
+    "email": "purchaser_23@otaru.in",
+    "details": "Drop checkout successful for purchaser_23@otaru.in",
+    "prevHash": "ebc2df876af01d8ad35d9dd46b6d8a68862c091f027c1f6fa0abe1e25446893b",
+    "hash": "699d93580350eba0218fe26c12f49ee75501ac23376484ee787f4c2e83de96e5"
+  },
+  {
+    "seq": 485,
+    "timestamp": "2026-09-03T16:24:48.781Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1024",
+    "email": "purchaser_24@otaru.in",
+    "details": "Drop checkout successful for purchaser_24@otaru.in",
+    "prevHash": "699d93580350eba0218fe26c12f49ee75501ac23376484ee787f4c2e83de96e5",
+    "hash": "da4194dc158fb968cdccc07f6cbc3bb03186ff1e9f7a76cfc515467bfb3f6069"
+  },
+  {
+    "seq": 486,
+    "timestamp": "2026-09-03T16:25:08.240Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "da4194dc158fb968cdccc07f6cbc3bb03186ff1e9f7a76cfc515467bfb3f6069",
+    "hash": "36e7b55d87b61d459c5893ecd6b7ea96d25e39ae116aa5129ec3ee26be43cd41"
+  },
+  {
+    "seq": 487,
+    "timestamp": "2026-09-03T16:25:08.246Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "36e7b55d87b61d459c5893ecd6b7ea96d25e39ae116aa5129ec3ee26be43cd41",
+    "hash": "75d4c61086df2d02197da70effabf373e502f3077831096975150c872f429575"
+  },
+  {
+    "seq": 488,
+    "timestamp": "2026-09-03T16:25:08.251Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "75d4c61086df2d02197da70effabf373e502f3077831096975150c872f429575",
+    "hash": "4bf157be72248e438868282a21ad4a236f004ffe0280017a1934df6de6653a50"
+  },
+  {
+    "seq": 489,
+    "timestamp": "2026-09-03T16:25:08.255Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "4bf157be72248e438868282a21ad4a236f004ffe0280017a1934df6de6653a50",
+    "hash": "2c0de6514d4bf23f7128be7fd7aaf2a416df137c64665d080f94782140999c96"
+  },
+  {
+    "seq": 490,
+    "timestamp": "2026-09-03T16:25:08.261Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "2c0de6514d4bf23f7128be7fd7aaf2a416df137c64665d080f94782140999c96",
+    "hash": "5e3f3ba767d8c608585107c86aec6079f2d57e6c2fa986efb7de6c2d49daf8a1"
+  },
+  {
+    "seq": 491,
+    "timestamp": "2026-09-03T16:25:08.265Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "5e3f3ba767d8c608585107c86aec6079f2d57e6c2fa986efb7de6c2d49daf8a1",
+    "hash": "8c20c0c9eb9eb4eac146a4eb7d0ecd1d6d80134fb9c0038d62b4a6e15bd4aa8f"
+  },
+  {
+    "seq": 492,
+    "timestamp": "2026-09-03T16:25:08.271Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "8c20c0c9eb9eb4eac146a4eb7d0ecd1d6d80134fb9c0038d62b4a6e15bd4aa8f",
+    "hash": "d00959ef8d10d23b4d2ae2ce1e48ed8bf2f76fbc108001d3bc6c50db185232af"
+  },
+  {
+    "seq": 493,
+    "timestamp": "2026-09-03T16:25:08.276Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "d00959ef8d10d23b4d2ae2ce1e48ed8bf2f76fbc108001d3bc6c50db185232af",
+    "hash": "d50ced75dd67f7bf6550af201d7e90b7ad97dbd9f31fd43ef8d261522b59b82b"
+  },
+  {
+    "seq": 494,
+    "timestamp": "2026-09-03T16:25:08.281Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "d50ced75dd67f7bf6550af201d7e90b7ad97dbd9f31fd43ef8d261522b59b82b",
+    "hash": "d1df3c627578ebcf775bcd4b2a4695eb2c8609d1986c4e3f0bf84fbd58e5c32e"
+  },
+  {
+    "seq": 495,
+    "timestamp": "2026-09-03T16:25:08.287Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "d1df3c627578ebcf775bcd4b2a4695eb2c8609d1986c4e3f0bf84fbd58e5c32e",
+    "hash": "6499c9ec79762701f7b24261bcdcc8362090b7337bc45fa9ceff1a2b9e41f0bd"
+  },
+  {
+    "seq": 496,
+    "timestamp": "2026-09-03T16:25:08.292Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "6499c9ec79762701f7b24261bcdcc8362090b7337bc45fa9ceff1a2b9e41f0bd",
+    "hash": "20443e4043f1f4d424194c3df8001560a2b5d7255164522b44a92073d4e0588a"
+  },
+  {
+    "seq": 497,
+    "timestamp": "2026-09-03T16:25:08.296Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "20443e4043f1f4d424194c3df8001560a2b5d7255164522b44a92073d4e0588a",
+    "hash": "88e29754f48be4ad5749f22435dac080fb426987ff6eab4269bd14f91aeb9067"
+  },
+  {
+    "seq": 498,
+    "timestamp": "2026-09-03T16:25:08.302Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "88e29754f48be4ad5749f22435dac080fb426987ff6eab4269bd14f91aeb9067",
+    "hash": "0818d1ab88acdc55e1f21c4ad880f129022ea06c2b15aaf571197a64b32913e0"
+  },
+  {
+    "seq": 499,
+    "timestamp": "2026-09-03T16:25:08.307Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "0818d1ab88acdc55e1f21c4ad880f129022ea06c2b15aaf571197a64b32913e0",
+    "hash": "afb4a5b940810ecd428c9459f006a7f5ebe1176b9a96aade26cb09449e950995"
+  },
+  {
+    "seq": 500,
+    "timestamp": "2026-09-03T16:25:08.316Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "afb4a5b940810ecd428c9459f006a7f5ebe1176b9a96aade26cb09449e950995",
+    "hash": "4bff933198d159d7dc88d3e45b5cbca538d9a764ec1406bf2eacbefd0f698c51"
+  },
+  {
+    "seq": 501,
+    "timestamp": "2026-09-03T16:25:08.320Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "4bff933198d159d7dc88d3e45b5cbca538d9a764ec1406bf2eacbefd0f698c51",
+    "hash": "1262aa15761ad0a014bb70effeac92bef7c67b88d1ab05e090a357cee9280c58"
+  },
+  {
+    "seq": 502,
+    "timestamp": "2026-09-03T16:25:08.326Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "1262aa15761ad0a014bb70effeac92bef7c67b88d1ab05e090a357cee9280c58",
+    "hash": "d3f123124d6999dcac1d35ade03dd7b1f6fa0d467ebf095f3b92174caac88adb"
+  },
+  {
+    "seq": 503,
+    "timestamp": "2026-09-03T16:25:08.331Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "d3f123124d6999dcac1d35ade03dd7b1f6fa0d467ebf095f3b92174caac88adb",
+    "hash": "007aadc23b86c844ffe8c5a3d8640de26266d9bba7cbb0c6d46fcda2646cb165"
+  },
+  {
+    "seq": 504,
+    "timestamp": "2026-09-03T16:25:08.337Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "007aadc23b86c844ffe8c5a3d8640de26266d9bba7cbb0c6d46fcda2646cb165",
+    "hash": "1d6309d8bc309ceac7ba8ad393b9cdbcbe71cc458f008829b1d1b0fca10f8c02"
+  },
+  {
+    "seq": 505,
+    "timestamp": "2026-09-03T16:25:08.343Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "1d6309d8bc309ceac7ba8ad393b9cdbcbe71cc458f008829b1d1b0fca10f8c02",
+    "hash": "44e33ae38afad7507e8589547dbf7752b3588f1184364f34d0c9310092ce85b0"
+  },
+  {
+    "seq": 506,
+    "timestamp": "2026-09-03T16:25:08.348Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1010",
+    "email": "purchaser_10@otaru.in",
+    "details": "Drop checkout successful for purchaser_10@otaru.in",
+    "prevHash": "44e33ae38afad7507e8589547dbf7752b3588f1184364f34d0c9310092ce85b0",
+    "hash": "1366e0ba27ffec44509e2430ba7618c911460399b1f5ceaf7954460b3c8ea27b"
+  },
+  {
+    "seq": 507,
+    "timestamp": "2026-09-03T16:25:08.353Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1011",
+    "email": "purchaser_11@otaru.in",
+    "details": "Drop checkout successful for purchaser_11@otaru.in",
+    "prevHash": "1366e0ba27ffec44509e2430ba7618c911460399b1f5ceaf7954460b3c8ea27b",
+    "hash": "2b643b568ae45ddcc9fb5ca3972daf99e29b365c49a4c20d5f2b07f88757b132"
+  },
+  {
+    "seq": 508,
+    "timestamp": "2026-09-03T16:25:08.357Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1012",
+    "email": "purchaser_12@otaru.in",
+    "details": "Drop checkout successful for purchaser_12@otaru.in",
+    "prevHash": "2b643b568ae45ddcc9fb5ca3972daf99e29b365c49a4c20d5f2b07f88757b132",
+    "hash": "5f3188d0fec0ae4476d888c312bf9dde61eab2e38b887facb6cb52a6d983286b"
+  },
+  {
+    "seq": 509,
+    "timestamp": "2026-09-03T16:25:08.362Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1013",
+    "email": "purchaser_13@otaru.in",
+    "details": "Drop checkout successful for purchaser_13@otaru.in",
+    "prevHash": "5f3188d0fec0ae4476d888c312bf9dde61eab2e38b887facb6cb52a6d983286b",
+    "hash": "f6fdb557c0331d769c8712a6dee16f895d3fe4eb05ea43eca5ffc8a9657d6bed"
+  },
+  {
+    "seq": 510,
+    "timestamp": "2026-09-03T16:25:08.367Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1014",
+    "email": "purchaser_14@otaru.in",
+    "details": "Drop checkout successful for purchaser_14@otaru.in",
+    "prevHash": "f6fdb557c0331d769c8712a6dee16f895d3fe4eb05ea43eca5ffc8a9657d6bed",
+    "hash": "360db09b23790dd48e19ea3620da457f8b62034024eec9087663ac2a35021707"
+  },
+  {
+    "seq": 511,
+    "timestamp": "2026-09-03T16:25:08.371Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1015",
+    "email": "purchaser_15@otaru.in",
+    "details": "Drop checkout successful for purchaser_15@otaru.in",
+    "prevHash": "360db09b23790dd48e19ea3620da457f8b62034024eec9087663ac2a35021707",
+    "hash": "d99161639fdf7e9f5fb2a0169a863981d9228918071bbbebe0d115ecd772d897"
+  },
+  {
+    "seq": 512,
+    "timestamp": "2026-09-03T16:25:08.375Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1016",
+    "email": "purchaser_16@otaru.in",
+    "details": "Drop checkout successful for purchaser_16@otaru.in",
+    "prevHash": "d99161639fdf7e9f5fb2a0169a863981d9228918071bbbebe0d115ecd772d897",
+    "hash": "6606a3323b0baa7e13c06de4771e3a8f9f2d3d1d3d82986c050f28e48a18b790"
+  },
+  {
+    "seq": 513,
+    "timestamp": "2026-09-03T16:25:08.381Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1017",
+    "email": "purchaser_17@otaru.in",
+    "details": "Drop checkout successful for purchaser_17@otaru.in",
+    "prevHash": "6606a3323b0baa7e13c06de4771e3a8f9f2d3d1d3d82986c050f28e48a18b790",
+    "hash": "7b960769661e9d97feb64a6564e1b0c7c746d376fcfefdc43b307e6f4eac5254"
+  },
+  {
+    "seq": 514,
+    "timestamp": "2026-09-03T16:25:08.387Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1018",
+    "email": "purchaser_18@otaru.in",
+    "details": "Drop checkout successful for purchaser_18@otaru.in",
+    "prevHash": "7b960769661e9d97feb64a6564e1b0c7c746d376fcfefdc43b307e6f4eac5254",
+    "hash": "a38662a12d2bf0cf133463d60f0f88ac3f953fb1c258907d8116d418d4668d59"
+  },
+  {
+    "seq": 515,
+    "timestamp": "2026-09-03T16:25:08.391Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1019",
+    "email": "purchaser_19@otaru.in",
+    "details": "Drop checkout successful for purchaser_19@otaru.in",
+    "prevHash": "a38662a12d2bf0cf133463d60f0f88ac3f953fb1c258907d8116d418d4668d59",
+    "hash": "2876afe962a1e04c780f28bac370f15e0ca9dad5bf6477d1affed2487e32437e"
+  },
+  {
+    "seq": 516,
+    "timestamp": "2026-09-03T16:25:08.398Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1020",
+    "email": "purchaser_20@otaru.in",
+    "details": "Drop checkout successful for purchaser_20@otaru.in",
+    "prevHash": "2876afe962a1e04c780f28bac370f15e0ca9dad5bf6477d1affed2487e32437e",
+    "hash": "ce7726e0b77d8291ef8e4ee025c8f69d0e681a73e2a7f4b4c2265522b3c2635d"
+  },
+  {
+    "seq": 517,
+    "timestamp": "2026-09-03T16:25:08.403Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1021",
+    "email": "purchaser_21@otaru.in",
+    "details": "Drop checkout successful for purchaser_21@otaru.in",
+    "prevHash": "ce7726e0b77d8291ef8e4ee025c8f69d0e681a73e2a7f4b4c2265522b3c2635d",
+    "hash": "cae6701ae7d0bf8cfebd78f94b00d03762e38722369fccff3718ceea9c652bec"
+  },
+  {
+    "seq": 518,
+    "timestamp": "2026-09-03T16:25:08.410Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1022",
+    "email": "purchaser_22@otaru.in",
+    "details": "Drop checkout successful for purchaser_22@otaru.in",
+    "prevHash": "cae6701ae7d0bf8cfebd78f94b00d03762e38722369fccff3718ceea9c652bec",
+    "hash": "26bf53e266b8f36ab684c2f95f467fa30c81f4f2ff9b9d60c637f532293ee789"
+  },
+  {
+    "seq": 519,
+    "timestamp": "2026-09-03T16:25:08.417Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1023",
+    "email": "purchaser_23@otaru.in",
+    "details": "Drop checkout successful for purchaser_23@otaru.in",
+    "prevHash": "26bf53e266b8f36ab684c2f95f467fa30c81f4f2ff9b9d60c637f532293ee789",
+    "hash": "acde5d364d3c8daa9c3e7c3dbd95be90ffd7476f4111d5a359a27e6415b0afc8"
+  },
+  {
+    "seq": 520,
+    "timestamp": "2026-09-03T16:25:08.425Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1024",
+    "email": "purchaser_24@otaru.in",
+    "details": "Drop checkout successful for purchaser_24@otaru.in",
+    "prevHash": "acde5d364d3c8daa9c3e7c3dbd95be90ffd7476f4111d5a359a27e6415b0afc8",
+    "hash": "d471d737d28f153c08e1c52ac69c5858cfa04009efda885cb13ef286e771210f"
+  },
+  {
+    "seq": 521,
+    "timestamp": "2026-09-03T16:27:14.512Z",
+    "type": "ORDER_CREATED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Order 1",
+    "prevHash": "d471d737d28f153c08e1c52ac69c5858cfa04009efda885cb13ef286e771210f",
+    "hash": "984007a4297b979fc3d4f035ea37714578240cbe062b7b5886fa5690fcde8f72"
+  },
+  {
+    "seq": 522,
+    "timestamp": "2026-09-03T16:27:14.520Z",
+    "type": "PAYMENT_VERIFIED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Payment Verified 1",
+    "prevHash": "984007a4297b979fc3d4f035ea37714578240cbe062b7b5886fa5690fcde8f72",
+    "hash": "26fa3d38104ab3b96310e3174b1ac58e43b194c4fd4fd0c84630a43092437f57"
+  },
+  {
+    "seq": 523,
+    "timestamp": "2026-09-03T16:27:14.527Z",
+    "type": "NONCE_CONSUMED",
+    "ref": "REF-001",
+    "email": "audit-test@otaru.in",
+    "details": "Test Nonce Consumed 1",
+    "prevHash": "26fa3d38104ab3b96310e3174b1ac58e43b194c4fd4fd0c84630a43092437f57",
+    "hash": "e78ef6ba1dbf9c94449271126e27ef0e58d5bc0c5e7e8da7d4f42526f583ac31"
+  },
+  {
+    "seq": 524,
+    "timestamp": "2026-09-03T16:27:14.594Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "e78ef6ba1dbf9c94449271126e27ef0e58d5bc0c5e7e8da7d4f42526f583ac31",
+    "hash": "27d611547ef460190d17baf434512335232663ece1d1ca384d7a8722f9b645ab"
+  },
+  {
+    "seq": 525,
+    "timestamp": "2026-09-03T16:27:14.602Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "27d611547ef460190d17baf434512335232663ece1d1ca384d7a8722f9b645ab",
+    "hash": "ef532347b1a5fc842b9d7d84797b0431c44fb2a358bb27fa055ec8addb51c654"
+  },
+  {
+    "seq": 526,
+    "timestamp": "2026-09-03T16:27:14.609Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "ef532347b1a5fc842b9d7d84797b0431c44fb2a358bb27fa055ec8addb51c654",
+    "hash": "d56a78c35a8fb5f513a74610a4e70c1362d027acccca30f820c84b6bcceff87b"
+  },
+  {
+    "seq": 527,
+    "timestamp": "2026-09-03T16:27:14.619Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "d56a78c35a8fb5f513a74610a4e70c1362d027acccca30f820c84b6bcceff87b",
+    "hash": "96de65fe910c78810d98894c60cffee86b608bb363a8357ed2043c23ccee53d8"
+  },
+  {
+    "seq": 528,
+    "timestamp": "2026-09-03T16:27:14.626Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "96de65fe910c78810d98894c60cffee86b608bb363a8357ed2043c23ccee53d8",
+    "hash": "f709bf1ea3c2c257a18709fc4079b047432c109533e031b20c3ad2b8f52d8e95"
+  },
+  {
+    "seq": 529,
+    "timestamp": "2026-09-03T16:27:14.633Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "f709bf1ea3c2c257a18709fc4079b047432c109533e031b20c3ad2b8f52d8e95",
+    "hash": "190210fc4d4b7af50426d0f2711b8ec36edaaf5236b294832e0f39909d83dc0b"
+  },
+  {
+    "seq": 530,
+    "timestamp": "2026-09-03T16:27:14.642Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "190210fc4d4b7af50426d0f2711b8ec36edaaf5236b294832e0f39909d83dc0b",
+    "hash": "96a71c076f8908b3bcbecf660c9c7fecaab9d239c42282d86966868aba9917e6"
+  },
+  {
+    "seq": 531,
+    "timestamp": "2026-09-03T16:27:14.653Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "96a71c076f8908b3bcbecf660c9c7fecaab9d239c42282d86966868aba9917e6",
+    "hash": "c61c3fc769c6e64605f0f09a902cc19c3692a47e1e654bfdbb3cc21776f5d1bc"
+  },
+  {
+    "seq": 532,
+    "timestamp": "2026-09-03T16:27:14.663Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "c61c3fc769c6e64605f0f09a902cc19c3692a47e1e654bfdbb3cc21776f5d1bc",
+    "hash": "2d5c74d7ef39908b6147ac9c07ddfac35eacc3e4ab9d3148498fb22b48b4430a"
+  },
+  {
+    "seq": 533,
+    "timestamp": "2026-09-03T16:27:14.671Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "2d5c74d7ef39908b6147ac9c07ddfac35eacc3e4ab9d3148498fb22b48b4430a",
+    "hash": "a6a5b25070b072ad901a7d4c78c2494a13e2700674b076e04dd7746bb1abb57d"
+  },
+  {
+    "seq": 534,
+    "timestamp": "2026-09-03T16:27:14.697Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "a6a5b25070b072ad901a7d4c78c2494a13e2700674b076e04dd7746bb1abb57d",
+    "hash": "73cf43772d2e3bf451d54b4a0090a5214f21b37c10f1e718adde078348638381"
+  },
+  {
+    "seq": 535,
+    "timestamp": "2026-09-03T16:27:14.704Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "73cf43772d2e3bf451d54b4a0090a5214f21b37c10f1e718adde078348638381",
+    "hash": "c26035ef43ca6568a5c31f3b84dbd3d8b6be0bb2f08cbdfcf353d150ed45807b"
+  },
+  {
+    "seq": 536,
+    "timestamp": "2026-09-03T16:27:14.713Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "c26035ef43ca6568a5c31f3b84dbd3d8b6be0bb2f08cbdfcf353d150ed45807b",
+    "hash": "bfe9ebe9cda8991c0ff10de026663c6df0d7867c36ad91558ce74ab54b8d99b7"
+  },
+  {
+    "seq": 537,
+    "timestamp": "2026-09-03T16:27:14.722Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "bfe9ebe9cda8991c0ff10de026663c6df0d7867c36ad91558ce74ab54b8d99b7",
+    "hash": "ca03d406693d1e9612436ad04af356e08ad0e48438a75f06ba92ac10a13f52ac"
+  },
+  {
+    "seq": 538,
+    "timestamp": "2026-09-03T16:27:14.731Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "ca03d406693d1e9612436ad04af356e08ad0e48438a75f06ba92ac10a13f52ac",
+    "hash": "00c86b0c3644bbb6f2c86d80e72f3235368e9508ad2ae54617ce73cef429e1f0"
+  },
+  {
+    "seq": 539,
+    "timestamp": "2026-09-03T16:27:14.739Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "00c86b0c3644bbb6f2c86d80e72f3235368e9508ad2ae54617ce73cef429e1f0",
+    "hash": "1931a103d9c3d434d2cc033b4832edc81184e018fa27f25d5f24a04038d8b3f1"
+  },
+  {
+    "seq": 540,
+    "timestamp": "2026-09-03T16:27:14.746Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "1931a103d9c3d434d2cc033b4832edc81184e018fa27f25d5f24a04038d8b3f1",
+    "hash": "9c8b6c4aaf01b9c4bcbacba9dc1141dafd48f5beaa4e12a3641926cbea59c4c8"
+  },
+  {
+    "seq": 541,
+    "timestamp": "2026-09-03T16:27:14.753Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "9c8b6c4aaf01b9c4bcbacba9dc1141dafd48f5beaa4e12a3641926cbea59c4c8",
+    "hash": "46cf0dac0b89f8fade7a939b63ab214d87854b771d45b1461bf1d19937cefcf9"
+  },
+  {
+    "seq": 542,
+    "timestamp": "2026-09-03T16:27:14.760Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "46cf0dac0b89f8fade7a939b63ab214d87854b771d45b1461bf1d19937cefcf9",
+    "hash": "84fc181ba94d48bab29033eac155ca0c801b1561e28408e7b0c20a15590ac1c9"
+  },
+  {
+    "seq": 543,
+    "timestamp": "2026-09-03T16:27:14.768Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "84fc181ba94d48bab29033eac155ca0c801b1561e28408e7b0c20a15590ac1c9",
+    "hash": "2bb69b6f4a2da6cc8d0ef4a289ede2ee5c1f48d0949b801f1cc26ad8a1aa4ce1"
+  },
+  {
+    "seq": 544,
+    "timestamp": "2026-09-03T16:27:14.782Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1010",
+    "email": "purchaser_10@otaru.in",
+    "details": "Drop checkout successful for purchaser_10@otaru.in",
+    "prevHash": "2bb69b6f4a2da6cc8d0ef4a289ede2ee5c1f48d0949b801f1cc26ad8a1aa4ce1",
+    "hash": "b6a13ba851653ba4a8721f2c3384961332b82882d90cc0f1f98328444a760d14"
+  },
+  {
+    "seq": 544,
+    "timestamp": "2026-09-03T16:27:14.787Z",
+    "type": "PAYMENT_FAILED",
+    "ref": "order_TEST_101",
+    "ip": "127.0.0.1",
+    "details": "Mock verification attempt FORBIDDEN in production. Order: order_TEST_101",
+    "prevHash": "2bb69b6f4a2da6cc8d0ef4a289ede2ee5c1f48d0949b801f1cc26ad8a1aa4ce1",
+    "hash": "1dadda8940cffcebd640f7c5f9493ce70c0b72abf74c9ad004a1e645be301cf3"
+  },
+  {
+    "seq": 546,
+    "timestamp": "2026-09-03T16:27:14.797Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1012",
+    "email": "purchaser_12@otaru.in",
+    "details": "Drop checkout successful for purchaser_12@otaru.in",
+    "prevHash": "c7be95b2479692a845ee684e7b82013793e4ab977f8bf461cfb18b92333cfc7d",
+    "hash": "f5ed61102316d6bcdd58c4f68779c4bea53fd6413eb404ce9854f3e55f18e00a"
+  },
+  {
+    "seq": 545,
+    "timestamp": "2026-09-03T16:27:14.812Z",
+    "type": "ORDER_BLOCKED",
+    "ip": "127.0.0.1",
+    "email": "adversary@test.com",
+    "details": "Order creation rejected: Razorpay gateway unavailable in production mode. Email: adversary@test.com",
+    "prevHash": "1dadda8940cffcebd640f7c5f9493ce70c0b72abf74c9ad004a1e645be301cf3",
+    "hash": "2e13cc1078f702fd2297f44f14904cea9c9485f0925445770bbc264d29c73e05"
+  },
+  {
+    "seq": 549,
+    "timestamp": "2026-09-03T16:27:14.820Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1015",
+    "email": "purchaser_15@otaru.in",
+    "details": "Drop checkout successful for purchaser_15@otaru.in",
+    "prevHash": "93f9185f0f4fe1a72970780a91fc662cd5a4dc6838693c1d9909b3ae3cbedc20",
+    "hash": "132b9dcc427e5946332e643528c69e8f53bf4afb1de0f9678b8b270125f56ee0"
+  },
+  {
+    "seq": 550,
+    "timestamp": "2026-09-03T16:27:14.839Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1016",
+    "email": "purchaser_16@otaru.in",
+    "details": "Drop checkout successful for purchaser_16@otaru.in",
+    "prevHash": "132b9dcc427e5946332e643528c69e8f53bf4afb1de0f9678b8b270125f56ee0",
+    "hash": "1cf96e2888ca9fa1f759e80cb39e88d93cd15163e4d8cac22527c537a5be3bcd"
+  },
+  {
+    "seq": 551,
+    "timestamp": "2026-09-03T16:27:14.866Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1017",
+    "email": "purchaser_17@otaru.in",
+    "details": "Drop checkout successful for purchaser_17@otaru.in",
+    "prevHash": "1cf96e2888ca9fa1f759e80cb39e88d93cd15163e4d8cac22527c537a5be3bcd",
+    "hash": "bf73a20ab6d7dc81a5cbb9e42a64445b48840d564d02488fc9fbbb91599cd267"
+  },
+  {
+    "seq": 552,
+    "timestamp": "2026-09-03T16:27:14.873Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1018",
+    "email": "purchaser_18@otaru.in",
+    "details": "Drop checkout successful for purchaser_18@otaru.in",
+    "prevHash": "bf73a20ab6d7dc81a5cbb9e42a64445b48840d564d02488fc9fbbb91599cd267",
+    "hash": "df7886a2da3b2b34ceb347eb60acd63b9097a6488dfba4e5ada610206aa28b13"
+  },
+  {
+    "seq": 553,
+    "timestamp": "2026-09-03T16:27:14.920Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1019",
+    "email": "purchaser_19@otaru.in",
+    "details": "Drop checkout successful for purchaser_19@otaru.in",
+    "prevHash": "df7886a2da3b2b34ceb347eb60acd63b9097a6488dfba4e5ada610206aa28b13",
+    "hash": "1b3c6230f20e5ec1e98e77a8d530eac5366a35f2f1e3887496da583d5850d1a6"
+  },
+  {
+    "seq": 554,
+    "timestamp": "2026-09-03T16:27:14.930Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1020",
+    "email": "purchaser_20@otaru.in",
+    "details": "Drop checkout successful for purchaser_20@otaru.in",
+    "prevHash": "1b3c6230f20e5ec1e98e77a8d530eac5366a35f2f1e3887496da583d5850d1a6",
+    "hash": "e0a1bbe99f918e69f740611779dd8b9cf5eab01539f4103a520a2ee2058142a4"
+  },
+  {
+    "seq": 555,
+    "timestamp": "2026-09-03T16:27:14.939Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1021",
+    "email": "purchaser_21@otaru.in",
+    "details": "Drop checkout successful for purchaser_21@otaru.in",
+    "prevHash": "e0a1bbe99f918e69f740611779dd8b9cf5eab01539f4103a520a2ee2058142a4",
+    "hash": "838d5a95af7501de0966b9a8e04d4411f6163f57d1680810f75a73b9d9ff52f5"
+  },
+  {
+    "seq": 556,
+    "timestamp": "2026-09-03T16:27:14.948Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1022",
+    "email": "purchaser_22@otaru.in",
+    "details": "Drop checkout successful for purchaser_22@otaru.in",
+    "prevHash": "838d5a95af7501de0966b9a8e04d4411f6163f57d1680810f75a73b9d9ff52f5",
+    "hash": "bb45431fb6761c548f02b5d71641914c026df5c3ebb12117a4d5d7267f2d3fe6"
+  },
+  {
+    "seq": 557,
+    "timestamp": "2026-09-03T16:27:14.959Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1023",
+    "email": "purchaser_23@otaru.in",
+    "details": "Drop checkout successful for purchaser_23@otaru.in",
+    "prevHash": "bb45431fb6761c548f02b5d71641914c026df5c3ebb12117a4d5d7267f2d3fe6",
+    "hash": "bd7566acfb076549a3496d36c55a969613df732998f26b8c09a05f11db5ec03d"
+  },
+  {
+    "seq": 558,
+    "timestamp": "2026-09-03T16:27:14.977Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1024",
+    "email": "purchaser_24@otaru.in",
+    "details": "Drop checkout successful for purchaser_24@otaru.in",
+    "prevHash": "bd7566acfb076549a3496d36c55a969613df732998f26b8c09a05f11db5ec03d",
+    "hash": "95b5f137d4d32c04aaa395da1c757b9950cd1bc223b9576c1328aee80793d06b"
+  },
+  {
+    "seq": 559,
+    "timestamp": "2026-09-03T16:27:34.517Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "95b5f137d4d32c04aaa395da1c757b9950cd1bc223b9576c1328aee80793d06b",
+    "hash": "a9ca803af20cb70d7b94f17bb677f1ea1aead3022d8cc15b5acc9feea1030bb6"
+  },
+  {
+    "seq": 560,
+    "timestamp": "2026-09-03T16:27:34.524Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "a9ca803af20cb70d7b94f17bb677f1ea1aead3022d8cc15b5acc9feea1030bb6",
+    "hash": "b1b23ca7bf76a628cc897f02f24ac57ddeeca78c04ff53b0efb9226445c0d653"
+  },
+  {
+    "seq": 561,
+    "timestamp": "2026-09-03T16:27:34.530Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "b1b23ca7bf76a628cc897f02f24ac57ddeeca78c04ff53b0efb9226445c0d653",
+    "hash": "4c6b551dde3baf35cfd2ea9ce6dddbe87888ccc4df8c976da2c745aaa81cfe4f"
+  },
+  {
+    "seq": 562,
+    "timestamp": "2026-09-03T16:27:34.535Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "4c6b551dde3baf35cfd2ea9ce6dddbe87888ccc4df8c976da2c745aaa81cfe4f",
+    "hash": "c2f0a3bd2374535d34846c5b24cc515bdd7f0649f01d5c4711c93c159339cb54"
+  },
+  {
+    "seq": 563,
+    "timestamp": "2026-09-03T16:27:34.543Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "c2f0a3bd2374535d34846c5b24cc515bdd7f0649f01d5c4711c93c159339cb54",
+    "hash": "2ae158f5633ffc3862dff77817ee305ed1a549d67b4b11be34be9a8e11a5d989"
+  },
+  {
+    "seq": 564,
+    "timestamp": "2026-09-03T16:27:34.549Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "2ae158f5633ffc3862dff77817ee305ed1a549d67b4b11be34be9a8e11a5d989",
+    "hash": "d2474beffe17e3291f137756fb2436d16a7b44c55a76c75f86e286078c256402"
+  },
+  {
+    "seq": 565,
+    "timestamp": "2026-09-03T16:27:34.558Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "d2474beffe17e3291f137756fb2436d16a7b44c55a76c75f86e286078c256402",
+    "hash": "c04b6cc83c5899326c4a84fc7573ad7606cb332814fc1882cf3d7f7f7592805a"
+  },
+  {
+    "seq": 566,
+    "timestamp": "2026-09-03T16:27:34.564Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "c04b6cc83c5899326c4a84fc7573ad7606cb332814fc1882cf3d7f7f7592805a",
+    "hash": "968ec22d6aa00745844fcc25c40f915718e3c8cb91d2e9e3457ae3a4f576a130"
+  },
+  {
+    "seq": 567,
+    "timestamp": "2026-09-03T16:27:34.568Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "968ec22d6aa00745844fcc25c40f915718e3c8cb91d2e9e3457ae3a4f576a130",
+    "hash": "acdb862404a854f2b9ca47bb0fc8db4e2335ce72cba3af08f0d109a8669faf78"
+  },
+  {
+    "seq": 568,
+    "timestamp": "2026-09-03T16:27:34.577Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "acdb862404a854f2b9ca47bb0fc8db4e2335ce72cba3af08f0d109a8669faf78",
+    "hash": "fe94cf5feab46b5fe56ec9a2842a409d113f2835bc21187aa9f5444975fc1469"
+  },
+  {
+    "seq": 569,
+    "timestamp": "2026-09-03T16:27:34.586Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1000",
+    "email": "purchaser_0@otaru.in",
+    "details": "Drop checkout successful for purchaser_0@otaru.in",
+    "prevHash": "fe94cf5feab46b5fe56ec9a2842a409d113f2835bc21187aa9f5444975fc1469",
+    "hash": "11ce6c4cc8c3e61ab80e7bec4bf0d6d8d370ba8c1b62005b8378e51b82ba2413"
+  },
+  {
+    "seq": 570,
+    "timestamp": "2026-09-03T16:27:34.592Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1001",
+    "email": "purchaser_1@otaru.in",
+    "details": "Drop checkout successful for purchaser_1@otaru.in",
+    "prevHash": "11ce6c4cc8c3e61ab80e7bec4bf0d6d8d370ba8c1b62005b8378e51b82ba2413",
+    "hash": "7474e447cf6ab196448a6c9fc01ff4c316d2c4422bc13f853a552fc290d93f83"
+  },
+  {
+    "seq": 571,
+    "timestamp": "2026-09-03T16:27:34.601Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1002",
+    "email": "purchaser_2@otaru.in",
+    "details": "Drop checkout successful for purchaser_2@otaru.in",
+    "prevHash": "7474e447cf6ab196448a6c9fc01ff4c316d2c4422bc13f853a552fc290d93f83",
+    "hash": "623c2a4d483a2ef2ee2cedd269e4a421988054c9cbaae72130230e2fdf87148e"
+  },
+  {
+    "seq": 572,
+    "timestamp": "2026-09-03T16:27:34.607Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1003",
+    "email": "purchaser_3@otaru.in",
+    "details": "Drop checkout successful for purchaser_3@otaru.in",
+    "prevHash": "623c2a4d483a2ef2ee2cedd269e4a421988054c9cbaae72130230e2fdf87148e",
+    "hash": "5cff92c80cace086805e6d33f87ddc9c19c8d2710f44168406a38ab78d7d4a63"
+  },
+  {
+    "seq": 573,
+    "timestamp": "2026-09-03T16:27:34.613Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1004",
+    "email": "purchaser_4@otaru.in",
+    "details": "Drop checkout successful for purchaser_4@otaru.in",
+    "prevHash": "5cff92c80cace086805e6d33f87ddc9c19c8d2710f44168406a38ab78d7d4a63",
+    "hash": "0548bd76c17ee5c1072c3a8c3daa39ff812f10b85e937af50c59b3f03e8ac27d"
+  },
+  {
+    "seq": 574,
+    "timestamp": "2026-09-03T16:27:34.621Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1005",
+    "email": "purchaser_5@otaru.in",
+    "details": "Drop checkout successful for purchaser_5@otaru.in",
+    "prevHash": "0548bd76c17ee5c1072c3a8c3daa39ff812f10b85e937af50c59b3f03e8ac27d",
+    "hash": "ab6b44dfedcafe83a027930dd86b851b83ea6786b56b8480b4e8a08abea3e7a8"
+  },
+  {
+    "seq": 575,
+    "timestamp": "2026-09-03T16:27:34.627Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1006",
+    "email": "purchaser_6@otaru.in",
+    "details": "Drop checkout successful for purchaser_6@otaru.in",
+    "prevHash": "ab6b44dfedcafe83a027930dd86b851b83ea6786b56b8480b4e8a08abea3e7a8",
+    "hash": "5c877ce6e0446da73e6dc410a599465f10a0cfedf68b52221a094c5aa6e95d5f"
+  },
+  {
+    "seq": 576,
+    "timestamp": "2026-09-03T16:27:34.633Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1007",
+    "email": "purchaser_7@otaru.in",
+    "details": "Drop checkout successful for purchaser_7@otaru.in",
+    "prevHash": "5c877ce6e0446da73e6dc410a599465f10a0cfedf68b52221a094c5aa6e95d5f",
+    "hash": "e75f23633465482d21ae818b7169974ff59a227f7f9ffc21843b49f82a6203f4"
+  },
+  {
+    "seq": 577,
+    "timestamp": "2026-09-03T16:27:34.639Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1008",
+    "email": "purchaser_8@otaru.in",
+    "details": "Drop checkout successful for purchaser_8@otaru.in",
+    "prevHash": "e75f23633465482d21ae818b7169974ff59a227f7f9ffc21843b49f82a6203f4",
+    "hash": "75485ca5b3b085d3dee04df98b5138a586f28881b6402e9cf39e3f690cb2c0fe"
+  },
+  {
+    "seq": 578,
+    "timestamp": "2026-09-03T16:27:34.645Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1009",
+    "email": "purchaser_9@otaru.in",
+    "details": "Drop checkout successful for purchaser_9@otaru.in",
+    "prevHash": "75485ca5b3b085d3dee04df98b5138a586f28881b6402e9cf39e3f690cb2c0fe",
+    "hash": "a432e1e36eb66619bd822e69e12b8ff15cbb3befe6e8509975378193318fdeaa"
+  },
+  {
+    "seq": 579,
+    "timestamp": "2026-09-03T16:27:34.651Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1010",
+    "email": "purchaser_10@otaru.in",
+    "details": "Drop checkout successful for purchaser_10@otaru.in",
+    "prevHash": "a432e1e36eb66619bd822e69e12b8ff15cbb3befe6e8509975378193318fdeaa",
+    "hash": "9fa045751bfd05894baf9bd1d678b4c5c592133e77c57973ed04351911abbfee"
+  },
+  {
+    "seq": 580,
+    "timestamp": "2026-09-03T16:27:34.656Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1011",
+    "email": "purchaser_11@otaru.in",
+    "details": "Drop checkout successful for purchaser_11@otaru.in",
+    "prevHash": "9fa045751bfd05894baf9bd1d678b4c5c592133e77c57973ed04351911abbfee",
+    "hash": "a2f7623c0e2124c7124dd3ee71e75c666e88a948cde6cd89019405cb9a723899"
+  },
+  {
+    "seq": 581,
+    "timestamp": "2026-09-03T16:27:34.664Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1012",
+    "email": "purchaser_12@otaru.in",
+    "details": "Drop checkout successful for purchaser_12@otaru.in",
+    "prevHash": "a2f7623c0e2124c7124dd3ee71e75c666e88a948cde6cd89019405cb9a723899",
+    "hash": "bb14eb0d300887fb03987ed47d086a7dabcbc230cb2e8975819d07e55394c51f"
+  },
+  {
+    "seq": 582,
+    "timestamp": "2026-09-03T16:27:34.679Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1013",
+    "email": "purchaser_13@otaru.in",
+    "details": "Drop checkout successful for purchaser_13@otaru.in",
+    "prevHash": "bb14eb0d300887fb03987ed47d086a7dabcbc230cb2e8975819d07e55394c51f",
+    "hash": "0229009359904912a3fa430e8fd473c102687dd6339317363ce5d5fc1319b103"
+  },
+  {
+    "seq": 583,
+    "timestamp": "2026-09-03T16:27:34.686Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1014",
+    "email": "purchaser_14@otaru.in",
+    "details": "Drop checkout successful for purchaser_14@otaru.in",
+    "prevHash": "0229009359904912a3fa430e8fd473c102687dd6339317363ce5d5fc1319b103",
+    "hash": "01d43631dcafa4f75169b9029c4ccf9c1892b222f67f62bcd8e6f7b341cc1cfa"
+  },
+  {
+    "seq": 584,
+    "timestamp": "2026-09-03T16:27:34.695Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1015",
+    "email": "purchaser_15@otaru.in",
+    "details": "Drop checkout successful for purchaser_15@otaru.in",
+    "prevHash": "01d43631dcafa4f75169b9029c4ccf9c1892b222f67f62bcd8e6f7b341cc1cfa",
+    "hash": "0bc8490631cea069e14111f8431ceba39c7f0a6ba4ce2746c8af81063a303767"
+  },
+  {
+    "seq": 585,
+    "timestamp": "2026-09-03T16:27:34.703Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1016",
+    "email": "purchaser_16@otaru.in",
+    "details": "Drop checkout successful for purchaser_16@otaru.in",
+    "prevHash": "0bc8490631cea069e14111f8431ceba39c7f0a6ba4ce2746c8af81063a303767",
+    "hash": "66df797cb4c6596fdc8b3c8e4fc37e2b894b7403a0ff8e66ad9a4029a525996f"
+  },
+  {
+    "seq": 586,
+    "timestamp": "2026-09-03T16:27:34.711Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1017",
+    "email": "purchaser_17@otaru.in",
+    "details": "Drop checkout successful for purchaser_17@otaru.in",
+    "prevHash": "66df797cb4c6596fdc8b3c8e4fc37e2b894b7403a0ff8e66ad9a4029a525996f",
+    "hash": "39c2f27fd908ef44a3ff401b4af86ccd694c4c18c6eae074030e605db6cd3829"
+  },
+  {
+    "seq": 587,
+    "timestamp": "2026-09-03T16:27:34.717Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1018",
+    "email": "purchaser_18@otaru.in",
+    "details": "Drop checkout successful for purchaser_18@otaru.in",
+    "prevHash": "39c2f27fd908ef44a3ff401b4af86ccd694c4c18c6eae074030e605db6cd3829",
+    "hash": "21b22a3f0eb96c48cb53ec1223d6d54f26d813246427a3844b31411f1fd275ef"
+  },
+  {
+    "seq": 588,
+    "timestamp": "2026-09-03T16:27:34.722Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1019",
+    "email": "purchaser_19@otaru.in",
+    "details": "Drop checkout successful for purchaser_19@otaru.in",
+    "prevHash": "21b22a3f0eb96c48cb53ec1223d6d54f26d813246427a3844b31411f1fd275ef",
+    "hash": "b2ae3b1f9cb0439fc7ab6f8cb7c6b4c7e68cbbc3fdd2c760d582a2584ca09a26"
+  },
+  {
+    "seq": 589,
+    "timestamp": "2026-09-03T16:27:34.734Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1020",
+    "email": "purchaser_20@otaru.in",
+    "details": "Drop checkout successful for purchaser_20@otaru.in",
+    "prevHash": "b2ae3b1f9cb0439fc7ab6f8cb7c6b4c7e68cbbc3fdd2c760d582a2584ca09a26",
+    "hash": "579286a496708364afc7467eba1d9960fef9615bb12e9e8aa5c1d8c297792339"
+  },
+  {
+    "seq": 590,
+    "timestamp": "2026-09-03T16:27:34.741Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1021",
+    "email": "purchaser_21@otaru.in",
+    "details": "Drop checkout successful for purchaser_21@otaru.in",
+    "prevHash": "579286a496708364afc7467eba1d9960fef9615bb12e9e8aa5c1d8c297792339",
+    "hash": "893ec9297084516f1d539504c854a53efe37072c94aff90be5e24a3911f44b92"
+  },
+  {
+    "seq": 591,
+    "timestamp": "2026-09-03T16:27:34.749Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1022",
+    "email": "purchaser_22@otaru.in",
+    "details": "Drop checkout successful for purchaser_22@otaru.in",
+    "prevHash": "893ec9297084516f1d539504c854a53efe37072c94aff90be5e24a3911f44b92",
+    "hash": "319e574725d4a35d962ffad9e1c57e6c8947e88ba4b88545f2b4f46f77433c4e"
+  },
+  {
+    "seq": 592,
+    "timestamp": "2026-09-03T16:27:34.755Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1023",
+    "email": "purchaser_23@otaru.in",
+    "details": "Drop checkout successful for purchaser_23@otaru.in",
+    "prevHash": "319e574725d4a35d962ffad9e1c57e6c8947e88ba4b88545f2b4f46f77433c4e",
+    "hash": "51509fe21a726d21d2eca9af1c87912ccdeb79f2c65a04b1201c44a19e6afe18"
+  },
+  {
+    "seq": 593,
+    "timestamp": "2026-09-03T16:27:34.766Z",
+    "type": "ORDER_CREATED",
+    "ref": "OTARU-DROP-1024",
+    "email": "purchaser_24@otaru.in",
+    "details": "Drop checkout successful for purchaser_24@otaru.in",
+    "prevHash": "51509fe21a726d21d2eca9af1c87912ccdeb79f2c65a04b1201c44a19e6afe18",
+    "hash": "607a3de107b8dc578fe43a77a21087fc8826b5aca3cfed7e479054a18795c657"
   }
 ]

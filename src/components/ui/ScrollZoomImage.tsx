@@ -25,7 +25,7 @@ export function ScrollZoomImage({
 }: ScrollZoomImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState<number>(direction === 'out-to-in' ? 1.08 : 0.95);
-  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [, setIsIntersecting] = useState(false);
 
   useEffect(() => {
     const el = containerRef.current;

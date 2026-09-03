@@ -1,5 +1,29 @@
 [
   {
+    "id": "order_MOCK_F46YI9F1O",
+    "orderId": "OTARU-REG-404679",
+    "customerId": "adversary@security-audit.org",
+    "customerName": "Security Auditor",
+    "amount": 480,
+    "currency": "USD",
+    "method": "Escrow Sandbox",
+    "status": "CREATED",
+    "details": "Order created. Fraud score: 0 (PASS). Gateway: order_MOCK_F46YI9F1O",
+    "security": {
+      "rateLimitPass": true,
+      "csrfPass": true,
+      "signatureVerified": false
+    },
+    "createdAt": "2026-09-03T16:27:14.754Z",
+    "history": [
+      {
+        "status": "CREATED",
+        "timestamp": "2026-09-03T16:27:14.754Z",
+        "details": "Order created. Fraud score: 0 (PASS). Gateway: order_MOCK_F46YI9F1O"
+      }
+    ]
+  },
+  {
     "id": "order_TEST_101",
     "orderId": "OTARU-REG-999999",
     "customerId": "patron@otaru.in",
@@ -14,11 +38,11 @@
       "csrfPass": true,
       "signatureVerified": false
     },
-    "createdAt": "2026-08-29T16:35:31.010Z",
+    "createdAt": "2026-09-03T16:27:14.557Z",
     "history": [
       {
         "status": "CREATED",
-        "timestamp": "2026-08-29T16:35:31.010Z",
+        "timestamp": "2026-09-03T16:27:14.557Z",
         "details": "Order Created"
       }
     ]

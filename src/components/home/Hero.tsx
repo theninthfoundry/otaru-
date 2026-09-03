@@ -57,7 +57,7 @@ export function Hero() {
     };
   }, []);
 
-  const slide = HERO_SLIDES[activeSlide];
+  const slide = HERO_SLIDES[activeSlide] ?? HERO_SLIDES[0]!;
 
   return (
     <div className={clsx('hero-stub', isReady && 'is-loaded')}>

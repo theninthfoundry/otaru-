@@ -20,14 +20,14 @@ export function SearchModal({ isOpen: externalIsOpen, onClose: externalOnClose }
   const inputRef = useRef<HTMLInputElement>(null);
 
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
-  const close = () => {
+  const close = React.useCallback(() => {
     if (externalOnClose) externalOnClose();
     else setInternalIsOpen(false);
     setQuery('');
     setActiveIndex(-1);
-  };
+  }, [externalOnClose]);
 
-  const open = () => setInternalIsOpen(true);
+  const open = React.useCallback(() => setInternalIsOpen(true), []);
 
   useEffect(() => {
     const handleKeyDown = (ev: KeyboardEvent) => {
@@ -42,7 +42,7 @@ export function SearchModal({ isOpen: externalIsOpen, onClose: externalOnClose }
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
+  }, [isOpen, close, open]);
 
   useEffect(() => {
     if (isOpen) {

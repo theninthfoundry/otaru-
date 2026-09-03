@@ -1,7 +1,6 @@
 'use client';
 
 import React, { createContext, useContext, useState } from 'react';
-import clsx from 'clsx';
 
 export interface MaterialDetail {
   name: string;
@@ -83,7 +82,7 @@ export function MaterialInspectorProvider({ children }: { children: React.ReactN
   const [selectedMaterial, setSelectedMaterial] = useState<MaterialDetail | null>(null);
 
   const inspectMaterial = (name: string) => {
-    const detail = MATERIAL_DATA[name] || Object.values(MATERIAL_DATA)[0];
+    const detail = MATERIAL_DATA[name] || Object.values(MATERIAL_DATA)[0] || null;
     setSelectedMaterial(detail);
   };
 

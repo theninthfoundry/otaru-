@@ -2,8 +2,6 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import {
   checkIdempotency,
   registerIdempotencyKey,
-  generateIdempotencyKey,
-  getIdempotencyStoreSize,
 } from '@/lib/payments/idempotency';
 import { auditLog, verifyChainIntegrity, getAuditEvents } from '@/lib/payments/audit-trail';
 import { addTransaction, getTransactions, clearLedger } from '@/lib/payments/ledger';

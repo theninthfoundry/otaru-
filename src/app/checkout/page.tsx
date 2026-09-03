@@ -62,15 +62,41 @@ export default function CheckoutPage() {
 
   const [orderId, setOrderId] = useState<string | null>(null);
   const [internalOrderId, setInternalOrderId] = useState<string | null>(null);
-  const [_cartToken, setCartToken] = useState<string | null>(null);
+  const [, setCartToken] = useState<string | null>(null);
   const [nonce, setNonce] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [shippingEstimate, setShippingEstimate] = useState<{
+    city?: string;
+    state?: string;
+    courierName?: string;
+    estimatedDays?: string;
+    estimatedDeliveryDate?: string;
+  } | null>(null);
 
   const idempotencyKey = useMemo(() => crypto.randomUUID(), []);
 
   const currency = 'USD';
   const shipping = subtotal > 300 ? 0 : 15;
   const total = subtotal + shipping;
+
+  useEffect(() => {
+    const cleanZip = formData.zip.trim();
+    if (/^\d{6}$/.test(cleanZip)) {
+      fetch(`/api/shipping/serviceability?pincode=${cleanZip}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.serviceable) {
+            setShippingEstimate(data);
+            if (!formData.city) {
+              setFormData((prev) => ({ ...prev, city: data.city }));
+            }
+          }
+        })
+        .catch(() => {});
+    } else {
+      setShippingEstimate(null);
+    }
+  }, [formData.zip, formData.city]);
 
   useEffect(() => {
     if (razorpayScriptRef.current) return;
@@ -368,12 +394,23 @@ export default function CheckoutPage() {
                         <input
                           id={field} name={field} type="text" required
                           value={formData[field]} onChange={handleInputChange}
-                          placeholder={field === 'city' ? 'Tokyo' : '100-0001'}
+                          placeholder={field === 'city' ? 'New Delhi' : '110001'}
                           className="bg-otaru-cream/30 border border-otaru-border rounded-xs px-4 py-3 text-body-sm focus:outline-none focus:border-otaru-ink transition-colors"
                         />
                       </div>
                     ))}
                   </div>
+
+                  {shippingEstimate && (
+                    <div className="p-3 bg-otaru-gold/10 border border-otaru-gold/30 rounded-xs flex items-center justify-between text-xs">
+                      <span className="text-otaru-ink font-medium">
+                        ✓ {shippingEstimate.courierName || 'Express Courier'} · {shippingEstimate.city}, {shippingEstimate.state}
+                      </span>
+                      <span className="font-mono text-otaru-gold uppercase tracking-wider text-[11px]">
+                        Est. {shippingEstimate.estimatedDays || '2-3 Days'}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 

@@ -8,11 +8,19 @@ interface GraphicProps {
   ratio?: string;
 }
 
-export function DesignedArtifactGraphic({ id, label = '', ratio = 'portrait' }: GraphicProps) {
+export function DesignedArtifactGraphic({ id, label = '' }: GraphicProps) {
   // Determine artifact theme/type
   const num = id || (label.match(/\b(0\d{2})\b/)?.[1] ?? '041');
 
-  // Custom vector blueprint configurations
+  const DEFAULT_THEME = {
+    title: 'YAMA FIELD JACKET',
+    kanji: '山',
+    sub: 'RAW INDIGO CANVAS · DOUBLE SEAM',
+    color: '#1a334d',
+    accent: '#d9bd83',
+    path: 'M 30 70 L 50 40 L 70 70 L 65 140 L 35 140 Z',
+  };
+
   const GRAPHIC_THEMES: Record<string, {
     title: string;
     kanji: string;
@@ -21,14 +29,7 @@ export function DesignedArtifactGraphic({ id, label = '', ratio = 'portrait' }: 
     accent: string;
     path: string;
   }> = {
-    '041': {
-      title: 'YAMA FIELD JACKET',
-      kanji: '山',
-      sub: 'RAW INDIGO CANVAS · DOUBLE SEAM',
-      color: '#1a334d',
-      accent: '#d9bd83',
-      path: 'M 30 70 L 50 40 L 70 70 L 65 140 L 35 140 Z', // jacket silhouette
-    },
+    '041': DEFAULT_THEME,
     '042': {
       title: 'KIRYŪ WRAP TROUSER',
       kanji: '桐',
@@ -103,7 +104,7 @@ export function DesignedArtifactGraphic({ id, label = '', ratio = 'portrait' }: 
     },
   };
 
-  const theme = GRAPHIC_THEMES[num] || GRAPHIC_THEMES['041'];
+  const theme = GRAPHIC_THEMES[num] ?? DEFAULT_THEME;
 
   return (
     <div

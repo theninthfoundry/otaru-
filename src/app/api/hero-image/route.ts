@@ -7,7 +7,7 @@ let cachedBuffer: Buffer | null = null;
 export async function GET() {
   try {
     if (cachedBuffer) {
-      return new NextResponse(cachedBuffer, {
+      return new NextResponse(new Uint8Array(cachedBuffer), {
         headers: {
           'Content-Type': 'image/jpeg',
           'Cache-Control': 'public, max-age=31536000, immutable',
@@ -31,7 +31,7 @@ export async function GET() {
         console.error('Failed to write public hero image file:', err);
       }
 
-      return new NextResponse(cachedBuffer, {
+      return new NextResponse(new Uint8Array(cachedBuffer), {
         headers: {
           'Content-Type': 'image/jpeg',
           'Cache-Control': 'public, max-age=31536000, immutable',

@@ -36,7 +36,7 @@ export async function reserveInventoryItem(
 
         return { success: true, remainingStock: updated.quantity };
       });
-    } catch (err: unknown) {
+    } catch {
       return { success: false, remainingStock: 0, error: 'LOCK_TIMEOUT' };
     }
   }

@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { JapaneseFurinChimes } from '@/components/ui/JapaneseFurinChimes';
 
 export function SiteFooter() {
   const [email, setEmail] = useState('');

@@ -8,7 +8,15 @@ import React from 'react';
  * and vertical kanji calligraphy watermarks to enrich empty UI spaces.
  */
 
-export function SashikoGrid({ className = '', style }: { className?: string; style?: React.CSSProperties }) {
+export function SashikoGrid({
+  className = '',
+  style,
+  opacity = 0.04,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+  opacity?: number;
+}) {
   return (
     <div
       aria-hidden="true"
@@ -19,7 +27,7 @@ export function SashikoGrid({ className = '', style }: { className?: string; sty
         pointerEvents: 'none',
         zIndex: 0,
         overflow: 'hidden',
-        opacity: 0.04,
+        opacity,
         ...style,
       }}
     >

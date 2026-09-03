@@ -4,7 +4,6 @@ import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart';
 import { useCurrency } from '@/lib/currency';
-import { JapaneseFurinChimes } from '@/components/ui/JapaneseFurinChimes';
 import { CartLineItem } from './CartLineItem';
 import clsx from 'clsx';
 
