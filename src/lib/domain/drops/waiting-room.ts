@@ -79,18 +79,26 @@ export class WaitingRoomManager {
   }
 
   /**
-   * Verifies that an admission token is genuine and unexpired.
+   * Verifies that an admission token is genuine, unexpired, and untampered.
    */
   verifyToken(token: SignedAdmissionToken): boolean {
-    if (Date.now() > token.expiresAt) {
+    if (!token || typeof token.signature !== 'string') {
+      return false;
+    }
+
+    if (!token.expiresAt || Date.now() > token.expiresAt) {
       return false; // Token expired
     }
 
     const expectedSignature = this.signPayload(token);
-    return crypto.timingSafeEqual(
-      Buffer.from(token.signature),
-      Buffer.from(expectedSignature)
-    );
+    const sigBuffer = Buffer.from(token.signature, 'utf8');
+    const expBuffer = Buffer.from(expectedSignature, 'utf8');
+
+    if (sigBuffer.length !== expBuffer.length) {
+      return false;
+    }
+
+    return crypto.timingSafeEqual(sigBuffer, expBuffer);
   }
 
   getQueueLength(): number {

@@ -90,7 +90,10 @@ describe('GATE F — DROP ENGINE, WAITING ROOM & BOT VELOCITY SHIELD', () => {
 
     it('rejects forged or tampered admission tokens', () => {
       const manager = new WaitingRoomManager('test_secret_key');
+      manager.joinQueue('user_original');
       const tokens = manager.admitBatch('drop_01', 1);
+
+      expect(tokens.length).toBe(1);
 
       // Fabricated token with altered userId
       const forgedToken: SignedAdmissionToken = {
@@ -103,7 +106,10 @@ describe('GATE F — DROP ENGINE, WAITING ROOM & BOT VELOCITY SHIELD', () => {
 
     it('rejects expired admission tokens', () => {
       const manager = new WaitingRoomManager('test_secret_key');
+      manager.joinQueue('user_original');
       const tokens = manager.admitBatch('drop_01', 1);
+
+      expect(tokens.length).toBe(1);
 
       const expiredToken: SignedAdmissionToken = {
         ...tokens[0]!,
