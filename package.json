@@ -74,5 +74,31 @@
     "tailwindcss": "^3.4.0",
     "typescript": "^5.7.0",
     "vitest": "^2.1.0"
+  },
+  "overrides": {
+    "@react-three/drei": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    },
+    "@react-three/fiber": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    },
+    "@react-spring/three": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    },
+    "@react-spring/core": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    },
+    "@react-spring/animated": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    },
+    "@react-spring/shared": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   }
 }
