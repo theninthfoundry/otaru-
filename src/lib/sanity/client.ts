@@ -38,7 +38,14 @@ export async function sanityFetch<T>(
   params: Record<string, unknown> = {},
   tags?: string[],
 ): Promise<T> {
-  if (!sanityConfig.token && (!sanityConfig.projectId || sanityConfig.projectId === 'otaru-studio')) {
+  const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.VITEST);
+  if (
+    isTest ||
+    (!sanityConfig.token &&
+      (!sanityConfig.projectId ||
+        sanityConfig.projectId === 'otaru-studio' ||
+        sanityConfig.projectId === 'otaru-project'))
+  ) {
     throw new Error('Sanity credentials not configured in local test environment.');
   }
   return sanityClient.fetch<T>(query, params, {
