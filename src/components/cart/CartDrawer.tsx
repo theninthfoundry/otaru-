@@ -145,7 +145,7 @@ export function CartDrawer() {
               Direct studio dispatch from Hokkaido · Lifetime repair guaranteed.
             </p>
             <Link
-              href="/sign-in"
+              href="/checkout"
               onClick={closeCart}
               className="btn-primary"
               style={{

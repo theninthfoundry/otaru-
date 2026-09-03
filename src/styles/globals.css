@@ -758,3 +758,25 @@ section.block.on-dusk {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--otaru-horizon);
 }
+
+/* Print Archival Deed Stylesheet */
+@media print {
+  header,
+  footer,
+  nav,
+  .archival-cursor-wrapper,
+  .skip-link,
+  .otaru-texture-overlay,
+  [aria-label="Atelier status bar"] {
+    display: none !important;
+  }
+  body {
+    background-color: #ffffff !important;
+    color: #080808 !important;
+  }
+  #main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+

@@ -341,14 +341,41 @@ export default function VerifyPiecePage() {
                     </span>
                   </div>
 
-                  <Link href="/returns" className="cta-link" style={{ fontSize: '0.8rem', color: 'var(--otaru-gold)' }}>
-                    Lifetime Free Repair Policy →
-                  </Link>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => window.print()}
+                      className="btn-primary"
+                      style={{
+                        padding: '0.6rem 1.2rem',
+                        fontSize: '0.74rem',
+                        letterSpacing: '0.12em',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                      }}
+                    >
+                      <span>🖨</span>
+                      <span>Print Archival Deed</span>
+                    </button>
+                    <Link href="/returns" className="cta-link" style={{ fontSize: '0.8rem', color: 'var(--otaru-gold)' }}>
+                      Lifetime Free Repair Policy →
+                    </Link>
+                  </div>
                 </div>
               </div>
             </JapaneseCornerBorder>
 
-            <div style={{ marginTop: '1.6rem', textAlign: 'center' }}>
+            <div style={{ marginTop: '1.6rem', textAlign: 'center', display: 'flex', justifyContent: 'center', gap: '1.5rem' }}>
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="cta-link"
+                style={{ fontSize: '0.82rem', color: 'var(--otaru-gold)' }}
+              >
+                🖨 Export Deed PDF
+              </button>
+              <span style={{ color: 'rgba(244,240,235,0.2)' }}>·</span>
               <button
                 type="button"
                 onClick={() => setCertificate(null)}
