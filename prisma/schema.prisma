@@ -1,23 +1,42 @@
-// Prisma Schema for Otaru Production-Grade Commerce Engine
+// Prisma Schema for Otaru Production Architecture 1.0
+// Institutional Luxury Commerce, Digital Archive & Provenance System
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// 01. ENUMS & STATE MACHINES
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  CUSTOMER
+  MAKER
+  EDITOR
+  ADMIN
+  OWNER
 }
 
 enum OrderStatus {
   CREATED
+  PENDING
   PAYMENT_PENDING
   PAID
   CONFIRMED
+  IN_PREPARATION
+  QUALITY_INSPECTED
+  PACKED
   FULFILLMENT_PENDING
   FULFILLING
+  HANDED_TO_CARRIER
   SHIPPED
+  IN_TRANSIT
   DELIVERED
   FAILED
   CANCELLED
@@ -27,9 +46,57 @@ enum OrderStatus {
 
 enum PaymentStatus {
   CREATED
+  PENDING
+  AUTHORIZED
   CAPTURED
+  SETTLED
   FAILED
+  REFUND_REQUESTED
   REFUNDED
+}
+
+enum MovementType {
+  RECEIVED
+  RESERVED
+  RELEASED
+  SOLD
+  RETURNED
+  DAMAGED
+}
+
+enum CartStatus {
+  ACTIVE
+  CHECKOUT_STARTED
+  ABANDONED
+  CONVERTED
+}
+
+enum GarmentStatus {
+  IN_ATELIER
+  ALLOCATED
+  ACQUIRED
+  ARCHIVED
+  IN_REPAIR
+}
+
+enum ShipmentStatus {
+  LABEL_CREATED
+  PICKED_UP
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  FAILED_ATTEMPT
+  EXCEPTION
+}
+
+enum DropStatus {
+  DRAFT
+  PREVIEW
+  SCHEDULED
+  LIVE
+  SOLD_OUT
+  CLOSED
+  ARCHIVED
 }
 
 enum WebhookStatus {
@@ -38,51 +105,329 @@ enum WebhookStatus {
   FAILED
 }
 
+enum OutboxStatus {
+  PENDING
+  PROCESSING
+  PUBLISHED
+  DELIVERED
+  FAILED
+  DEAD_LETTER
+}
+
 enum IdempotencyStatus {
   PROCESSING
   COMPLETED
   FAILED
 }
 
-enum OutboxStatus {
-  PENDING
-  PROCESSING
-  PUBLISHED
-  FAILED
-}
+// ---------------------------------------------------------------------------
+// 02. IDENTITY & CUSTOMER ENCLAVE
+// ---------------------------------------------------------------------------
 
 model User {
-  id            String      @id @default(uuid())
-  email         String      @unique
-  name          String?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  orders        Order[]
-  nfcScans      NfcScan[]
+  id              String            @id @default(uuid())
+  email           String            @unique
+  emailVerifiedAt DateTime?
+  phoneNumber     String?           @unique
+  phoneVerifiedAt DateTime?
+  name            String?
+  role            UserRole          @default(CUSTOMER)
+  
+  // Relations
+  sessions        UserSession[]
+  addresses       CustomerAddress[]
+  orders          Order[]
+  carts           Cart[]
+  ownedGarments   GarmentSerial[]   @relation("CurrentOwner")
+  nfcScans        NfcScan[]
 
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([email])
+  @@index([phoneNumber])
   @@map("users")
 }
 
+model UserSession {
+  id           String    @id @default(uuid())
+  userId       String
+  tokenHash    String    @unique
+  ipAddress    String?
+  userAgent    String?
+  city         String?
+  country      String?
+  isRevoked    Boolean   @default(false)
+  expiresAt    DateTime
+  lastActiveAt DateTime  @default(now())
+  createdAt    DateTime  @default(now())
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("user_sessions")
+}
+
+model OtpChallenge {
+  id           String    @id @default(uuid())
+  destination  String    // Email or E.164 phone
+  codeHash     String
+  attempts     Int       @default(0)
+  maxAttempts  Int       @default(5)
+  isConsumed   Boolean   @default(false)
+  expiresAt    DateTime
+  createdAt    DateTime  @default(now())
+
+  @@index([destination, isConsumed])
+  @@map("otp_challenges")
+}
+
+model CustomerAddress {
+  id            String    @id @default(uuid())
+  userId        String
+  label         String?   // "Studio", "Residence"
+  recipientName String
+  streetLine1   String
+  streetLine2   String?
+  city          String
+  state         String
+  postalCode    String
+  country       String    @default("IN")
+  phoneNumber   String
+  isDefault     Boolean   @default(false)
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders        Order[]   @relation("OrderDeliveryAddress")
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("customer_addresses")
+}
+
+// ---------------------------------------------------------------------------
+// 03. CATALOG & CRAFT SPECIFICATION (Product ≠ SKU ≠ Garment)
+// ---------------------------------------------------------------------------
+
+model Collection {
+  id          String    @id @default(uuid())
+  numeral     String    // "CHAPTER 01"
+  kanjiTitle  String    // "京都・夜"
+  title       String    // "Kyoto Nights"
+  season      String    // "AUTUMN / WINTER MMXXVI"
+  story       String    @db.Text
+  slug        String    @unique
+  isActive    Boolean   @default(true)
+  
+  products    Product[]
+  drops       Drop[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("collections")
+}
+
+model Product {
+  id              String           @id @default(uuid())
+  objectNumber    String           @unique // "041"
+  name            String           // "Yama Field Jacket"
+  subtitle        String           // "14.5oz Natural Botanical Twill"
+  story           String           @db.Text
+  materialSpec    String           @db.Text
+  dyeMethod       String           // "Natural Sukumo Fermented Indigo"
+  loomOrigin      String           // "Toyoda G3 Vintage Shuttle Loom"
+  careRitual      String           @db.Text
+  basePriceMinor  Int              // Integer minor units (e.g. ₹40,320 = 4032000 paise)
+  editionLimit    Int              // Total pieces in this archival run (e.g. 44)
+  collectionId    String?
+  
+  collection      Collection?      @relation(fields: [collectionId], references: [id])
+  variants        ProductVariant[]
+  serials         GarmentSerial[]
+  dropItems       DropProduct[]
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([objectNumber])
+  @@map("products")
+}
+
+model ProductVariant {
+  id              String           @id @default(uuid())
+  productId       String
+  sku             String           @unique // "YAMA-041-IV"
+  size            String           // "I", "II", "III", "IV", "V"
+  measurements    Json?            // Chest, Shoulders, Length in cm
+  
+  product         Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  inventory       InventoryItem?
+  cartItems       CartItem[]
+  orderItems      OrderItem[]
+  garmentSerials  GarmentSerial[]
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([sku])
+  @@index([productId])
+  @@map("product_variants")
+}
+
+// ---------------------------------------------------------------------------
+// 04. INVENTORY LEDGER (Double-Entry Movements)
+// ---------------------------------------------------------------------------
+
+model InventoryItem {
+  id              String                  @id @default(uuid())
+  variantId       String                  @unique
+  variant         ProductVariant          @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  
+  onHandCount     Int                     @default(0)
+  reservedCount   Int                     @default(0)
+  
+  movements       InventoryMovement[]
+  reservations    InventoryReservation[]
+
+  updatedAt       DateTime                @updatedAt
+
+  @@map("inventory_items")
+}
+
+model InventoryMovement {
+  id              String         @id @default(uuid())
+  inventoryItemId String
+  type            MovementType
+  quantity        Int            // Positive integer
+  referenceId     String?        // orderId, cartId, returnId
+  notes           String?
+  createdAt       DateTime       @default(now())
+
+  inventoryItem   InventoryItem  @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+
+  @@index([inventoryItemId])
+  @@index([referenceId])
+  @@map("inventory_movements")
+}
+
+model InventoryReservation {
+  id              String         @id @default(uuid())
+  inventoryItemId String
+  cartId          String
+  quantity        Int            @default(1)
+  expiresAt       DateTime
+  isConsumed      Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+
+  inventoryItem   InventoryItem  @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+
+  @@index([cartId, isConsumed])
+  @@index([expiresAt])
+  @@map("inventory_reservations")
+}
+
+// ---------------------------------------------------------------------------
+// 05. CART & FROZEN CHECKOUT SNAPSHOTS
+// ---------------------------------------------------------------------------
+
+model Cart {
+  id              String           @id @default(uuid())
+  userId          String?
+  anonymousId     String?
+  status          CartStatus       @default(ACTIVE)
+  currency        String           @default("INR")
+  version         Int              @default(1) // Optimistic concurrency version
+  expiresAt       DateTime
+  
+  user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items           CartItem[]
+  checkoutSession CheckoutSession?
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([anonymousId])
+  @@map("carts")
+}
+
+model CartItem {
+  id              String         @id @default(uuid())
+  cartId          String
+  variantId       String
+  quantity        Int            @default(1)
+
+  cart            Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variant         ProductVariant @relation(fields: [variantId], references: [id])
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@unique([cartId, variantId])
+  @@map("cart_items")
+}
+
+model CheckoutSession {
+  id              String         @id @default(uuid())
+  cartId          String         @unique
+  orderId         String?        @unique
+  idempotencyKey  String         @unique
+  
+  // Frozen Commercial State
+  currency        String         @default("INR")
+  subtotalMinor   Int
+  taxMinor        Int
+  shippingMinor   Int
+  totalMinor      Int
+  snapshotData    Json           // Complete frozen items, address, prices
+  
+  isCompleted     Boolean        @default(false)
+  expiresAt       DateTime
+
+  cart            Cart           @relation(fields: [cartId], references: [id])
+  order           Order?         @relation(fields: [orderId], references: [id])
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([idempotencyKey])
+  @@map("checkout_sessions")
+}
+
+// ---------------------------------------------------------------------------
+// 06. ORDERS & FINANCIAL REPRODUCIBILITY
+// ---------------------------------------------------------------------------
+
 model Order {
-  id            String          @id @default(uuid())
-  internalId    String          @unique // e.g. OTARU-REG-104921
-  userId        String?
-  user          User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
-  customerEmail String
-  customerName  String
-  shopifyId     String?         @unique
-  status        OrderStatus     @default(CREATED)
+  id                String            @id @default(uuid())
+  internalId        String            @unique // e.g. OTR-2026-000184
+  userId            String?
+  user              User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  customerEmail     String
+  customerName      String
+  shopifyId         String?           @unique
+  status            OrderStatus       @default(CREATED)
+  deliveryAddressId String?
+
+  // Monetary values stored strictly as integer minor units (paise / cents)
+  subtotalMinor     Int
+  shippingMinor     Int
+  taxMinor          Int               @default(0)
+  totalMinor        Int
+  currency          String            @default("INR")
   
-  // Monetary values stored as INTEGER MINOR UNITS (paise / cents)
-  subtotalMinor Int
-  shippingMinor Int
-  totalMinor    Int
-  currency      String          @default("USD")
-  
-  items         OrderItem[]
-  payments      Payment[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  deliveryAddress   CustomerAddress?  @relation("OrderDeliveryAddress", fields: [deliveryAddressId], references: [id])
+  items             OrderItem[]
+  payments          Payment[]
+  shipments         Shipment[]
+  returns           Return[]
+  checkoutSession   CheckoutSession?
+
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 
   @@index([customerEmail])
   @@index([status])
@@ -91,13 +436,16 @@ model Order {
 }
 
 model OrderItem {
-  id             String      @id @default(uuid())
+  id             String          @id @default(uuid())
   orderId        String
-  order          Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  artifactHandle String
-  variantId      String
+  order          Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  artifactHandle String?         // Legacy identifier support
+  variantId      String?
+  variant        ProductVariant? @relation(fields: [variantId], references: [id])
   quantity       Int
   unitPriceMinor Int
+
+  assignedSerial GarmentSerial?
 
   @@map("order_items")
 }
@@ -106,15 +454,20 @@ model Payment {
   id               String         @id @default(uuid())
   orderId          String
   order            Order          @relation(fields: [orderId], references: [id], onDelete: Restrict)
-  gateway          String
+  gateway          String         @default("RAZORPAY")
   gatewayOrderId   String         @unique
   gatewayPaymentId String?        @unique
   amountMinor      Int
-  currency         String
+  currency         String         @default("INR")
   status           PaymentStatus  @default(CREATED)
   signature        String?
   fraudScore       Int            @default(0)
+  nonceConsumed    String?
   details          String?
+  
+  events           PaymentEvent[]
+  refunds          Refund[]
+
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 
@@ -125,17 +478,208 @@ model Payment {
   @@map("payments")
 }
 
+model PaymentEvent {
+  id              String         @id @default(uuid())
+  paymentId       String
+  fromStatus      PaymentStatus
+  toStatus        PaymentStatus
+  gatewayEventId  String?
+  rawPayload      Json?
+  createdAt       DateTime       @default(now())
+
+  payment         Payment        @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@index([paymentId])
+  @@map("payment_events")
+}
+
+model Refund {
+  id              String         @id @default(uuid())
+  paymentId       String
+  gatewayRefundId String?        @unique
+  amountMinor     Int            // in integer paise
+  reason          String
+  status          String         @default("PROCESSED")
+  processedBy     String?        // Admin User ID
+  createdAt       DateTime       @default(now())
+
+  payment         Payment        @relation(fields: [paymentId], references: [id])
+
+  @@index([paymentId])
+  @@map("refunds")
+}
+
+// ---------------------------------------------------------------------------
+// 07. PHYSICAL-DIGITAL PROVENANCE (The Individual Garment Identity)
+// ---------------------------------------------------------------------------
+
+model GarmentSerial {
+  id               String           @id @default(uuid())
+  serialNumber     String           @unique // "OTR-2026-000184"
+  productId        String?
+  variantId        String?
+  orderItemId      String?          @unique
+  ownerId          String?
+  
+  editionPiece     String           // "Piece 14 of 44"
+  batchYear        Int              @default(2026)
+  dyeMaster        String           @default("T. Murata (Tokushima)")
+  patternCutter    String           @default("K. Sato (Otaru)")
+  loomSpec         String           @default("Toyoda G3 Vintage Shuttle (1968)")
+  authenticityHash String           @unique // SHA-256 cryptographic seal
+  
+  status           GarmentStatus    @default(IN_ATELIER)
+  deedIssuedAt     DateTime?
+
+  product          Product?         @relation(fields: [productId], references: [id])
+  variant          ProductVariant?  @relation(fields: [variantId], references: [id])
+  orderItem        OrderItem?       @relation(fields: [orderItemId], references: [id])
+  currentOwner     User?            @relation("CurrentOwner", fields: [ownerId], references: [id])
+  transfers        OwnershipTransfer[]
+
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([serialNumber])
+  @@index([authenticityHash])
+  @@map("garment_serials")
+}
+
+model OwnershipTransfer {
+  id              String         @id @default(uuid())
+  garmentSerialId String
+  fromUserId      String?
+  toUserId        String
+  transferReason  String         // "INITIAL_ACQUISITION", "ARCHIVAL_TRANSFER"
+  transferHash    String         @unique
+  createdAt       DateTime       @default(now())
+
+  garment         GarmentSerial  @relation(fields: [garmentSerialId], references: [id])
+
+  @@index([garmentSerialId])
+  @@map("ownership_transfers")
+}
+
+model NfcScan {
+  id            String      @id @default(uuid())
+  serialNumber  String
+  userId        String?
+  user          User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  ip            String
+  scannedAt     DateTime    @default(now())
+
+  @@index([serialNumber])
+  @@index([scannedAt])
+  @@map("nfc_scans")
+}
+
+// ---------------------------------------------------------------------------
+// 08. FULFILLMENT & CARRIER INTERACTION
+// ---------------------------------------------------------------------------
+
+model Shipment {
+  id                String           @id @default(uuid())
+  orderId           String
+  carrier           String           @default("SHIPROCKET")
+  trackingNumber    String?          @unique // AWB
+  labelUrl          String?
+  status            ShipmentStatus   @default(LABEL_CREATED)
+  estimatedDelivery DateTime?
+  dispatchedAt      DateTime?
+  deliveredAt       DateTime?
+
+  order             Order            @relation(fields: [orderId], references: [id])
+  events            ShipmentEvent[]
+
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@index([orderId])
+  @@index([trackingNumber])
+  @@map("shipments")
+}
+
+model ShipmentEvent {
+  id              String           @id @default(uuid())
+  shipmentId      String
+  status          ShipmentStatus
+  location        String?
+  activityText    String           // "Garment has departed Hokkaido Atelier"
+  timestamp       DateTime         @default(now())
+
+  shipment        Shipment         @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  @@index([shipmentId])
+  @@map("shipment_events")
+}
+
+model Return {
+  id              String           @id @default(uuid())
+  orderId         String
+  status          String           @default("REQUESTED")
+  reason          String
+  conditionNotes  String?
+  refundAmountInr Int?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  order           Order            @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@map("returns")
+}
+
+// ---------------------------------------------------------------------------
+// 09. DROP ENGINE & HIGH-DEMAND ALLOCATION
+// ---------------------------------------------------------------------------
+
+model Drop {
+  id              String           @id @default(uuid())
+  title           String           // "Chapter VII — Rain Study"
+  slug            String           @unique
+  collectionId    String?
+  openingAt       DateTime
+  closingAt       DateTime
+  status          DropStatus       @default(DRAFT)
+  
+  collection      Collection?      @relation(fields: [collectionId], references: [id])
+  products        DropProduct[]
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@map("drops")
+}
+
+model DropProduct {
+  id              String           @id @default(uuid())
+  dropId          String
+  productId       String
+  allocationCount Int              // Allocated inventory limit for drop
+
+  drop            Drop             @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  product         Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([dropId, productId])
+  @@map("drop_products")
+}
+
+// ---------------------------------------------------------------------------
+// 10. RELIABILITY: OUTBOX, WEBHOOK INGESTION & AUDITING
+// ---------------------------------------------------------------------------
+
 model WebhookEvent {
-  id            String        @id @default(uuid())
-  eventId       String        @unique
-  source        String
-  eventType     String
-  payload       Json
-  status        WebhookStatus @default(PENDING)
-  error         String?
-  attempts      Int           @default(0)
-  processedAt   DateTime?
-  createdAt     DateTime      @default(now())
+  id                String        @id @default(uuid())
+  eventId           String        @unique
+  source            String
+  eventType         String
+  payload           Json
+  status            WebhookStatus @default(PENDING)
+  signatureVerified Boolean       @default(true)
+  error             String?
+  attempts          Int           @default(0)
+  processedAt       DateTime?
+  createdAt         DateTime      @default(now())
 
   @@index([source, eventId])
   @@index([status])
@@ -145,8 +689,8 @@ model WebhookEvent {
 model OutboxEvent {
   id            String       @id @default(uuid())
   eventId       String       @unique
-  type          String       // e.g. "PaymentCaptured", "OrderCreated"
-  aggregateType String?      // e.g. "Order", "Payment"
+  type          String       // e.g. "order.paid", "garment.assigned"
+  aggregateType String?      // e.g. "Order", "Payment", "Garment"
   aggregateId   String?
   payload       Json
   status        OutboxStatus @default(PENDING)
@@ -172,25 +716,15 @@ model AuditEvent {
   email         String?
   details       String
   meta          Json?
-  prevHash      String
-  hash          String
+  prevHash      String      @default("")
+  hash          String      @default("")
+
+  actorId       String?
+  actor         User?       @relation("ActionActor", fields: [actorId], references: [id])
 
   @@index([seq])
   @@index([timestamp])
   @@map("audit_events")
-}
-
-model NfcScan {
-  id            String      @id @default(uuid())
-  serialNumber  String
-  userId        String?
-  user          User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
-  ip            String
-  scannedAt     DateTime    @default(now())
-
-  @@index([serialNumber])
-  @@index([scannedAt])
-  @@map("nfc_scans")
 }
 
 model IdempotencyRecord {
