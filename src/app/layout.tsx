@@ -11,8 +11,9 @@ import { SearchModal } from '@/components/search/SearchModal';
 import { SizeGuideModal } from '@/components/ui/SizeGuideModal';
 import { MoonProgress } from '@/components/ui/MoonProgress';
 import { ArchiveTextureOverlay } from '@/components/ui/ArchiveTextureOverlay';
-import { ScrollProgressLedger } from '@/components/ui/ScrollProgressLedger';
 import { ArchivePageTransition } from '@/components/ui/ArchivePageTransition';
+import { ArchivalCursor } from '@/components/ui/ArchivalCursor';
+import { StudioStatusBar } from '@/components/ui/StudioStatusBar';
 import '@/styles/globals.css';
 
 const inter = Inter({
@@ -59,6 +60,7 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
@@ -69,6 +71,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
       <body>
+        <ArchivalCursor />
         <a href="#main" className="skip-link">
           Skip to content
         </a>
@@ -82,11 +85,11 @@ export default function RootLayout({
                   <main id="main">{children}</main>
                 </ArchivePageTransition>
                 <SiteFooter />
+                <StudioStatusBar />
                 <CartDrawer />
                 <SearchModal />
                 <SizeGuideModal />
                 <MoonProgress />
-                <ScrollProgressLedger />
               </MaterialInspectorProvider>
             </SizeGuideProvider>
           </CartProvider>

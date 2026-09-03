@@ -1,0 +1,25 @@
+{
+  "name": "Otaru — Living Image Archive",
+  "short_name": "Otaru",
+  "description": "Editorial luxury garment archive. Limited-run, design-led garments built from exceptional raw textiles and permanent intention.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/api/art/great-wave",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/api/art/great-wave",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "shopping", "luxury"]
+}

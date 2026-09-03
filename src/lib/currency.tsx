@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 
-export type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'JPY';
+export type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'INR';
 
 export interface CurrencyConfig {
   code: CurrencyCode;
@@ -15,6 +15,7 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyConfig> = {
   EUR: { code: 'EUR', symbol: '€', rate: 0.92 },
   GBP: { code: 'GBP', symbol: '£', rate: 0.79 },
   JPY: { code: 'JPY', symbol: '¥', rate: 149 },
+  INR: { code: 'INR', symbol: '₹', rate: 84 },
 };
 
 interface CurrencyContextType {
