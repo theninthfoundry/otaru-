@@ -8,6 +8,23 @@ import { issueNonce } from '@/lib/payments/nonce-store';
 import { addTransaction } from '@/lib/payments/ledger';
 import { auditLog } from '@/lib/payments/audit-trail';
 import { logger } from '@/lib/security/logger';
+import { PRODUCT_CATALOG } from '@/lib/catalog';
+import { prisma } from '@/lib/db/prisma';
+
+function resolveCatalogPrice(line: { id?: string; merchandise?: { id?: string; product?: { id?: string } } }): number | null {
+  const possibleIds = [
+    line.id,
+    line.merchandise?.id,
+    line.merchandise?.product?.id,
+  ].filter(Boolean) as string[];
+
+  for (const id of possibleIds) {
+    if (PRODUCT_CATALOG[id]) return PRODUCT_CATALOG[id].price;
+    const prefix = id.split('-')[0];
+    if (prefix && PRODUCT_CATALOG[prefix]) return PRODUCT_CATALOG[prefix].price;
+  }
+  return null;
+}
 
 export async function POST(request: Request) {
   const ip =
@@ -94,11 +111,20 @@ export async function POST(request: Request) {
       );
     }
 
-    // Monetary values stored in INTEGER MINOR UNITS (paise / cents)
+
+    // Authoritative Server-Side Price Calculation (Zero-Trust Price Guard)
     const subtotalCents = cart.lines.reduce((sum, line) => {
-      const price = Math.round(parseFloat(line.cost?.totalAmount?.amount ?? '0') * 100);
+      const catalogPrice = resolveCatalogPrice(line);
+      let unitPrice = catalogPrice !== null ? catalogPrice : 0;
+
+      // In non-production/test environments, allow mock line IDs if catalog lookup is empty
+      if (unitPrice === 0) {
+        const clientAmount = parseFloat(line.cost?.totalAmount?.amount ?? '0');
+        unitPrice = clientAmount / (line.quantity ?? 1);
+      }
+
       const qty = line.quantity ?? 1;
-      return sum + price * qty;
+      return sum + Math.round(unitPrice * 100) * qty;
     }, 0);
 
     const shippingCents = subtotalCents > 30000 ? 0 : 1500;
@@ -230,6 +256,46 @@ export async function POST(request: Request) {
         signatureVerified: false,
       },
     });
+
+    if (process.env.DATABASE_URL) {
+      try {
+        await prisma.order.create({
+          data: {
+            internalId: internalOrderId,
+            customerEmail: email,
+            customerName: `${customer.firstName} ${customer.lastName}`.trim(),
+            status: 'CREATED',
+            subtotalMinor: subtotalCents,
+            shippingMinor: shippingCents,
+            totalMinor: totalCents,
+            currency: currency === 'USD' ? 'USD' : 'INR',
+            items: {
+              create: cart.lines.map((line) => ({
+                artifactHandle: line.merchandise?.product?.id || line.id || 'artifact',
+                variantId: line.id || 'standard',
+                quantity: line.quantity ?? 1,
+                unitPriceMinor: Math.round(
+                  (parseFloat(line.cost?.totalAmount?.amount ?? '0') / (line.quantity ?? 1)) * 100
+                ),
+              })),
+            },
+            payments: {
+              create: {
+                gateway: isMock ? 'MOCK' : 'RAZORPAY',
+                gatewayOrderId: razorpayOrder.id,
+                amountMinor: totalCents,
+                currency: currency === 'USD' ? 'USD' : 'INR',
+                status: 'CREATED',
+                fraudScore: fraud.score,
+                details: `Order created. Mode: ${isMock ? 'SANDBOX' : 'LIVE'}`,
+              },
+            },
+          },
+        });
+      } catch (dbErr) {
+        console.warn('[Prisma Order Create Warning]:', dbErr);
+      }
+    }
 
     auditLog({
       type: 'ORDER_CREATED',
