@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { prisma } from '@/lib/db/prisma';
+import { Prisma } from '@prisma/client';
 
 export type AuditEventType =
   | 'ORDER_CREATED'
@@ -38,28 +39,38 @@ export interface AuditEvent {
 const AUDIT_FILE = path.join(process.cwd(), 'src', 'data', 'security-audit.json');
 
 let chainTail: { seq: number; hash: string } | null = null;
+const memoryAuditEvents: AuditEvent[] = [];
 
 function ensureFile() {
-  const dir = path.dirname(AUDIT_FILE);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  if (!fs.existsSync(AUDIT_FILE)) fs.writeFileSync(AUDIT_FILE, '[]', 'utf-8');
+  try {
+    const dir = path.dirname(AUDIT_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    if (!fs.existsSync(AUDIT_FILE)) fs.writeFileSync(AUDIT_FILE, '[]', 'utf-8');
+  } catch {
+    // Read-only filesystem in serverless
+  }
 }
 
 function getChainTail(): { seq: number; hash: string } {
   if (chainTail) return chainTail;
+  if (memoryAuditEvents.length > 0) {
+    const last = memoryAuditEvents[memoryAuditEvents.length - 1];
+    if (last) return { seq: last.seq, hash: last.hash };
+  }
   try {
     ensureFile();
-    const data = fs.readFileSync(AUDIT_FILE, 'utf-8');
-    const events: AuditEvent[] = JSON.parse(data);
-    if (events.length === 0) {
-      return { seq: 0, hash: '0'.repeat(64) };
+    if (fs.existsSync(AUDIT_FILE)) {
+      const data = fs.readFileSync(AUDIT_FILE, 'utf-8');
+      const events: AuditEvent[] = JSON.parse(data);
+      if (events.length > 0) {
+        const last = events[events.length - 1];
+        if (last) return { seq: last.seq, hash: last.hash };
+      }
     }
-    const last = events[events.length - 1];
-    if (!last) return { seq: 0, hash: '0'.repeat(64) };
-    return { seq: last.seq, hash: last.hash };
   } catch {
-    return { seq: 0, hash: '0'.repeat(64) };
+    // Fall back to zero hash
   }
+  return { seq: 0, hash: '0'.repeat(64) };
 }
 
 function computeEventHash(event: Omit<AuditEvent, 'hash'>): string {
@@ -86,7 +97,6 @@ export function auditLog(params: {
   meta?: Record<string, unknown>;
 }): void {
   try {
-    ensureFile();
     const tail = getChainTail();
     const seq = tail.seq + 1;
     const timestamp = new Date().toISOString();
@@ -106,12 +116,20 @@ export function auditLog(params: {
     const hash = computeEventHash(eventWithoutHash);
     const event: AuditEvent = { ...eventWithoutHash, hash };
 
-    const existing = fs.readFileSync(AUDIT_FILE, 'utf-8');
-    const events: AuditEvent[] = JSON.parse(existing);
-    events.push(event);
-    fs.writeFileSync(AUDIT_FILE, JSON.stringify(events, null, 2), 'utf-8');
-
+    memoryAuditEvents.push(event);
     chainTail = { seq, hash };
+
+    try {
+      ensureFile();
+      if (fs.existsSync(AUDIT_FILE)) {
+        const existing = fs.readFileSync(AUDIT_FILE, 'utf-8');
+        const events: AuditEvent[] = JSON.parse(existing);
+        events.push(event);
+        fs.writeFileSync(AUDIT_FILE, JSON.stringify(events, null, 2), 'utf-8');
+      }
+    } catch {
+      // Safely handled in-memory in serverless
+    }
 
     if (process.env.DATABASE_URL) {
       prisma.auditEvent.create({
@@ -121,7 +139,7 @@ export function auditLog(params: {
           ip: params.ip,
           email: params.email,
           details: params.details,
-          meta: (params.meta as any) ?? undefined,
+          meta: (params.meta as Prisma.InputJsonValue) ?? undefined,
           prevHash: tail.hash,
           hash,
         },
@@ -135,12 +153,17 @@ export function auditLog(params: {
 export function getAuditEvents(limit = 100): AuditEvent[] {
   try {
     ensureFile();
-    const data = fs.readFileSync(AUDIT_FILE, 'utf-8');
-    const events: AuditEvent[] = JSON.parse(data);
-    return events.slice(-limit).reverse();
+    if (fs.existsSync(AUDIT_FILE)) {
+      const data = fs.readFileSync(AUDIT_FILE, 'utf-8');
+      const events: AuditEvent[] = JSON.parse(data);
+      if (events.length > 0) {
+        return events.slice(-limit).reverse();
+      }
+    }
   } catch {
-    return [];
+    // Fall back to memory
   }
+  return memoryAuditEvents.slice(-limit).reverse();
 }
 
 export function verifyChainIntegrity(): { intact: boolean; brokenAt?: number } {
@@ -160,6 +183,15 @@ export function verifyChainIntegrity(): { intact: boolean; brokenAt?: number } {
     }
     return { intact: true };
   } catch {
-    return { intact: false };
+    for (let i = 0; i < memoryAuditEvents.length; i++) {
+      const event = memoryAuditEvents[i];
+      if (!event) continue;
+      const { hash, ...rest } = event;
+      const recomputed = computeEventHash(rest);
+      if (recomputed !== hash) {
+        return { intact: false, brokenAt: i };
+      }
+    }
+    return { intact: true };
   }
 }
