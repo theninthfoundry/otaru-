@@ -14,7 +14,6 @@ interface HeroSlide {
   stats: string;
   kanji: string;
   imageBg: string;
-  zoomDirection: 'zoom-in' | 'zoom-out' | 'zoom-drift';
 }
 
 const HERO_SLIDES: HeroSlide[] = [
@@ -29,7 +28,6 @@ const HERO_SLIDES: HeroSlide[] = [
     stats: '3 Live Objects in the Archive',
     kanji: '山海',
     imageBg: '/api/hero-image',
-    zoomDirection: 'zoom-in',
   },
   {
     campaign: 'Campaign 02 / 03',
@@ -42,7 +40,6 @@ const HERO_SLIDES: HeroSlide[] = [
     stats: 'Four Materials On Hand',
     kanji: '運河',
     imageBg: '/api/art/great-wave',
-    zoomDirection: 'zoom-out',
   },
   {
     campaign: 'Campaign 03 / 03',
@@ -55,20 +52,21 @@ const HERO_SLIDES: HeroSlide[] = [
     stats: 'Permanent Archival Series',
     kanji: '悠久',
     imageBg: '/api/art/lanterns',
-    zoomDirection: 'zoom-drift',
   },
 ];
 
-const SLIDE_DURATION = 8000; // 8 seconds per slide
+const SLIDE_DURATION = 8500;
 
 export function Hero() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [isReady, setIsReady] = useState(false);
   const [isTextTransitioning, setIsTextTransitioning] = useState(false);
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const [scrollY, setScrollY] = useState(0);
+  const [windowHeight, setWindowHeight] = useState(900);
   const heroRef = useRef<HTMLDivElement>(null);
 
-  // Initial Entrance & Automatic Slide Cycling
+  // 1. Initial Entrance & Auto Cycling
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsReady(true);
@@ -81,6 +79,34 @@ export function Hero() {
     return () => {
       clearTimeout(timer);
       clearInterval(interval);
+    };
+  }, []);
+
+  // 2. High-Performance 60fps Scroll-Responsive Tracking
+  useEffect(() => {
+    setWindowHeight(window.innerHeight || 900);
+
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setScrollY(window.scrollY || window.pageYOffset || 0);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    const onResize = () => {
+      setWindowHeight(window.innerHeight || 900);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
     };
   }, []);
 
@@ -100,8 +126,8 @@ export function Hero() {
     const normalizedY = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
 
     setMouseOffset({
-      x: Math.max(-1, Math.min(1, normalizedX)) * 14, // Max 14px tilt
-      y: Math.max(-1, Math.min(1, normalizedY)) * 14,
+      x: Math.max(-1, Math.min(1, normalizedX)) * 12,
+      y: Math.max(-1, Math.min(1, normalizedY)) * 12,
     });
   };
 
@@ -110,6 +136,25 @@ export function Hero() {
   };
 
   const currentSlide = HERO_SLIDES[activeSlide] ?? HERO_SLIDES[0]!;
+
+  // Scroll Progress (0 at top, 1 when hero scrolled out)
+  const scrollFraction = Math.min(1, Math.max(0, scrollY / (windowHeight || 900)));
+
+  // Dynamic Scroll-Responsive Transformations:
+  // - Background Zoom: zooms from 1.0 up to 1.32x as collector scrolls
+  const backgroundZoomScale = 1.0 + scrollFraction * 0.32;
+  const backgroundParallaxY = scrollY * 0.32; // Gentle downward counter-drift
+  const backgroundOpacity = Math.max(0.2, 0.82 - scrollFraction * 0.55);
+
+  // - Text Transition: moves upward faster, scales down, blurs, and fades
+  const textTranslateY = -scrollY * 0.52;
+  const textScale = Math.max(0.82, 1 - scrollFraction * 0.22);
+  const textOpacity = Math.max(0, 1 - scrollFraction * 1.6);
+  const textBlur = scrollFraction * 8;
+
+  // - Floating Calligraphy Parallax
+  const kanjiParallaxY = -scrollY * 0.75;
+  const kanjiScale = 1 + scrollFraction * 0.25;
 
   return (
     <div
@@ -124,18 +169,13 @@ export function Hero() {
         backgroundColor: '#070d14',
       }}
     >
-      {/* Dynamic Multi-Slide Layer with Ken Burns Zoom-In & Zoom-Out */}
+      {/* Scroll-Responsive Background Visual Layer with Zoom In */}
       {HERO_SLIDES.map((slide, idx) => {
         const isActive = idx === activeSlide;
         return (
           <div
             key={slide.campaign}
             aria-hidden={!isActive}
-            className={clsx(
-              'hero-cinematic-bg',
-              isActive ? 'is-active' : 'is-inactive',
-              slide.zoomDirection
-            )}
             style={{
               position: 'absolute',
               inset: 0,
@@ -143,20 +183,21 @@ export function Hero() {
               backgroundSize: 'cover',
               backgroundPosition: 'center 40%',
               backgroundRepeat: 'no-repeat',
-              opacity: isActive ? 0.78 : 0,
+              opacity: isActive ? backgroundOpacity : 0,
               pointerEvents: 'none',
               transform: isActive
-                ? `translate3d(${mouseOffset.x * -0.5}px, ${mouseOffset.y * -0.5}px, 0)`
+                ? `translate3d(${mouseOffset.x * -0.4}px, ${backgroundParallaxY + mouseOffset.y * -0.4}px, 0) scale(${backgroundZoomScale})`
                 : 'none',
-              transition:
-                'opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+              transition: isActive
+                ? 'opacity 1.2s ease, transform 0.08s linear'
+                : 'opacity 0.8s ease',
               willChange: 'transform, opacity',
             }}
           />
         );
       })}
 
-      {/* Atmospheric Vignette & Gradients */}
+      {/* Atmospheric Gradients */}
       <div
         className="hero-vignette-overlay"
         aria-hidden="true"
@@ -166,16 +207,16 @@ export function Hero() {
           pointerEvents: 'none',
           zIndex: 1,
           background:
-            'linear-gradient(90deg, rgba(7,13,20,0.72) 0%, rgba(7,13,20,0.32) 48%, rgba(7,13,20,0.12) 75%), linear-gradient(0deg, rgba(7,13,20,0.88) 0%, transparent 35%), linear-gradient(180deg, rgba(7,13,20,0.55) 0%, transparent 22%)',
+            'linear-gradient(90deg, rgba(7,13,20,0.74) 0%, rgba(7,13,20,0.35) 48%, rgba(7,13,20,0.12) 75%), linear-gradient(0deg, rgba(7,13,20,0.9) 0%, transparent 35%), linear-gradient(180deg, rgba(7,13,20,0.55) 0%, transparent 22%)',
         }}
       />
 
-      {/* Floating Japanese Calligraphy Watermark with Gentle Parallax */}
+      {/* Floating Calligraphy Watermark with Scroll Parallax Drift */}
       <div
         aria-hidden="true"
         style={{
           position: 'absolute',
-          top: '18%',
+          top: '16%',
           right: '8%',
           pointerEvents: 'none',
           zIndex: 1,
@@ -185,15 +226,26 @@ export function Hero() {
           letterSpacing: '0.25em',
           color: 'rgba(244, 240, 235, 0.038)',
           userSelect: 'none',
-          transform: `translate3d(${mouseOffset.x * 0.8}px, ${mouseOffset.y * 0.8}px, 0)`,
-          transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+          transform: `translate3d(${mouseOffset.x * 0.8}px, ${kanjiParallaxY + mouseOffset.y * 0.8}px, 0) scale(${kanjiScale})`,
+          transition: 'transform 0.1s linear',
+          willChange: 'transform',
         }}
       >
         {currentSlide.kanji}
       </div>
 
-      {/* Hero Content Overlay */}
-      <div id="heroContent" className={clsx('hero-content', isReady && 'is-ready')}>
+      {/* Hero Content with Direct Scroll-Responsive Zoom/Fade Transition */}
+      <div
+        id="heroContent"
+        className={clsx('hero-content', isReady && 'is-ready')}
+        style={{
+          opacity: textOpacity,
+          transform: `translate3d(0, ${textTranslateY}px, 0) scale(${textScale})`,
+          filter: textBlur > 0.1 ? `blur(${textBlur}px)` : 'none',
+          willChange: 'transform, opacity, filter',
+          transition: 'transform 0.08s linear, opacity 0.08s linear',
+        }}
+      >
         {/* Topbar */}
         <div className="hero-topbar">
           <span className="tracking-widest">Otaru / Design House</span>
@@ -201,14 +253,14 @@ export function Hero() {
           <span className="right font-mono">MMXXVI</span>
         </div>
 
-        {/* Center Main Headline with Smooth Zoom-Settle */}
+        {/* Center Main Headline with Smooth Text Transition */}
         <div
           className="hero-main"
           style={{
-            transform: isTextTransitioning ? 'scale(0.97) translateY(8px)' : 'scale(1) translateY(0)',
+            transform: isTextTransitioning ? 'scale(0.96) translateY(10px)' : 'scale(1) translateY(0)',
             opacity: isTextTransitioning ? 0.2 : 1,
             filter: isTextTransitioning ? 'blur(3px)' : 'none',
-            transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, filter 0.4s ease',
+            transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, filter 0.35s ease',
             willChange: 'transform, opacity, filter',
           }}
         >

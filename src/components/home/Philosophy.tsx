@@ -1,5 +1,6 @@
 import React from 'react';
 import { RevealOnScroll } from '@/components/ui/RevealOnScroll';
+import { ScrollTextReveal } from '@/components/ui/ScrollTextReveal';
 import { SashikoGrid, VerticalKanjiStamp } from '@/components/ui/ArchivalBackgroundArt';
 import { ArtBackgroundPlate } from '@/components/ui/ArtBackgroundPlate';
 
@@ -35,7 +36,10 @@ export function Philosophy() {
             <span style={{ height: '1px', width: '30px', backgroundColor: 'var(--otaru-line-strong)' }} />
           </div>
 
-          <blockquote
+          <ScrollTextReveal
+            as="blockquote"
+            text="We do not chase seasons. We chase the right amount of time."
+            highlightGold
             style={{
               fontFamily: 'var(--font-display)',
               fontStyle: 'italic',
@@ -46,9 +50,7 @@ export function Philosophy() {
               margin: '0 auto',
               color: 'var(--otaru-parchment)',
             }}
-          >
-            &ldquo;We do not chase seasons. We chase the right amount of time.&rdquo;
-          </blockquote>
+          />
 
           {/* Stillness Ledger */}
           <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap' }}>

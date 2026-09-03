@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { RevealOnScroll } from '@/components/ui/RevealOnScroll';
+import { ScrollTextReveal } from '@/components/ui/ScrollTextReveal';
 import { ScrollZoomImage } from '@/components/ui/ScrollZoomImage';
 import { SashikoGrid, VerticalKanjiStamp, JapaneseCornerBorder } from '@/components/ui/ArchivalBackgroundArt';
 import { ArtBackgroundPlate } from '@/components/ui/ArtBackgroundPlate';
@@ -52,9 +53,13 @@ export function StoryJourney() {
                   [ EST. 1907 · RECLAIMED 2026 ]
                 </span>
               </div>
-              <h2 className="section-title" id="story-heading" style={{ maxWidth: '14ch', lineHeight: 1.12 }}>
-                Otaru was a town before it was a name.
-              </h2>
+              <ScrollTextReveal
+                as="h2"
+                className="section-title"
+                text="Otaru was a town before it was a name."
+                highlightGold
+                style={{ maxWidth: '14ch', lineHeight: 1.12 }}
+              />
               <p style={{ marginTop: '1.4rem', color: 'var(--otaru-parchment-dim)', lineHeight: 1.8, maxWidth: '44ch', fontSize: '0.98rem' }}>
                 In 1907 the stone harbor at Otaru moved more coal, herring, and raw cloth than any port in Hokkaido. The warehouses are mostly quiet now. We kept one.
               </p>
