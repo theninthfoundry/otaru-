@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { issueNonceAsync, consumeNonceAsync } from '@/lib/payments/nonce-store';
-import { redis } from '@/lib/redis/client';
 
 describe('Adversarial Forensic Deep Verification Suite', () => {
   describe('1. Distributed Redis Nonce Consumption', () => {
