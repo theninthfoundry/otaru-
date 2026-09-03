@@ -12,19 +12,25 @@ export async function POST(request: Request) {
   const secret = process.env.SHOPIFY_REVALIDATION_SECRET || process.env.SHOPIFY_WEBHOOK_SECRET;
 
   if (!secret || !hmacHeader) {
-    console.warn('[Order Webhook] Secret or HMAC header missing. Skipping verification in dev.');
-  } else {
-    const expectedHmac = crypto
-      .createHmac('sha256', secret)
-      .update(body, 'utf8')
-      .digest('base64');
+    return NextResponse.json(
+      { error: 'Missing webhook secret or HMAC signature header.' },
+      { status: 401 },
+    );
+  }
 
-    if (hmacHeader !== expectedHmac) {
-      return NextResponse.json(
-        { error: 'Invalid HMAC signature' },
-        { status: 401 },
-      );
-    }
+  const expectedHmac = crypto
+    .createHmac('sha256', secret)
+    .update(body, 'utf8')
+    .digest('base64');
+
+  const expectedBuf = Buffer.from(expectedHmac, 'utf8');
+  const receivedBuf = Buffer.from(hmacHeader, 'utf8');
+
+  if (expectedBuf.length !== receivedBuf.length || !crypto.timingSafeEqual(expectedBuf, receivedBuf)) {
+    return NextResponse.json(
+      { error: 'Invalid HMAC signature' },
+      { status: 401 },
+    );
   }
 
   const topic = headersList.get('x-shopify-topic') ?? 'orders/create';

@@ -46,7 +46,7 @@ export async function middleware(request: NextRequest) {
     if (current > 60) {
       isAllowed = false;
     }
-  } catch (err) {
+  } catch {
     if (isProduction) {
       // Fail closed in production for security critical routes
       if (pathname.startsWith('/api/checkout') || pathname.startsWith('/admin')) {
@@ -71,8 +71,8 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  // 3. CSRF Verification
-  if (!verifyCsrf(request)) {
+  // 3. CSRF Verification (Server-to-server webhooks authenticate via HMAC; bypass browser CSRF)
+  if (!pathname.startsWith('/api/webhooks') && !verifyCsrf(request)) {
     return new NextResponse(
       JSON.stringify({ error: 'CSRF validation failed. Request origin untrusted.', code: 'CSRF_FAILED' }),
       {
