@@ -3,13 +3,45 @@ import { redis } from '@/lib/redis/client';
 import { verifyCsrf } from '@/lib/security/csrf';
 
 const isProduction = process.env.NODE_ENV === 'production';
+const vercelEnv = process.env.VERCEL_ENV;
+const isPreview = vercelEnv === 'preview';
 
 /**
  * Otaru Global Edge Middleware
- * Handles distributed Redis rate limiting, admin authentication, CSRF, and CSP security headers.
+ * Handles:
+ * 1. Canonical Domain Redirection (www.otaru.in -> otaru.in)
+ * 2. Secure Preview Deployment Gates
+ * 3. Frontend-Backend Skew Protection (Build ID synchronization)
+ * 4. Distributed Redis Rate Limiting & Admin Security
+ * 5. CSRF Protection & CSP Nonce Headers
  */
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const host = request.headers.get('host') || '';
+
+  // 0. Canonical Domain Enforcement (www.otaru.in -> https://otaru.in 301 Permanent Redirect)
+  if (host.toLowerCase().startsWith('www.otaru.in')) {
+    const canonicalUrl = new URL(request.url);
+    canonicalUrl.hostname = 'otaru.in';
+    canonicalUrl.port = '';
+    canonicalUrl.protocol = 'https:';
+    return NextResponse.redirect(canonicalUrl, { status: 301 });
+  }
+
+  // 0b. Secure Preview Deployments
+  const previewSecret = process.env.PREVIEW_ACCESS_KEY;
+  if (isPreview && previewSecret) {
+    const previewCookie = request.cookies.get('otaru_preview_access')?.value;
+    const previewHeader = request.headers.get('x-otaru-preview-key');
+    if (previewCookie !== previewSecret && previewHeader !== previewSecret) {
+      if (pathname.startsWith('/api/')) {
+        return new NextResponse(
+          JSON.stringify({ error: 'Preview environment locked.', code: 'PREVIEW_LOCKED' }),
+          { status: 401, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+  }
 
   // 1. Admin Security Guard (/admin/* and /api/admin/*)
   if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
@@ -91,7 +123,18 @@ export async function middleware(request: NextRequest) {
     request: { headers: requestHeaders },
   });
 
-  // 5. Standard Security Headers
+  // 5. Standard Security & Skew Protection Headers
+  const buildId = process.env.VERCEL_GIT_COMMIT_SHA || process.env.BUILD_ID || 'v1.0-architecture';
+  const deploymentId = process.env.VERCEL_DEPLOYMENT_ID || 'dpl_otaru_production';
+
+  response.headers.set('x-otaru-build-id', buildId);
+  response.headers.set('x-deployment-id', deploymentId);
+
+  // Prevent Crawlers from Indexing Previews
+  if (isPreview) {
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+  }
+
   response.headers.set('X-DNS-Prefetch-Control', 'on');
   response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
   response.headers.set('X-Frame-Options', 'DENY');

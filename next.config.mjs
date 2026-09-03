@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  generateBuildId: async () => {
+    return process.env.VERCEL_GIT_COMMIT_SHA || process.env.BUILD_ID || 'otaru-v1.0-architecture';
+  },
   experimental: {
     webpackBuildWorker: false,
   },
@@ -26,6 +29,19 @@ const nextConfig = {
   },
   async headers() {
     return [
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/api/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, max-age=0' },
+          { key: 'Pragma', value: 'no-cache' },
+        ],
+      },
       {
         source: '/(.*)',
         headers: [
