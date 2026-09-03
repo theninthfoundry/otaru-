@@ -18,6 +18,7 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "production:verify": "vitest run src/__tests__/production-rehearsal.test.ts",
+    "staging:attack": "node scripts/staging-adversarial-attack.mjs",
     "backend:check": "node scripts/verify-backend.mjs",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",

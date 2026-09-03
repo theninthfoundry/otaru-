@@ -4,16 +4,17 @@ Otaru utilizes webhooks to keep stock levels synchronized, revalidate editorial 
 
 ---
 
-## ⚡ Webhook Endpoints Index
+## ⚡ Canonical Production Webhook Index
 
-### 1. `/api/checkout/razorpay/webhook`
+### 1. `/api/webhooks/razorpay` (Canonical Production Ingestion)
 - **Source**: Razorpay payment gateway
-- **Actions**: Handles `payment.captured`, `payment.failed`, and `refund.processed` hooks.
-- **Verification**: Signature header check using standard Razorpay webhook secrets (`razorpay_signature`).
+- **Actions**: Handles `payment.captured`, `payment.failed`, and `refund.processed` hooks into the idempotent transactional outbox.
+- **Verification**: Timing-safe HMAC-SHA256 signature verification over raw request body via `x-razorpay-signature`.
 - **Domain Service Flow**:
   ```
-  Webhook Payload ──> Verification ──> Update Ledger ──> Trigger Shopify Order Creation
+  Webhook Payload ──> Timing-Safe HMAC ──> Deduplication (WebhookEvent) ──> PostgreSQL Ledger & Order Transition
   ```
+- **Note**: The legacy prototype path `/api/checkout/razorpay/webhook` has been permanently consolidated into this single canonical endpoint to prevent split-brain state machines.
 
 ### 2. `/api/webhooks/order`
 - **Source**: Shopify Admin Webhooks
