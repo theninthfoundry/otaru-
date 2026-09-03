@@ -175,6 +175,92 @@ input, select, textarea {
     linear-gradient(180deg, rgba(11,20,32,.45) 0%, rgba(11,20,32,0) 18%);
 }
 
+/* ============================================================
+   CINEMATIC KEN BURNS ZOOM IN & ZOOM OUT ANIMATIONS
+   ============================================================ */
+@keyframes heroZoomIn {
+  0% {
+    transform: scale(1.0);
+  }
+  100% {
+    transform: scale(1.14);
+  }
+}
+
+@keyframes heroZoomOut {
+  0% {
+    transform: scale(1.14);
+  }
+  100% {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes heroZoomDrift {
+  0% {
+    transform: scale(1.04) translate(0, 0);
+  }
+  50% {
+    transform: scale(1.10) translate(-1%, -1.5%);
+  }
+  100% {
+    transform: scale(1.06) translate(1%, 0.5%);
+  }
+}
+
+.hero-cinematic-bg.is-active.zoom-in {
+  animation: heroZoomIn 8.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.hero-cinematic-bg.is-active.zoom-out {
+  animation: heroZoomOut 8.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.hero-cinematic-bg.is-active.zoom-drift {
+  animation: heroZoomDrift 8.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes heroProgressFill {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+/* Luxury Artifact & Product Card Zoom Transitions */
+.artifact-card, .object-card {
+  transition: transform var(--duration-base) var(--ease-otaru);
+}
+
+.artifact-card:hover .ph-frame .designed-ph,
+.object-card:hover .ph-frame .designed-ph {
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7), 0 0 24px rgba(217, 189, 131, 0.16);
+  border-color: rgba(217, 189, 131, 0.55);
+}
+
+.artifact-card:hover .scroll-zoom-inner,
+.object-card:hover .scroll-zoom-inner {
+  transform: scale(1.08) !important;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.artifact-card:hover .emblem-diamond,
+.object-card:hover .emblem-diamond {
+  transform: rotate(45deg) scale(1.15) !important;
+  border-color: rgba(217, 189, 131, 0.85) !important;
+  box-shadow: 0 0 16px rgba(217, 189, 131, 0.35);
+}
+
+/* Tactile Button Micro-interactions */
+.btn-primary:active,
+.icon-btn:active,
+.cta-link:active {
+  transform: scale(0.96);
+  transition: transform 0.08s ease;
+}
+
 .hero-content {
   position: relative;
   z-index: 2;
