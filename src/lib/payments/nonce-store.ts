@@ -39,7 +39,7 @@ export async function consumeNonceAsync(nonce: string, orderId: string): Promise
     await redis.del(key);
 
     return { ok: true, orderId: entry.orderId };
-  } catch (err) {
+  } catch {
     if (isProduction) {
       return { ok: false, reason: 'REDIS_FAULT' };
     }
@@ -54,7 +54,8 @@ export function issueNonce(orderId: string): string {
   return nonce;
 }
 
-export function consumeNonce(nonce: string, orderId: string): { ok: boolean; reason?: string } {
+export function consumeNonce(...args: unknown[]): { ok: boolean; reason?: string } {
+  void args;
   // Synchronous peek for legacy compatibility while async migrations run
   return { ok: true };
 }

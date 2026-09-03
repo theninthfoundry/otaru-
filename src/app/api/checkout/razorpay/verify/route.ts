@@ -2,10 +2,13 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { validateBody, VerifyRequestSchema } from '@/lib/payments/schemas';
 import { checkPaymentRateLimit } from '@/lib/payments/payment-rate-limiter';
-import { consumeNonce } from '@/lib/payments/nonce-store';
+import { consumeNonceAsync } from '@/lib/payments/nonce-store';
 import { updateTransactionStatus } from '@/lib/payments/ledger';
 import { auditLog } from '@/lib/payments/audit-trail';
 import { logger } from '@/lib/security/logger';
+import { sendOrderConfirmationWhatsApp } from '@/lib/integrations/interakt';
+import { trackKlaviyoEvent } from '@/lib/integrations/klaviyo';
+import { prisma } from '@/lib/db/prisma';
 
 export async function POST(request: Request) {
   const ip =
@@ -73,7 +76,7 @@ export async function POST(request: Request) {
     }
 
     if (nonce) {
-      const nonceResult = consumeNonce(nonce, razorpay_order_id);
+      const nonceResult = await consumeNonceAsync(nonce, razorpay_order_id);
       if (!nonceResult.ok) {
         const isReplay = nonceResult.reason === 'ALREADY_CONSUMED';
         auditLog({
@@ -149,6 +152,33 @@ export async function POST(request: Request) {
         `Live payment captured. Payment ID: ${razorpay_payment_id}. Constant-time signature verified.`,
         { signatureVerified: true },
       );
+
+      if (process.env.DATABASE_URL) {
+        try {
+          await prisma.payment.updateMany({
+            where: { gatewayOrderId: razorpay_order_id },
+            data: {
+              status: 'CAPTURED',
+              gatewayPaymentId: razorpay_payment_id,
+              signature: razorpay_signature,
+              details: `Payment captured. Signature verified.`,
+            },
+          });
+          await prisma.order.updateMany({
+            where: {
+              payments: {
+                some: { gatewayOrderId: razorpay_order_id },
+              },
+            },
+            data: {
+              status: 'PAID',
+            },
+          });
+        } catch (dbErr) {
+          console.warn('[Prisma Payment Update Warning]:', dbErr);
+        }
+      }
+
       auditLog({
         type: 'PAYMENT_VERIFIED',
         details: `Live payment CAPTURED. Order: ${razorpay_order_id}, Payment: ${razorpay_payment_id}`,
@@ -156,6 +186,29 @@ export async function POST(request: Request) {
         ref: razorpay_order_id,
         meta: { paymentId: razorpay_payment_id, mode: 'LIVE' },
       });
+
+      // Automated Multi-Channel Notification Triggers
+      if (validation.data.customerEmail) {
+        trackKlaviyoEvent({
+          eventName: 'Placed Order',
+          email: validation.data.customerEmail,
+          properties: {
+            orderId: razorpay_order_id,
+            paymentId: razorpay_payment_id,
+            amount: validation.data.amount || '0',
+          },
+        }).catch((err) => console.warn('[Klaviyo Event Dispatch Error]:', err));
+      }
+
+      if (validation.data.customerPhone) {
+        sendOrderConfirmationWhatsApp(
+          validation.data.customerPhone,
+          validation.data.customerName || 'Archival Collector',
+          razorpay_order_id,
+          validation.data.amount ? `₹${validation.data.amount}` : 'Acquisition Confirmed'
+        ).catch((err) => console.warn('[Interakt WhatsApp Dispatch Error]:', err));
+      }
+
       return NextResponse.json({ verified: true });
     }
 
@@ -174,6 +227,18 @@ export async function POST(request: Request) {
         ref: razorpay_order_id,
         meta: { mode: 'SANDBOX' },
       });
+
+      if (validation.data.customerEmail) {
+        trackKlaviyoEvent({
+          eventName: 'Placed Order (Sandbox)',
+          email: validation.data.customerEmail,
+          properties: {
+            orderId: razorpay_order_id,
+            mode: 'SANDBOX',
+          },
+        }).catch((err) => console.warn('[Klaviyo Event Dispatch Error]:', err));
+      }
+
       return NextResponse.json({ verified: true });
     }
 
