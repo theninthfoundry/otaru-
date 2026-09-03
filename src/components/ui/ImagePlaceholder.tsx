@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import clsx from 'clsx';
 import { DesignedArtifactGraphic } from './DesignedArtifactGraphic';
 
@@ -48,13 +49,12 @@ export function ImagePlaceholder({
         }}
       >
         <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', border: '1px dashed rgba(217,189,131,0.35)', borderRadius: '2px' }}>
-          <img
+          <Image
             src={src}
             alt={alt || label || 'Otaru Artifact'}
-            loading="lazy"
+            fill
+            unoptimized
             style={{
-              width: '100%',
-              height: '100%',
               objectFit: 'cover',
               objectPosition: 'center',
             }}
@@ -125,13 +125,12 @@ export function ImagePlaceholder({
           backgroundColor: 'var(--otaru-ink)',
         }}
       >
-        <img
+        <Image
           src={artSrc}
           alt={label || 'Otaru Archival Artwork'}
-          loading="lazy"
+          fill
+          unoptimized
           style={{
-            width: '100%',
-            height: '100%',
             objectFit: 'cover',
             filter: 'contrast(1.08) saturate(0.95)',
             transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',

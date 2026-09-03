@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { SashikoGrid, VerticalKanjiStamp } from '@/components/ui/ArchivalBackgroundArt';
 import { ArtBackgroundPlate } from '@/components/ui/ArtBackgroundPlate';
 import { useCurrency } from '@/lib/currency';
 import { useCart } from '@/lib/cart';
-import { PRODUCT_CATALOG } from '@/lib/catalog';
 import clsx from 'clsx';
 
 const TABS = [
@@ -65,6 +65,17 @@ export function ProfileDashboard() {
   const { addToCart } = useCart();
   const [wishlist, setWishlist] = useState(SAVED_DATA);
   const [savedSuccess, setSavedSuccess] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [liveOrders, setLiveOrders] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch('/api/account/orders')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.orders) setLiveOrders(data.orders);
+      })
+      .catch(() => {});
+  }, []);
 
   const handleAddWishlistToCart = (item: typeof SAVED_DATA[0]) => {
     addToCart({
@@ -387,6 +398,46 @@ export function ProfileDashboard() {
                       </Link>
                     ))}
                   </div>
+
+                  {/* Live Dispatch Telemetry Card */}
+                  {liveOrders.length > 0 && (
+                    <div style={{ marginTop: '1.5rem', padding: '1.2rem', backgroundColor: 'var(--otaru-black)', border: '1px solid var(--otaru-gold-dim)', borderRadius: '2px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: 'var(--otaru-gold)', textTransform: 'uppercase', fontFamily: 'monospace' }}>
+                          Live Shipment Telemetry
+                        </span>
+                        <span style={{ fontSize: '0.62rem', color: 'var(--otaru-parchment-dim)' }}>
+                          {liveOrders[0].id}
+                        </span>
+                      </div>
+                      <p style={{ margin: '0.4rem 0 0', fontSize: '0.92rem', color: 'var(--otaru-parchment)', fontFamily: 'var(--font-display)' }}>
+                        {liveOrders[0].shipmentStatus}
+                      </p>
+                      <div style={{ marginTop: '0.8rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                        <Link
+                          href={`/track-order?orderId=${liveOrders[0].id}`}
+                          className="cta-link"
+                          style={{ fontSize: '0.74rem', color: 'var(--otaru-gold)' }}
+                        >
+                          Track via Shiprocket →
+                        </Link>
+                        <Link
+                          href="/verify"
+                          className="cta-link"
+                          style={{ fontSize: '0.74rem' }}
+                        >
+                          Verify NFC Certificate →
+                        </Link>
+                        <Link
+                          href="/returns"
+                          className="cta-link"
+                          style={{ fontSize: '0.74rem', color: 'var(--otaru-parchment-dim)' }}
+                        >
+                          Lifetime Repair →
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Right Side: Mount Fuji Certificate Mount */}
@@ -402,13 +453,12 @@ export function ProfileDashboard() {
                       backgroundColor: 'var(--otaru-ink)',
                     }}
                   >
-                    <img
+                    <Image
                       src="/api/art/mount-fuji"
                       alt="Mount Fuji & Sakura Spring Vista"
-                      loading="lazy"
+                      fill
+                      unoptimized
                       style={{
-                        width: '100%',
-                        height: '100%',
                         objectFit: 'cover',
                         filter: 'contrast(1.08) saturate(0.95)',
                       }}

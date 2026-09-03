@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 
 interface ArtBackgroundPlateProps {
   artName: 'great-wave' | 'cherry-blossom' | 'poppies' | 'pine-tree' | 'mount-fuji' | 'lanterns' | 'furin';
@@ -84,13 +85,12 @@ export function ArtBackgroundPlate({
           maskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0.65) 70%, transparent 92%)',
         }}
       >
-        <img
+        <Image
           src={`/api/art/${artName}`}
           alt=""
-          loading="lazy"
+          fill
+          unoptimized
           style={{
-            width: '100%',
-            height: '100%',
             objectFit: 'cover',
             filter: 'contrast(1.12) saturate(0.95) brightness(0.9)',
           }}

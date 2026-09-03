@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { CartButton } from '@/components/cart/CartButton';
 import clsx from 'clsx';
@@ -193,12 +194,12 @@ export function SiteHeader({ onSearchOpen }: SiteHeaderProps) {
             maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 20%, rgba(0,0,0,1) 100%)',
           }}
         >
-          <img
+          <Image
             src="/api/art/lanterns"
             alt="Japanese Paper Lanterns"
+            fill
+            unoptimized
             style={{
-              width: '100%',
-              height: '100%',
               objectFit: 'cover',
               objectPosition: 'center right',
               filter: 'contrast(1.18) saturate(1.1) brightness(0.95)',

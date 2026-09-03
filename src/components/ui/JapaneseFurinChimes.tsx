@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 
 interface JapaneseFurinChimesProps {
   opacity?: number;
@@ -43,9 +44,12 @@ export function JapaneseFurinChimes({
           maskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0.8) 75%, transparent 95%)',
         }}
       >
-        <img
+        <Image
           src="/api/art/furin"
           alt=""
+          width={360}
+          height={480}
+          unoptimized
           className="furin-img"
           style={{
             width: '100%',
