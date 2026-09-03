@@ -18,11 +18,10 @@ interface ScrollTextRevealProps {
 export function ScrollTextReveal({
   text,
   className = '',
-  as: Component = 'p',
   style: customStyle,
   highlightGold = false,
 }: ScrollTextRevealProps) {
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
@@ -66,9 +65,8 @@ export function ScrollTextReveal({
   const words = text.split(' ');
 
   return (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    <Component
-      ref={containerRef as any}
+    <div
+      ref={containerRef}
       className={`scroll-text-reveal ${className}`}
       style={{
         display: 'inline-block',
@@ -105,6 +103,6 @@ export function ScrollTextReveal({
           </span>
         );
       })}
-    </Component>
+    </div>
   );
 }
