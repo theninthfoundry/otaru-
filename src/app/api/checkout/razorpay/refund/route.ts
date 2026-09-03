@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { validateBody, RefundRequestSchema } from '@/lib/payments/schemas';
 import { checkPaymentRateLimit } from '@/lib/payments/payment-rate-limiter';
 import { getTransactions, updateTransactionStatus } from '@/lib/payments/ledger';
@@ -6,6 +7,25 @@ import { auditLog } from '@/lib/payments/audit-trail';
 import { logger } from '@/lib/security/logger';
 
 export async function POST(request: Request) {
+  const authHeader = request.headers.get('authorization');
+  const adminSecret = process.env.ADMIN_API_SECRET;
+
+  if (!adminSecret || !authHeader) {
+    return NextResponse.json(
+      { error: 'Unauthorized administrative access rejected.', code: 'UNAUTHORIZED_ADMIN' },
+      { status: 401 },
+    );
+  }
+
+  const expectedBuf = Buffer.from(`Bearer ${adminSecret}`);
+  const receivedBuf = Buffer.from(authHeader);
+  if (expectedBuf.length !== receivedBuf.length || !crypto.timingSafeEqual(expectedBuf, receivedBuf)) {
+    return NextResponse.json(
+      { error: 'Forbidden administrative access.', code: 'FORBIDDEN_ADMIN' },
+      { status: 403 },
+    );
+  }
+
   const ip =
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
     request.headers.get('x-real-ip') ||
