@@ -75,6 +75,24 @@ body {
 }
 
 /* ============================================================
+   CUSTOM CURSOR FOLLOWER REMOVAL
+   Permanently removes custom cursor overlays, outer rings, and gold dots.
+   Restores clean, responsive standard browser cursor pointer.
+   ============================================================ */
+.archival-cursor-wrapper,
+[class*="archival-cursor"],
+[class*="custom-cursor"],
+[data-cursor-dot],
+[data-cursor-ring] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* ============================================================
    REVEAL-ON-SCROLL & LUXURY ANIMATIONS
    ============================================================ */
 .reveal {
