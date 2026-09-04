@@ -8,15 +8,8 @@ import { SashikoGrid, VerticalKanjiStamp } from '@/components/ui/ArchivalBackgro
 import { ArtBackgroundPlate } from '@/components/ui/ArtBackgroundPlate';
 import { useCurrency } from '@/lib/currency';
 import { useCart } from '@/lib/cart';
+import { useAuth } from '@/context/auth-context';
 import clsx from 'clsx';
-
-const TABS = [
-  { id: 'Overview', label: 'Overview', kanji: '概' },
-  { id: 'Acquired Artifacts', label: 'Acquired Artifacts', count: 7, kanji: '獲' },
-  { id: 'Saved', label: 'Saved Wishlist', count: 3, kanji: '保' },
-  { id: 'Addresses', label: 'Dispatch Addresses', kanji: '所' },
-  { id: 'Membership', label: 'Membership Tier', kanji: '員' },
-];
 
 const ACQUIRED_DATA = [
   { id: '041', title: 'Yama Field Jacket', run: 'Run 01 / Batch #018', date: '18 Aug MMXXVI', size: 'Size III (L)', status: 'Verified in Ledger', cert: 'OT-ARC-041-018' },
@@ -60,6 +53,7 @@ const ADDRESSES_DATA = [
 ];
 
 export function ProfileDashboard() {
+  const { user, isAuthenticated, logout, openAuthModal } = useAuth();
   const [activeTab, setActiveTab] = useState('Overview');
   const { formatPrice } = useCurrency();
   const { addToCart } = useCart();
@@ -219,32 +213,85 @@ export function ProfileDashboard() {
             </div>
 
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', marginTop: '1.2rem', color: 'var(--otaru-parchment)' }}>
-              Member since MMXXV
+              {isAuthenticated ? (user?.name || (user?.email ? user.email.split('@')[0] : null) || user?.phone || 'Sovereign Collector') : 'Collector Dossier'}
             </h2>
             <p style={{ fontSize: '0.74rem', color: 'var(--otaru-parchment-dim)', marginTop: '0.2rem' }}>
-              7 artifacts acquired · Otaru Ledger #8821
+              {isAuthenticated ? (user?.email || user?.phone || 'Authenticated Session') : 'Guest Session · Unlinked Ledger'}
             </p>
 
-            <button
-              type="button"
-              onClick={() => setActiveTab('Membership')}
-              style={{
-                display: 'inline-block',
-                marginTop: '0.9rem',
-                fontSize: '0.62rem',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: 'var(--otaru-gold)',
-                border: '1px dashed var(--otaru-gold)',
-                padding: '0.3rem 0.75rem',
-                borderRadius: '2px',
-                backgroundColor: 'rgba(217, 189, 131, 0.08)',
-                cursor: 'pointer',
-                textAlign: 'left',
-              }}
-            >
-              Archival Circle Tier →
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.9rem' }}>
+              <button
+                type="button"
+                onClick={() => setActiveTab('Membership')}
+                style={{
+                  display: 'inline-block',
+                  fontSize: '0.62rem',
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: 'var(--otaru-gold)',
+                  border: '1px dashed var(--otaru-gold)',
+                  padding: '0.3rem 0.75rem',
+                  borderRadius: '2px',
+                  backgroundColor: 'rgba(217, 189, 131, 0.08)',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                {isAuthenticated ? `${user?.membershipTier || user?.role || 'ARCHIVAL'} TIER →` : 'Archival Circle Tier →'}
+              </button>
+
+              {isAuthenticated ? (
+                <button
+                  type="button"
+                  onClick={() => logout()}
+                  style={{
+                    display: 'inline-block',
+                    fontSize: '0.6rem',
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    color: 'var(--otaru-parchment-dim)',
+                    background: 'none',
+                    border: '1px solid var(--otaru-line)',
+                    padding: '0.32rem 0.65rem',
+                    borderRadius: '2px',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#e57373';
+                    e.currentTarget.style.borderColor = '#e57373';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'var(--otaru-parchment-dim)';
+                    e.currentTarget.style.borderColor = 'var(--otaru-line)';
+                  }}
+                >
+                  Revoke Session (Sign Out) ⏻
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => openAuthModal()}
+                  style={{
+                    display: 'inline-block',
+                    fontSize: '0.62rem',
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    color: '#070d14',
+                    backgroundColor: 'var(--otaru-gold)',
+                    border: 'none',
+                    padding: '0.4rem 0.75rem',
+                    borderRadius: '2px',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    textAlign: 'left',
+                  }}
+                >
+                  Sign In (SMS / OTP) →
+                </button>
+              )}
+            </div>
 
             <ul
               className="profile-tabs"

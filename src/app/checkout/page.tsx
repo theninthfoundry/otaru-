@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/hooks/use-cart';
 import { formatPrice } from '@/lib/utils';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
+import { useAuth } from '@/context/auth-context';
 
 declare global {
   interface Window {
@@ -34,6 +35,7 @@ type SandboxStep = 'method' | 'details' | 'processing' | 'done' | 'failed';
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, subtotal, clearCart } = useCart();
+  const { user, isAuthenticated, openAuthModal } = useAuth();
   const razorpayScriptRef = useRef(false);
 
   const [formData, setFormData] = useState({
@@ -44,6 +46,21 @@ export default function CheckoutPage() {
     city: '',
     zip: '',
   });
+
+  // Auto-populate customer information if authenticated
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const parts = user.name ? user.name.split(' ') : [];
+      const first = parts[0] ?? '';
+      const last = parts.length > 1 ? parts.slice(1).join(' ') : '';
+      setFormData((prev) => ({
+        ...prev,
+        email: prev.email || user.email || (user.phone ? `${user.phone.replace(/\D/g, '')}@otaru.in` : ''),
+        firstName: prev.firstName || first,
+        lastName: prev.lastName || last,
+      }));
+    }
+  }, [isAuthenticated, user]);
 
   const [activeTab, setActiveTab] = useState<PaymentTab>('razorpay');
 
@@ -339,9 +356,42 @@ export default function CheckoutPage() {
             <div className="lg:col-span-7 space-y-10">
               <div className="space-y-6">
                 <div className="space-y-4">
-                  <h3 className="text-heading-sm font-semibold text-otaru-ink border-b border-otaru-border/30 pb-2">
-                    01 &bull; Contact Info
-                  </h3>
+                  <div className="flex items-center justify-between border-b border-otaru-border/30 pb-2">
+                    <h3 className="text-heading-sm font-semibold text-otaru-ink">
+                      01 &bull; Contact Info
+                    </h3>
+                    {isAuthenticated ? (
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-otaru-gold font-semibold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-otaru-gold inline-block" />
+                        Sovereign Collector
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => openAuthModal()}
+                        className="text-[11px] font-semibold text-otaru-gold uppercase tracking-wider hover:underline"
+                      >
+                        Sign In (SMS / OTP) →
+                      </button>
+                    )}
+                  </div>
+
+                  {isAuthenticated && user && (
+                    <div className="p-3 bg-otaru-gold/10 border border-otaru-gold/30 rounded-xs flex items-center justify-between text-xs">
+                      <div>
+                        <span className="font-semibold text-otaru-ink">
+                          {user.name || user.email || user.phone}
+                        </span>
+                        <span className="text-otaru-ink-subtle ml-2">
+                          · {user.membershipTier || user.role || 'Archival'} Tier
+                        </span>
+                      </div>
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-otaru-gold">
+                        ✓ Authenticated
+                      </span>
+                    </div>
+                  )}
+
                   <div className="flex flex-col gap-1">
                     <label htmlFor="email" className="text-[10px] uppercase font-mono tracking-widest text-otaru-ink-subtle">
                       Email Registry Address

@@ -8,6 +8,7 @@ export interface AuthUser {
   phone?: string | null;
   name: string;
   role: string;
+  membershipTier?: string;
   isArchivalMember: boolean;
 }
 

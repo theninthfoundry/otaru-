@@ -11,6 +11,7 @@ import {
   ElevatedActionError,
 } from '@/lib/auth/authorization';
 import { AuditRecorder } from '@/lib/auth/audit';
+import { formatE164Phone, maskPhoneNumber, dispatchMobileOtp } from '@/lib/auth/sms';
 
 describe('PHASE B + IDENTITY SECURITY GATE — COMPLETE ADVERSARIAL PASS', () => {
 
@@ -20,7 +21,7 @@ describe('PHASE B + IDENTITY SECURITY GATE — COMPLETE ADVERSARIAL PASS', () =>
   describe('Check 1: Zero IDOR & Session Subject Authority', () => {
     it('resolves orders strictly from validated session, completely ignoring poisoned client query params', () => {
       const sessionManager = new SessionManager();
-      const { token, session } = sessionManager.createSession('user_alice_001', 'alice@luxury.in', 'CUSTOMER');
+      const { token } = sessionManager.createSession('user_alice_001', 'alice@luxury.in', 'CUSTOMER');
 
       // Validated session
       const validated = sessionManager.validateSession(token);
@@ -225,6 +226,51 @@ describe('PHASE B + IDENTITY SECURITY GATE — COMPLETE ADVERSARIAL PASS', () =>
       expect(auditEntry.actorId).toBe('owner_01');
       expect(auditEntry.action).toBe('REFUND_DISBURSEMENT');
       expect(recorder.getRecordsForTarget('OTR-2026-000184').length).toBe(1);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // 7. Multi-Channel Phone Normalization & Telemetry Masking Invariants
+  // -------------------------------------------------------------------------
+  describe('Check 7: Multi-Channel Phone Normalization & Telemetry Masking Invariants', () => {
+    it('normalizes 10-digit Indian phone numbers to E.164 with default country code', () => {
+      expect(formatE164Phone('9876543210', '+91')).toBe('+919876543210');
+      expect(formatE164Phone('09876543210', '+91')).toBe('+09876543210');
+      expect(formatE164Phone('+919876543210')).toBe('+919876543210');
+    });
+
+    it('preserves existing country code prefixes for international collectors', () => {
+      expect(formatE164Phone('+14155552671')).toBe('+14155552671'); // USA
+      expect(formatE164Phone('+81354128820')).toBe('+81354128820'); // Japan
+      expect(formatE164Phone('+442079460912')).toBe('+442079460912'); // UK
+    });
+
+    it('masks phone numbers preventing PII leakage in client JSON responses', () => {
+      const masked = maskPhoneNumber('+919876543210');
+      expect(masked).toContain('+91');
+      expect(masked).toContain('3210');
+      expect(masked).not.toContain('987654'); // Sensitive core digits masked
+    });
+
+    it('dispatches SMS and WhatsApp OTP challenges safely in dev/test mode without unhandled exceptions', async () => {
+      const smsResult = await dispatchMobileOtp({
+        phoneNumber: '9876543210',
+        countryCode: '+91',
+        channel: 'sms',
+        otp: '482910',
+      });
+      expect(smsResult.success).toBe(true);
+      expect(smsResult.channel).toBe('sms');
+      expect(smsResult.maskedNumber).toBeDefined();
+
+      const waResult = await dispatchMobileOtp({
+        phoneNumber: '9876543210',
+        countryCode: '+91',
+        channel: 'whatsapp',
+        otp: '482910',
+      });
+      expect(waResult.success).toBe(true);
+      expect(waResult.channel).toBe('whatsapp');
     });
   });
 });
