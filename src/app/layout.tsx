@@ -12,7 +12,6 @@ import { SizeGuideModal } from '@/components/ui/SizeGuideModal';
 import { MoonProgress } from '@/components/ui/MoonProgress';
 import { ArchiveTextureOverlay } from '@/components/ui/ArchiveTextureOverlay';
 import { ArchivePageTransition } from '@/components/ui/ArchivePageTransition';
-import { ArchivalCursor } from '@/components/ui/ArchivalCursor';
 import { StudioStatusBar } from '@/components/ui/StudioStatusBar';
 import '@/styles/globals.css';
 
@@ -71,7 +70,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
       <body>
-        <ArchivalCursor />
         <a href="#main" className="skip-link">
           Skip to content
         </a>
