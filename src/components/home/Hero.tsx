@@ -62,15 +62,18 @@ export function Hero() {
   const [isReady, setIsReady] = useState(false);
   const [textAnimState, setTextAnimState] = useState<'idle' | 'exit' | 'enter'>('idle');
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
-  const [scrollY, setScrollY] = useState(0);
-  const [windowHeight, setWindowHeight] = useState(900);
-  const heroRef = useRef<HTMLDivElement>(null);
 
-  // 1. Initial Entrance & Auto Cycling
+  const heroRef = useRef<HTMLDivElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
+  const bgContainerRef = useRef<HTMLDivElement>(null);
+  const kanjiRef = useRef<HTMLDivElement>(null);
+
+  // 1. Initial Pop-Up Entrance & Auto Slide Cycling
   useEffect(() => {
+    // Staggered pop-up triggers on mount
     const timer = setTimeout(() => {
       setIsReady(true);
-    }, 60);
+    }, 70);
 
     const interval = setInterval(() => {
       handleSlideChange((prev) => (prev + 1) % HERO_SLIDES.length);
@@ -82,31 +85,70 @@ export function Hero() {
     };
   }, []);
 
-  // 2. High-Performance 60fps Scroll Tracking
+  // 2. Buttery-Smooth Direct RAF Lerp Scroll Parallax (Zero Jitter, Zero React Re-renders)
   useEffect(() => {
-    setWindowHeight(window.innerHeight || 900);
+    let targetY = window.scrollY || 0;
+    let currentY = targetY;
+    let rafId: number;
+    let isRunning = true;
 
-    let ticking = false;
     const onScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          setScrollY(window.scrollY || window.pageYOffset || 0);
-          ticking = false;
-        });
-        ticking = true;
-      }
+      targetY = window.scrollY || window.pageYOffset || 0;
     };
 
-    const onResize = () => {
-      setWindowHeight(window.innerHeight || 900);
+    const tick = () => {
+      if (!isRunning) return;
+
+      const diff = targetY - currentY;
+      if (Math.abs(diff) < 0.08) {
+        currentY = targetY;
+      } else {
+        // Silky smooth, responsive damping factor for fluid glide
+        currentY += diff * 0.16;
+      }
+
+      const h = window.innerHeight || 900;
+      // Only compute and apply transforms while hero is visible in viewport
+      if (currentY <= h * 1.3) {
+        const fraction = Math.min(1, Math.max(0, currentY / h));
+
+        // 1. Text Container: stays crisp in upper fold, then floats gracefully upward and fades
+        if (heroContentRef.current) {
+          const textY = -currentY * 0.30;
+          const textOpacity =
+            fraction < 0.20
+              ? 1
+              : Math.max(0, 1 - Math.pow((fraction - 0.20) / 0.80, 1.35));
+          heroContentRef.current.style.transform = `translate3d(0, ${textY.toFixed(2)}px, 0)`;
+          heroContentRef.current.style.opacity = textOpacity.toFixed(3);
+        }
+
+        // 2. Background: subtle depth parallax & cinematic scale expansion
+        if (bgContainerRef.current) {
+          const bgY = currentY * 0.22;
+          const bgScale = 1.0 + fraction * 0.12;
+          bgContainerRef.current.style.transform = `translate3d(0, ${bgY.toFixed(2)}px, 0) scale(${bgScale.toFixed(4)})`;
+        }
+
+        // 3. Kanji Calligraphy: gentle atmospheric upward float
+        if (kanjiRef.current) {
+          const kanjiY = -currentY * 0.42;
+          const kanjiOpacity = Math.max(0.012, 0.045 - fraction * 0.035);
+          kanjiRef.current.style.transform = `translate3d(0, ${kanjiY.toFixed(2)}px, 0)`;
+          kanjiRef.current.style.opacity = kanjiOpacity.toFixed(3);
+        }
+      }
+
+      rafId = requestAnimationFrame(tick);
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize, { passive: true });
+    rafId = requestAnimationFrame(tick);
 
     return () => {
+      isRunning = false;
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onResize);
+      cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -117,11 +159,11 @@ export function Hero() {
       setTextAnimState('enter');
       setTimeout(() => {
         setTextAnimState('idle');
-      }, 480);
-    }, 260);
+      }, 500);
+    }, 220);
   };
 
-  // Subtle Mouse Parallax
+  // Subtle Mouse Parallax on Desktop
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
@@ -129,8 +171,8 @@ export function Hero() {
     const normalizedY = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
 
     setMouseOffset({
-      x: Math.max(-1, Math.min(1, normalizedX)) * 10,
-      y: Math.max(-1, Math.min(1, normalizedY)) * 10,
+      x: Math.max(-1, Math.min(1, normalizedX)) * 8,
+      y: Math.max(-1, Math.min(1, normalizedY)) * 8,
     });
   };
 
@@ -139,26 +181,6 @@ export function Hero() {
   };
 
   const currentSlide = HERO_SLIDES[activeSlide] ?? HERO_SLIDES[0]!;
-
-  // Refined Scroll Kinematics:
-  const scrollFraction = Math.min(1, Math.max(0, scrollY / (windowHeight || 900)));
-
-  // Background: subtle zoom from 1.0 to 1.14x, slow atmospheric drift
-  const backgroundZoomScale = 1.0 + scrollFraction * 0.14;
-  const backgroundParallaxY = scrollY * 0.22;
-  const backgroundOpacity = Math.max(0.32, 0.85 - scrollFraction * 0.45);
-
-  // Text: stays razor crisp in top 25% of scroll, then lifts gently upward
-  const textTranslateY = -scrollY * 0.32;
-  const textOpacity =
-    scrollFraction < 0.25
-      ? 1
-      : Math.max(0, 1 - Math.pow((scrollFraction - 0.25) / 0.75, 1.25));
-  const textBlur = scrollFraction > 0.45 ? (scrollFraction - 0.45) * 5 : 0;
-
-  // Floating Calligraphy Parallax Drift
-  const kanjiParallaxY = -scrollY * 0.45;
-  const kanjiOpacity = Math.max(0.015, 0.045 - scrollFraction * 0.035);
 
   return (
     <div
@@ -173,33 +195,41 @@ export function Hero() {
         backgroundColor: '#070d14',
       }}
     >
-      {/* Scroll-Responsive Background Visual Layer */}
-      {HERO_SLIDES.map((slide, idx) => {
-        const isActive = idx === activeSlide;
-        return (
-          <div
-            key={slide.campaign}
-            aria-hidden={!isActive}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundImage: `url(${slide.imageBg})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center 40%',
-              backgroundRepeat: 'no-repeat',
-              opacity: isActive ? backgroundOpacity : 0,
-              pointerEvents: 'none',
-              transform: isActive
-                ? `translate3d(${mouseOffset.x * -0.3}px, ${backgroundParallaxY + mouseOffset.y * -0.3}px, 0) scale(${backgroundZoomScale})`
-                : 'scale(1.02)',
-              transition: isActive
-                ? 'opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 0.08s linear'
-                : 'opacity 0.8s ease',
-              willChange: 'transform, opacity',
-            }}
-          />
-        );
-      })}
+      {/* Scroll-Responsive Background Visual Layer with Independent Parallax Container */}
+      <div
+        ref={bgContainerRef}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          willChange: 'transform',
+        }}
+      >
+        {HERO_SLIDES.map((slide, idx) => {
+          const isActive = idx === activeSlide;
+          return (
+            <div
+              key={slide.campaign}
+              aria-hidden={!isActive}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: `url(${slide.imageBg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center 40%',
+                backgroundRepeat: 'no-repeat',
+                opacity: isActive ? 0.85 : 0,
+                pointerEvents: 'none',
+                transform: `translate3d(${mouseOffset.x * -0.25}px, ${mouseOffset.y * -0.25}px, 0)`,
+                transition: isActive
+                  ? 'opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s ease-out'
+                  : 'opacity 0.8s ease, transform 0.4s ease-out',
+                willChange: 'opacity, transform',
+              }}
+            />
+          );
+        })}
+      </div>
 
       {/* Vignette Atmosphere Gradients */}
       <div
@@ -217,6 +247,7 @@ export function Hero() {
 
       {/* Floating Calligraphy Watermark with Parallax Drift */}
       <div
+        ref={kanjiRef}
         aria-hidden="true"
         style={{
           position: 'absolute',
@@ -229,10 +260,8 @@ export function Hero() {
           fontSize: 'clamp(5rem, 14vw, 13rem)',
           letterSpacing: '0.25em',
           color: 'var(--otaru-parchment)',
-          opacity: kanjiOpacity,
+          opacity: 0.045,
           userSelect: 'none',
-          transform: `translate3d(0, ${kanjiParallaxY}px, 0)`,
-          transition: 'transform 0.08s linear, opacity 0.3s ease',
           willChange: 'transform, opacity',
         }}
       >
@@ -242,44 +271,39 @@ export function Hero() {
       {/* Kinetic Hero Content Container */}
       <div
         id="heroContent"
+        ref={heroContentRef}
         className={clsx('hero-content', isReady && 'is-ready')}
-        style={{
-          opacity: textOpacity,
-          transform: `translate3d(0, ${textTranslateY}px, 0)`,
-          filter: textBlur > 0.1 ? `blur(${textBlur}px)` : 'none',
-          willChange: 'transform, opacity, filter',
-          transition: 'transform 0.08s linear, opacity 0.1s linear',
-        }}
       >
-        {/* Topbar Metadata */}
-        <div className="hero-topbar">
+        {/* Topbar Metadata: Fades down into place */}
+        <div className="hero-topbar hero-popup-topbar">
           <span className="tracking-widest">Otaru / Design House</span>
           <span className="text-[var(--otaru-gold)] opacity-90">{currentSlide.campaign}</span>
           <span className="right font-mono">MMXXVI</span>
         </div>
 
-        {/* Center Main Headline with Smooth Text Transition */}
+        {/* Center Main Headline with Staggered Pop-Up Entrance & Smooth Slide Transitions */}
         <div
           className="hero-main"
           style={{
             transform:
               textAnimState === 'exit'
-                ? 'translate3d(0, -12px, 0)'
+                ? 'translate3d(0, -16px, 0)'
                 : textAnimState === 'enter'
-                ? 'translate3d(0, 12px, 0)'
-                : 'translate3d(0, 0, 0)',
-            opacity: textAnimState === 'exit' ? 0.15 : 1,
-            filter: textAnimState === 'exit' ? 'blur(3px)' : 'none',
+                ? 'translate3d(0, 24px, 0) scale(0.97)'
+                : 'translate3d(0, 0, 0) scale(1)',
+            opacity: textAnimState === 'exit' ? 0 : 1,
             transition:
               textAnimState === 'exit'
-                ? 'transform 0.26s cubic-bezier(0.4, 0, 1, 1), opacity 0.26s ease, filter 0.26s ease'
-                : 'transform 0.48s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.48s ease, filter 0.48s ease',
-            willChange: 'transform, opacity, filter',
+                ? 'transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.22s ease'
+                : 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease',
+            willChange: 'transform, opacity',
           }}
         >
-          <span className="hero-eyebrow2 text-[var(--otaru-gold)]">{currentSlide.eyebrow}</span>
+          <span className="hero-eyebrow2 hero-popup-eyebrow text-[var(--otaru-gold)]">
+            {currentSlide.eyebrow}
+          </span>
           <h1
-            className="hero-title"
+            className="hero-title hero-popup-title"
             style={{
               whiteSpace: 'pre-line',
               textShadow: '0 4px 28px rgba(0,0,0,0.65), 0 0 50px rgba(217,189,131,0.06)',
@@ -287,15 +311,15 @@ export function Hero() {
           >
             {currentSlide.title}
           </h1>
-          <p className="hero-sub2">{currentSlide.sub}</p>
+          <p className="hero-sub2 hero-popup-sub">{currentSlide.sub}</p>
           <a
             href={currentSlide.link}
-            className="hero-cta2 group"
-            data-cursor="EXPLORE"
+            className="hero-cta2 hero-popup-cta group"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.65rem',
+              cursor: 'pointer',
               transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           >
@@ -310,7 +334,7 @@ export function Hero() {
         </div>
 
         {/* Footer Navigation & Progress Indicators */}
-        <div className="hero-footer">
+        <div className="hero-footer hero-popup-footer">
           {/* Animated Slide Progress Bars */}
           <div className="hero-dots" role="tablist" aria-label="Hero slides">
             {HERO_SLIDES.map((_, idx) => {
