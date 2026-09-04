@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { CartButton } from '@/components/cart/CartButton';
+import { useAuth } from '@/context/auth-context';
 import clsx from 'clsx';
 
 interface SiteHeaderProps {
@@ -15,6 +16,7 @@ export function SiteHeader({ onSearchOpen }: SiteHeaderProps) {
   const [isSolid, setIsSolid] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { user, isAuthenticated, openAuthModal } = useAuth();
 
   const isHome = pathname === '/';
 
@@ -125,17 +127,46 @@ export function SiteHeader({ onSearchOpen }: SiteHeaderProps) {
               </svg>
             </button>
 
-            {/* Account Link */}
-            <Link
-              href="/profile"
-              className="icon-btn"
-              aria-label="Sign in or view profile"
-            >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-              </svg>
-            </Link>
+            {/* Account / Auth Button */}
+            {isAuthenticated ? (
+              <Link
+                href="/profile"
+                className="icon-btn relative group"
+                aria-label="View member profile"
+                title={`Signed in as ${user?.name || user?.email || 'Collector'}`}
+              >
+                <div style={{ position: 'relative' }}>
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+                  </svg>
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: -1,
+                      right: -1,
+                      width: 5,
+                      height: 5,
+                      borderRadius: '50%',
+                      backgroundColor: 'var(--otaru-gold)',
+                    }}
+                  />
+                </div>
+              </Link>
+            ) : (
+              <button
+                type="button"
+                className="icon-btn"
+                onClick={() => openAuthModal('sms')}
+                aria-label="Sign in to Archive"
+                title="Sign in with SMS, WhatsApp, or Email"
+              >
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+                </svg>
+              </button>
+            )}
 
             {/* Cart Button */}
             <CartButton />
@@ -263,13 +294,37 @@ export function SiteHeader({ onSearchOpen }: SiteHeaderProps) {
           >
             Chapters
           </Link>
-          <Link
-            href="/profile"
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{ marginTop: '0.8rem', fontSize: '0.92rem', color: 'var(--otaru-gold)', textDecoration: 'none', letterSpacing: '0.1em', textTransform: 'uppercase' }}
-          >
-            Collector Dossier →
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              href="/profile"
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{ marginTop: '0.8rem', fontSize: '0.92rem', color: 'var(--otaru-gold)', textDecoration: 'none', letterSpacing: '0.1em', textTransform: 'uppercase' }}
+            >
+              Collector Dossier ({user?.name || 'Active'}) →
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                openAuthModal('sms');
+              }}
+              style={{
+                background: 'none',
+                border: 'none',
+                textAlign: 'left',
+                marginTop: '0.8rem',
+                fontSize: '0.92rem',
+                color: 'var(--otaru-gold)',
+                cursor: 'pointer',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                padding: 0,
+              }}
+            >
+              Sign In (SMS / WhatsApp OTP) →
+            </button>
+          )}
         </div>
 
         {/* Right Corner Craft Watermark */}

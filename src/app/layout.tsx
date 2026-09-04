@@ -3,6 +3,8 @@ import { Inter, Newsreader } from 'next/font/google';
 import { CartProvider } from '@/lib/cart';
 import { CurrencyProvider } from '@/lib/currency';
 import { SizeGuideProvider } from '@/lib/size-guide';
+import { AuthProvider } from '@/context/auth-context';
+import { AuthModal } from '@/components/auth/AuthModal';
 import { MaterialInspectorProvider } from '@/components/ui/MaterialInspectorModal';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
@@ -69,29 +71,53 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
+      <head>
+        {/* Enforce permanent suppression of any custom cursor follower overlays */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              .archival-cursor-wrapper,
+              [class*="archival-cursor"],
+              [class*="custom-cursor"],
+              [data-cursor-dot],
+              [data-cursor-ring] {
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+                width: 0 !important;
+                height: 0 !important;
+              }
+            `,
+          }}
+        />
+      </head>
       <body>
         <a href="#main" className="skip-link">
           Skip to content
         </a>
         <ArchiveTextureOverlay />
-        <CurrencyProvider>
-          <CartProvider>
-            <SizeGuideProvider>
-              <MaterialInspectorProvider>
-                <SiteHeader />
-                <ArchivePageTransition>
-                  <main id="main">{children}</main>
-                </ArchivePageTransition>
-                <SiteFooter />
-                <StudioStatusBar />
-                <CartDrawer />
-                <SearchModal />
-                <SizeGuideModal />
-                <MoonProgress />
-              </MaterialInspectorProvider>
-            </SizeGuideProvider>
-          </CartProvider>
-        </CurrencyProvider>
+        <AuthProvider>
+          <CurrencyProvider>
+            <CartProvider>
+              <SizeGuideProvider>
+                <MaterialInspectorProvider>
+                  <SiteHeader />
+                  <ArchivePageTransition>
+                    <main id="main">{children}</main>
+                  </ArchivePageTransition>
+                  <SiteFooter />
+                  <StudioStatusBar />
+                  <CartDrawer />
+                  <SearchModal />
+                  <SizeGuideModal />
+                  <AuthModal />
+                  <MoonProgress />
+                </MaterialInspectorProvider>
+              </SizeGuideProvider>
+            </CartProvider>
+          </CurrencyProvider>
+        </AuthProvider>
       </body>
     </html>
   );
