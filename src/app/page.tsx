@@ -7,6 +7,7 @@ import { StoryJourney } from '@/components/home/StoryJourney';
 import { Craftsmanship } from '@/components/home/Craftsmanship';
 import { Philosophy } from '@/components/home/Philosophy';
 import { MembershipTeaser } from '@/components/home/MembershipTeaser';
+import { CollectorPassportSection } from '@/components/home/CollectorPassportSection';
 import { JournalTeaser } from '@/components/home/JournalTeaser';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 
@@ -32,6 +33,8 @@ export default function HomePage() {
       <Philosophy />
       <div className="section-connector" />
       <MembershipTeaser />
+      <div className="section-connector" />
+      <CollectorPassportSection />
       <div className="section-connector" />
       <JournalTeaser />
       <div className="section-connector" />

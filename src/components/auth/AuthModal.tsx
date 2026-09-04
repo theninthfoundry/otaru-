@@ -317,19 +317,19 @@ export function AuthModal() {
               marginBottom: '1.8rem',
             }}
           >
-            {[
+            {([
               { id: 'sms', label: 'SMS OTP' },
               { id: 'whatsapp', label: 'WhatsApp' },
               { id: 'email', label: 'Email Code' },
               { id: 'password', label: 'Password' },
-            ].map((tab) => {
+            ] as const).map((tab) => {
               const isSelected = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
                   type="button"
                   onClick={() => {
-                    setActiveTab(tab.id as any);
+                    setActiveTab(tab.id);
                     setError(null);
                   }}
                   style={{

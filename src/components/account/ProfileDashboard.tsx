@@ -63,10 +63,27 @@ export function ProfileDashboard() {
   const [activeTab, setActiveTab] = useState('Overview');
   const { formatPrice } = useCurrency();
   const { addToCart } = useCart();
+  const [acquiredItems, setAcquiredItems] = useState(ACQUIRED_DATA);
   const [wishlist, setWishlist] = useState(SAVED_DATA);
   const [savedSuccess, setSavedSuccess] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [liveOrders, setLiveOrders] = useState<any[]>([]);
+
+  // Load user saved removals from localStorage
+  useEffect(() => {
+    try {
+      const savedAcquired = localStorage.getItem('otaru_acquired_artifacts');
+      if (savedAcquired) {
+        setAcquiredItems(JSON.parse(savedAcquired));
+      }
+      const savedWishlist = localStorage.getItem('otaru_saved_wishlist');
+      if (savedWishlist) {
+        setWishlist(JSON.parse(savedWishlist));
+      }
+    } catch {
+      // Ignore localStorage read errors
+    }
+  }, []);
 
   useEffect(() => {
     fetch('/api/account/orders')
@@ -91,8 +108,72 @@ export function ProfileDashboard() {
   };
 
   const handleRemoveWishlist = (id: string) => {
-    setWishlist((prev) => prev.filter((i) => i.id !== id));
+    setWishlist((prev) => {
+      const updated = prev.filter((i) => i.id !== id);
+      try {
+        localStorage.setItem('otaru_saved_wishlist', JSON.stringify(updated));
+      } catch {
+        // Ignore localStorage errors
+      }
+      return updated;
+    });
   };
+
+  const handleClearAllWishlist = () => {
+    setWishlist([]);
+    try {
+      localStorage.setItem('otaru_saved_wishlist', JSON.stringify([]));
+    } catch {
+      // Ignore localStorage errors
+    }
+  };
+
+  const handleResetWishlist = () => {
+    setWishlist(SAVED_DATA);
+    try {
+      localStorage.removeItem('otaru_saved_wishlist');
+    } catch {
+      // Ignore localStorage errors
+    }
+  };
+
+  const handleRemoveAcquired = (id: string) => {
+    setAcquiredItems((prev) => {
+      const updated = prev.filter((item) => item.id !== id);
+      try {
+        localStorage.setItem('otaru_acquired_artifacts', JSON.stringify(updated));
+      } catch {
+        // Ignore localStorage errors
+      }
+      return updated;
+    });
+  };
+
+  const handleClearAllAcquired = () => {
+    setAcquiredItems([]);
+    try {
+      localStorage.setItem('otaru_acquired_artifacts', JSON.stringify([]));
+    } catch {
+      // Ignore localStorage errors
+    }
+  };
+
+  const handleResetAcquired = () => {
+    setAcquiredItems(ACQUIRED_DATA);
+    try {
+      localStorage.removeItem('otaru_acquired_artifacts');
+    } catch {
+      // Ignore localStorage errors
+    }
+  };
+
+  const currentTabs = [
+    { id: 'Overview', label: 'Overview', kanji: '概' },
+    { id: 'Acquired Artifacts', label: 'Acquired Artifacts', count: acquiredItems.length, kanji: '獲' },
+    { id: 'Saved', label: 'Saved Wishlist', count: wishlist.length, kanji: '保' },
+    { id: 'Addresses', label: 'Dispatch Addresses', kanji: '所' },
+    { id: 'Membership', label: 'Membership Tier', kanji: '員' },
+  ];
 
   return (
     <div style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh' }}>
@@ -178,7 +259,7 @@ export function ProfileDashboard() {
                 gap: '0.35rem',
               }}
             >
-              {TABS.map((tab) => {
+              {currentTabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
                   <li key={tab.id}>
@@ -280,7 +361,7 @@ export function ProfileDashboard() {
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                  <p style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', margin: 0, color: 'var(--otaru-parchment)' }}>7</p>
+                  <p style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', margin: 0, color: 'var(--otaru-parchment)' }}>{acquiredItems.length}</p>
                   <span style={{ fontSize: '0.65rem', color: 'var(--otaru-gold)' }}>VIEW →</span>
                 </div>
                 <p style={{ marginTop: '0.3rem', fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--otaru-parchment-dim)' }}>
@@ -353,12 +434,12 @@ export function ProfileDashboard() {
                       onClick={() => setActiveTab('Acquired Artifacts')}
                       style={{ background: 'none', border: 'none', color: 'var(--otaru-gold)', fontSize: '0.68rem', letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer' }}
                     >
-                      All 7 Artifacts →
+                      All {acquiredItems.length} Artifacts →
                     </button>
                   </div>
 
                   <div style={{ marginTop: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                    {ACQUIRED_DATA.slice(0, 3).map((item) => (
+                    {acquiredItems.slice(0, 3).map((item) => (
                       <Link
                         key={item.id}
                         href={`/product/${item.id}`}
@@ -508,83 +589,245 @@ export function ProfileDashboard() {
             {/* TAB 2: ACQUIRED ARTIFACTS (FULL PROVENANCE LEDGER) */}
             {activeTab === 'Acquired Artifacts' && (
               <div style={{ marginTop: '2.5rem' }}>
-                <p style={{ color: 'var(--otaru-parchment-dim)', fontSize: '0.92rem', maxWidth: '62ch', lineHeight: 1.7 }}>
-                  Every physical artifact released by Otaru carries an immutable digital edition record and perpetual lifetime repair warranty at our Hokkaido canal dyehouse.
-                </p>
-
-                <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
-                  {ACQUIRED_DATA.map((item) => (
-                    <div
-                      key={item.id}
-                      className="sashiko-stitch-box"
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+                  <p style={{ color: 'var(--otaru-parchment-dim)', fontSize: '0.92rem', maxWidth: '62ch', lineHeight: 1.7, margin: 0 }}>
+                    Every physical artifact released by Otaru carries an immutable digital edition record and perpetual lifetime repair warranty at our Hokkaido canal dyehouse.
+                  </p>
+                  {acquiredItems.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleClearAllAcquired}
                       style={{
-                        padding: '1.2rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
+                        background: 'none',
+                        border: '1px solid var(--otaru-line-strong)',
+                        color: 'var(--otaru-parchment-dim)',
+                        fontSize: '0.68rem',
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase',
+                        padding: '0.45rem 0.85rem',
+                        cursor: 'pointer',
+                        borderRadius: '2px',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = '#e57373';
+                        e.currentTarget.style.borderColor = '#e57373';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = 'var(--otaru-parchment-dim)';
+                        e.currentTarget.style.borderColor = 'var(--otaru-line-strong)';
                       }}
                     >
-                      <div>
-                        <div style={{ width: '100%', height: '180px', borderRadius: '2px', overflow: 'hidden', marginBottom: '1rem' }}>
-                          <ImagePlaceholder ratio="portrait" label={item.id} />
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                          <span style={{ fontSize: '0.64rem', letterSpacing: '0.14em', color: 'var(--otaru-gold)', fontFamily: 'monospace' }}>
-                            OBJECT NO. {item.id}
-                          </span>
-                          <span style={{ fontSize: '0.62rem', color: 'var(--otaru-parchment-dim)' }}>
-                            {item.date}
-                          </span>
-                        </div>
-                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', margin: '0.3rem 0 0', color: 'var(--otaru-parchment)' }}>
-                          {item.title}
-                        </h3>
-                        <p style={{ margin: '0.3rem 0 0', fontSize: '0.78rem', color: 'var(--otaru-horizon)' }}>
-                          {item.run} · {item.size}
-                        </p>
-                        <div style={{ marginTop: '0.8rem', padding: '0.4rem 0.6rem', backgroundColor: 'rgba(11,20,32,0.6)', border: '1px solid var(--otaru-line)', borderRadius: '2px', fontSize: '0.62rem', color: 'var(--otaru-gold-dim)', fontFamily: 'monospace' }}>
-                          CERT: {item.cert}
-                        </div>
-                      </div>
-
-                      <div style={{ marginTop: '1.2rem', paddingTop: '0.8rem', borderTop: '1px dashed var(--otaru-line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Link
-                          href={`/product/${item.id}`}
-                          style={{
-                            fontSize: '0.74rem',
-                            letterSpacing: '0.08em',
-                            textTransform: 'uppercase',
-                            color: 'var(--otaru-parchment)',
-                            textDecoration: 'none',
-                          }}
-                        >
-                          View Object Record →
-                        </Link>
-                        <span style={{ fontSize: '0.65rem', color: 'var(--otaru-gold-dim)' }}>
-                          ● Active
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                      Clear All Artifacts
+                    </button>
+                  )}
                 </div>
+
+                {acquiredItems.length === 0 ? (
+                  <div style={{ marginTop: '3rem', padding: '3.5rem 2rem', textAlign: 'center', border: '1px dashed var(--otaru-line)' }}>
+                    <span style={{ fontSize: '1.8rem', color: 'var(--otaru-gold-dim)', marginBottom: '0.8rem', display: 'inline-block' }}>◇</span>
+                    <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', color: 'var(--otaru-parchment)', margin: 0 }}>
+                      Your private archive is currently empty.
+                    </p>
+                    <p style={{ fontSize: '0.84rem', color: 'var(--otaru-parchment-dim)', marginTop: '0.6rem', maxWidth: '42ch', margin: '0.6rem auto 0', lineHeight: 1.6 }}>
+                      Acquired pieces, woven QR seals, and deeds of authenticity will appear here upon acquisition.
+                    </p>
+                    <div style={{ marginTop: '1.8rem', display: 'flex', gap: '1.2rem', justifyContent: 'center', alignItems: 'center' }}>
+                      <Link href="/archive" className="cta-link" style={{ fontSize: '0.78rem' }}>
+                        Browse Archive Catalog →
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={handleResetAcquired}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: 'var(--otaru-gold-dim)',
+                          fontSize: '0.72rem',
+                          textDecoration: 'underline',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Reset Demo Artifacts
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                    {acquiredItems.map((item) => (
+                      <div
+                        key={item.id}
+                        className="sashiko-stitch-box"
+                        style={{
+                          padding: '1.2rem',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between',
+                          position: 'relative',
+                        }}
+                      >
+                        <div>
+                          <div style={{ width: '100%', height: '180px', borderRadius: '2px', overflow: 'hidden', marginBottom: '1rem', position: 'relative' }}>
+                            <ImagePlaceholder ratio="portrait" label={item.id} />
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveAcquired(item.id)}
+                              aria-label={`Remove ${item.title} from archive`}
+                              style={{
+                                position: 'absolute',
+                                top: '0.5rem',
+                                right: '0.5rem',
+                                zIndex: 10,
+                                backgroundColor: 'rgba(7, 13, 20, 0.85)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                color: 'var(--otaru-parchment)',
+                                width: '26px',
+                                height: '26px',
+                                borderRadius: '50%',
+                                display: 'grid',
+                                placeItems: 'center',
+                                fontSize: '0.72rem',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease',
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.color = '#e57373';
+                                e.currentTarget.style.borderColor = '#e57373';
+                                e.currentTarget.style.transform = 'scale(1.1)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.color = 'var(--otaru-parchment)';
+                                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                                e.currentTarget.style.transform = 'scale(1)';
+                              }}
+                              title="Remove from archive"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                            <span style={{ fontSize: '0.64rem', letterSpacing: '0.14em', color: 'var(--otaru-gold)', fontFamily: 'monospace' }}>
+                              OBJECT NO. {item.id}
+                            </span>
+                            <span style={{ fontSize: '0.62rem', color: 'var(--otaru-parchment-dim)' }}>
+                              {item.date}
+                            </span>
+                          </div>
+                          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', margin: '0.3rem 0 0', color: 'var(--otaru-parchment)' }}>
+                            {item.title}
+                          </h3>
+                          <p style={{ margin: '0.3rem 0 0', fontSize: '0.78rem', color: 'var(--otaru-horizon)' }}>
+                            {item.run} · {item.size}
+                          </p>
+                          <div style={{ marginTop: '0.8rem', padding: '0.4rem 0.6rem', backgroundColor: 'rgba(11,20,32,0.6)', border: '1px solid var(--otaru-line)', borderRadius: '2px', fontSize: '0.62rem', color: 'var(--otaru-gold-dim)', fontFamily: 'monospace' }}>
+                            CERT: {item.cert}
+                          </div>
+                        </div>
+
+                        <div style={{ marginTop: '1.2rem', paddingTop: '0.8rem', borderTop: '1px dashed var(--otaru-line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <Link
+                            href={`/product/${item.id}`}
+                            style={{
+                              fontSize: '0.74rem',
+                              letterSpacing: '0.08em',
+                              textTransform: 'uppercase',
+                              color: 'var(--otaru-parchment)',
+                              textDecoration: 'none',
+                            }}
+                          >
+                            View Object Record →
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveAcquired(item.id)}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              fontSize: '0.68rem',
+                              letterSpacing: '0.08em',
+                              textTransform: 'uppercase',
+                              color: 'var(--otaru-parchment-dim)',
+                              cursor: 'pointer',
+                              padding: '0.2rem 0',
+                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.color = '#e57373')}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--otaru-parchment-dim)')}
+                          >
+                            Remove ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
             {/* TAB 3: SAVED (WISHLIST) */}
             {activeTab === 'Saved' && (
               <div style={{ marginTop: '2.5rem' }}>
-                <p style={{ color: 'var(--otaru-parchment-dim)', fontSize: '0.92rem', maxWidth: '62ch', lineHeight: 1.7 }}>
-                  Artifacts flagged for release monitoring. When archival runs become available for allocation, priority notices are sent directly to your account.
-                </p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+                  <p style={{ color: 'var(--otaru-parchment-dim)', fontSize: '0.92rem', maxWidth: '62ch', lineHeight: 1.7, margin: 0 }}>
+                    Artifacts flagged for release monitoring. When archival runs become available for allocation, priority notices are sent directly to your account.
+                  </p>
+                  {wishlist.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleClearAllWishlist}
+                      style={{
+                        background: 'none',
+                        border: '1px solid var(--otaru-line-strong)',
+                        color: 'var(--otaru-parchment-dim)',
+                        fontSize: '0.68rem',
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase',
+                        padding: '0.45rem 0.85rem',
+                        cursor: 'pointer',
+                        borderRadius: '2px',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = '#e57373';
+                        e.currentTarget.style.borderColor = '#e57373';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = 'var(--otaru-parchment-dim)';
+                        e.currentTarget.style.borderColor = 'var(--otaru-line-strong)';
+                      }}
+                    >
+                      Clear All Wishlist
+                    </button>
+                  )}
+                </div>
 
                 {wishlist.length === 0 ? (
-                  <div style={{ marginTop: '3rem', padding: '3rem', textAlign: 'center', border: '1px dashed var(--otaru-line)' }}>
-                    <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', color: 'var(--otaru-parchment)' }}>
+                  <div style={{ marginTop: '3rem', padding: '3.5rem 2rem', textAlign: 'center', border: '1px dashed var(--otaru-line)' }}>
+                    <span style={{ fontSize: '1.8rem', color: 'var(--otaru-gold-dim)', marginBottom: '0.8rem', display: 'inline-block' }}>◇</span>
+                    <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', color: 'var(--otaru-parchment)', margin: 0 }}>
                       Your wishlist is empty.
                     </p>
-                    <Link href="/archive" className="cta-link" style={{ marginTop: '1rem', display: 'inline-block' }}>
-                      Browse Archive Catalog →
-                    </Link>
+                    <p style={{ fontSize: '0.84rem', color: 'var(--otaru-parchment-dim)', marginTop: '0.6rem', maxWidth: '42ch', margin: '0.6rem auto 0', lineHeight: 1.6 }}>
+                      Artifacts saved while browsing the archive will be recorded here for priority drop allocations.
+                    </p>
+                    <div style={{ marginTop: '1.8rem', display: 'flex', gap: '1.2rem', justifyContent: 'center', alignItems: 'center' }}>
+                      <Link href="/archive" className="cta-link" style={{ fontSize: '0.78rem' }}>
+                        Browse Archive Catalog →
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={handleResetWishlist}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: 'var(--otaru-gold-dim)',
+                          fontSize: '0.72rem',
+                          textDecoration: 'underline',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Reset Demo Wishlist
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -661,10 +904,29 @@ export function ProfileDashboard() {
                           <button
                             type="button"
                             onClick={() => handleRemoveWishlist(item.id)}
-                            aria-label="Remove from wishlist"
-                            style={{ background: 'none', border: 'none', color: 'var(--otaru-horizon)', fontSize: '1rem', cursor: 'pointer' }}
+                            aria-label={`Remove ${item.title} from wishlist`}
+                            style={{
+                              background: 'none',
+                              border: '1px solid var(--otaru-line-strong)',
+                              color: 'var(--otaru-parchment-dim)',
+                              fontSize: '0.72rem',
+                              letterSpacing: '0.08em',
+                              textTransform: 'uppercase',
+                              padding: '0.5rem 0.85rem',
+                              cursor: 'pointer',
+                              borderRadius: '2px',
+                              transition: 'all 0.2s ease',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.color = '#e57373';
+                              e.currentTarget.style.borderColor = '#e57373';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.color = 'var(--otaru-parchment-dim)';
+                              e.currentTarget.style.borderColor = 'var(--otaru-line-strong)';
+                            }}
                           >
-                            ✕
+                            Remove ✕
                           </button>
                         </div>
                       </div>

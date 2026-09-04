@@ -99,7 +99,7 @@ export default function AtelierOsPage() {
         {/* Today's Queue Card */}
         <div style={{ border: '1px solid var(--otaru-line)', padding: '1.5rem', backgroundColor: 'rgba(23,41,62,0.2)' }}>
           <span style={{ fontSize: '0.62rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--otaru-gold-dim)' }}>
-            TODAY'S WORKLOAD
+            TODAY&apos;S WORKLOAD
           </span>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
             <div>
