@@ -1,18 +1,24 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 /**
  * ArchivePageTransition
  * Smooth, calm dark veil transition between archival routes.
- * 400ms duration, zero jarring flashes.
+ * Skips initial mount to ensure initial page load animations remain crisp and undisturbed.
  */
 export function ArchivePageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const isFirstMount = useRef(true);
 
   useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+
     setIsTransitioning(true);
     const timer = setTimeout(() => {
       setIsTransitioning(false);
