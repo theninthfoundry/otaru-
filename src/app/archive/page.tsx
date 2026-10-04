@@ -3,12 +3,9 @@
 import React, { useState } from 'react';
 import { ArchiveFilters } from '@/components/archive/ArchiveFilters';
 import { ArchiveGrid } from '@/components/archive/ArchiveGrid';
-import { MilestonesGrid } from '@/components/archive/MilestonesGrid';
-import { SashikoGrid, VerticalKanjiStamp } from '@/components/ui/ArchivalBackgroundArt';
-import { ArtBackgroundPlate } from '@/components/ui/ArtBackgroundPlate';
 import { PRODUCT_CATALOG } from '@/lib/catalog';
 
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 12;
 const CATEGORIES = ['All', 'Outerwear', 'Tops', 'Trousers', 'Accessories'];
 
 export default function ArchivePage() {
@@ -43,54 +40,56 @@ export default function ArchivePage() {
     }))
     .filter((item) => Boolean(item.product));
 
+  const handleResetFilters = () => {
+    setActiveCategory('All');
+    setSort('newest');
+    setPage(1);
+  };
+
   return (
-    <div style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh' }}>
-      {/* Background Japanese Art Plates */}
-      <ArtBackgroundPlate artName="cherry-blossom" position="top-right" opacity={0.19} maxWidth="820px" maxHeight="620px" />
-      <ArtBackgroundPlate artName="great-wave" position="bottom-left" opacity={0.16} maxWidth="780px" maxHeight="560px" />
-
-      {/* Background Sashiko Grid */}
-      <SashikoGrid opacity={0.035} />
-
-      {/* Vertical Japanese Calligraphy Watermarks */}
-      <VerticalKanjiStamp text="永久保存録" subtext="PERMANENT RECORD INDEX" top="12%" right="2.5%" opacity={0.05} />
-      <VerticalKanjiStamp text="物象目録" subtext="412 OBJECT CATALOG" top="55%" left="2%" opacity={0.045} />
-
-      <div className="wrap page-wrap" style={{ paddingTop: '9rem', paddingBottom: '6rem', position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.4rem' }}>
-          <span className="eyebrow" style={{ margin: 0 }}>The archive</span>
-          <span style={{ fontSize: '0.62rem', letterSpacing: '0.18em', color: 'var(--otaru-gold-dim)', textTransform: 'uppercase', fontFamily: 'monospace' }}>
-            [ MMXXVI FULL INDEX ]
+    <div className="min-h-screen bg-[var(--paper)] text-[var(--ink)] pt-28 pb-24">
+      <div className="wrap">
+        
+        {/* Header */}
+        <div className="pb-10 border-b border-hairline">
+          <span className="font-mono text-xs tracking-widest uppercase text-[var(--ink-muted)] block mb-2">
+            Permanent Holdings
           </span>
+          <h1 className="display-l text-[var(--ink)] mb-3">
+            The archive.
+          </h1>
+          <p className="text-sm text-[var(--ink)]/65 max-w-[48ch] leading-relaxed">
+            Every garment ever produced, catalogued in chronological order. When a run concludes, the listing remains as an archival record.
+          </p>
         </div>
-        <h1 className="section-title">412 objects. Nothing reprinted.</h1>
-        <p className="section-lede">
-          Every artifact we&apos;ve ever released, cataloged and searchable. When a run sells out, the listing stays — as a record, not an invitation.
-        </p>
 
-        <ArchiveFilters
-          categories={CATEGORIES}
-          activeCategory={activeCategory}
-          onSelectCategory={(cat) => {
-            setActiveCategory(cat);
-            setPage(1);
-          }}
-          sort={sort}
-          onSelectSort={(s) => {
-            setSort(s);
-            setPage(1);
-          }}
-          resultCount={sorted.length}
-        />
+        {/* Sticky Filter Bar */}
+        <div className="sticky top-16 z-30 bg-[var(--paper)]/95 backdrop-blur-md py-4 border-b border-hairline">
+          <ArchiveFilters
+            categories={CATEGORIES}
+            activeCategory={activeCategory}
+            onSelectCategory={(cat) => {
+              setActiveCategory(cat);
+              setPage(1);
+            }}
+            sort={sort}
+            onSelectSort={(s) => {
+              setSort(s);
+              setPage(1);
+            }}
+            resultCount={sorted.length}
+          />
+        </div>
 
+        {/* 2-col mobile / 4-col desktop archive grid */}
         <ArchiveGrid
           products={productList}
           page={currentPage}
           totalPages={totalPages}
           onPageChange={(p) => setPage(p)}
+          onResetFilters={handleResetFilters}
         />
 
-        <MilestonesGrid />
       </div>
     </div>
   );

@@ -25,26 +25,29 @@ export function useSplitText<T extends HTMLElement = HTMLHeadingElement>(
     }
 
     const text = el.textContent || '';
+    let visualHTML = '';
 
     if (mode === 'chars') {
-      el.innerHTML = text
+      visualHTML = text
         .split('')
         .map(
           (char, i) =>
-            `<span class="split-char" data-char-index="${i}" style="display:inline-block">${char === ' ' ? '&nbsp;' : char}</span>`,
+            `<span class="split-char" aria-hidden="true" data-char-index="${i}" style="display:inline-block">${char === ' ' ? '&nbsp;' : char}</span>`,
         )
         .join('');
     } else if (mode === 'words') {
-      el.innerHTML = text
+      visualHTML = text
         .split(/\s+/)
         .map(
           (word, i) =>
-            `<span class="split-word" data-word-index="${i}" style="display:inline-block">${word}</span>`,
+            `<span class="split-word" aria-hidden="true" data-word-index="${i}" style="display:inline-block">${word}</span>`,
         )
-        .join('<span style="display:inline-block">&nbsp;</span>');
+        .join('<span aria-hidden="true" style="display:inline-block">&nbsp;</span>');
     } else if (mode === 'lines') {
-      el.innerHTML = `<span class="split-line" data-line-index="0" style="display:block">${text}</span>`;
+      visualHTML = `<span class="split-line" aria-hidden="true" data-line-index="0" style="display:block">${text}</span>`;
     }
+
+    el.innerHTML = `<span class="sr-only">${text}</span><span aria-hidden="true">${visualHTML}</span>`;
   }, [mode]);
 
   const restore = useCallback(() => {

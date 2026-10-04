@@ -1,24 +1,32 @@
 import React from 'react';
-import { HeroSection } from '@/components/home/HeroSection';
-import { StorySection } from '@/components/home/StorySection';
-import { CraftPairsSection } from '@/components/home/CraftPairsSection';
-import { DropSection } from '@/components/home/DropSection';
-import { ResidentsSection } from '@/components/home/ResidentsSection';
-import { FieldNotesSection } from '@/components/home/FieldNotesSection';
-import { ClosingSection } from '@/components/home/ClosingSection';
-import { Thread } from '@/components/ui/Thread';
+import { HeldHero } from '@/components/home/HeldHero';
+import { BatchSection } from '@/components/home/BatchSection';
+import { ChaptersScrollSnap } from '@/components/home/ChaptersScrollSnap';
+import { MaterialMacroSection } from '@/components/home/MaterialMacroSection';
+import { StudioStorySection } from '@/components/home/StudioStorySection';
+import { JournalThreeCards } from '@/components/home/JournalThreeCards';
+import { CircleEmailSection } from '@/components/home/CircleEmailSection';
 
+/**
+ * Homepage (Refined 7-Movement Order per Prompt 4)
+ * 1. Hero: "Held up to the window" (100svh backlit raw indigo cloth)
+ * 2. This week's batch: 4 products in asymmetric 12-col layout
+ * 3. Chapters: Full-width horizontal scroll-snap
+ * 4. Material study: One focused interactive swatch with macro zoom
+ * 5. Studio story: Quiet stone warehouse heritage
+ * 6. Journal: 3 editorial field note cards
+ * 7. Circle + email: Calm reservation
+ */
 export default function HomePage() {
   return (
     <>
-      <Thread />
-      <HeroSection />
-      <StorySection />
-      <CraftPairsSection />
-      <DropSection />
-      <ResidentsSection />
-      <FieldNotesSection />
-      <ClosingSection />
+      <HeldHero />
+      <BatchSection />
+      <ChaptersScrollSnap />
+      <MaterialMacroSection />
+      <StudioStorySection />
+      <JournalThreeCards />
+      <CircleEmailSection />
     </>
   );
 }

@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
-import { Shippori_Mincho, Hanken_Grotesk, DM_Mono, Tiro_Devanagari_Hindi } from 'next/font/google';
+import { Fraunces, Hanken_Grotesk, DM_Mono, Tiro_Devanagari_Hindi } from 'next/font/google';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import '@/styles/globals.css';
 import { site } from '../../content/site';
 
-const shippori = Shippori_Mincho({
-  weight: ['400'],
+const fraunces = Fraunces({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-display',
@@ -47,20 +46,24 @@ export const metadata: Metadata = {
   },
 };
 
+import { AppProviders } from '@/components/providers/AppProviders';
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${shippori.variable} ${hanken.variable} ${dm_mono.variable} ${tiro.variable}`}>
+    <html lang="en" className={`${fraunces.variable} ${hanken.variable} ${dm_mono.variable} ${tiro.variable}`}>
       <body>
         <a href="#main" className="skip-link">
           Skip to content
         </a>
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <SiteFooter />
+        <AppProviders>
+          <SiteHeader />
+          <main id="main">{children}</main>
+          <SiteFooter />
+        </AppProviders>
       </body>
     </html>
   );

@@ -24,7 +24,10 @@ export function CartLineItem({ line }: CartLineItemProps) {
       }}
     >
       <div style={{ width: '72px', flexShrink: 0 }}>
-        <ImagePlaceholder label={line.name} ratio="portrait" />
+        <ImagePlaceholder 
+          label={line.id ? `Artifact ${line.id.split('-')[0]} — ${line.name}` : line.name} 
+          ratio="portrait" 
+        />
       </div>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem' }}>

@@ -73,6 +73,11 @@ export function ScrollTextReveal({
         ...customStyle,
       }}
     >
+      {/* Screen reader accessible full text */}
+      <span className="sr-only">{text}</span>
+
+      {/* Visual animated word fragments */}
+      <span aria-hidden="true">
       {words.map((word, idx) => {
         // Stagger each word across the scroll progress range
         const wordStart = idx / words.length;
@@ -103,6 +108,7 @@ export function ScrollTextReveal({
           </span>
         );
       })}
+      </span>
     </div>
   );
 }

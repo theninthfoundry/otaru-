@@ -3,88 +3,144 @@
 import React from 'react';
 import Link from 'next/link';
 import { useCurrency } from '@/lib/currency';
-import { RevealOnScroll } from '@/components/ui/RevealOnScroll';
 
-export default function MembershipPage() {
+export function MembershipPage() {
   const { formatPrice } = useCurrency();
 
   return (
-    <div className="wrap page-wrap" style={{ paddingTop: '9rem', paddingBottom: '6rem' }}>
-      <RevealOnScroll>
-        <span className="eyebrow">Archive access</span>
-        <h1 className="section-title">Three tiers. One standard of care.</h1>
-        <p className="section-lede">
-          Membership gives you standing access to new chapters before public release, custom commissions, and a lifetime repair guarantee on every artifact.
-        </p>
-      </RevealOnScroll>
+    <div className="min-h-screen bg-[var(--paper)] text-[var(--ink)] pt-28 pb-24">
+      <div className="wrap">
+        
+        {/* Header */}
+        <div className="max-w-2xl pb-10 border-b border-hairline">
+          <span className="font-mono text-xs tracking-widest uppercase text-[var(--ink-muted)] block mb-2">
+            Archival Allocation
+          </span>
+          <h1 className="display-l text-[var(--ink)] mb-3">
+            Three tiers. One standard of care.
+          </h1>
+          <p className="text-sm text-[var(--ink)]/70 leading-relaxed">
+            Membership gives you standing priority to archival batches prior to public release, custom commissions, and a lifetime repair commitment on every garment.
+          </p>
+        </div>
 
-      <div
-        className="tier-grid reveal-stagger"
-        style={{
-          marginTop: '4rem',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '1.6rem',
-        }}
-      >
-        <RevealOnScroll staggerIndex={0}>
-          <div className="tier-card" style={{ border: '1px solid var(--otaru-line)', padding: '2.5rem', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        {/* 3 Calm Columns, Middle Tier Subtly Emphasised (Anchoring) + Honest Availability */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-12 items-stretch">
+          
+          {/* Tier 1: Vanguard */}
+          <div className="border border-hairline bg-[var(--paper-2)] p-8 flex flex-col justify-between">
             <div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', color: 'var(--otaru-parchment)', margin: 0 }}>Vanguard</h2>
-              <p style={{ marginTop: '0.8rem', color: 'var(--otaru-parchment-dim)', fontSize: '0.92rem', lineHeight: 1.6 }}>
-                Early access to new chapters, 48 hours before public release. First notification when archival runs release.
+              <div className="font-mono text-xs text-[var(--ink-muted)] uppercase tracking-wider mb-2">
+                Tier I · Open
+              </div>
+              <h2 className="font-display text-3xl text-[var(--ink)] mb-3">
+                Vanguard
+              </h2>
+              <p className="text-sm text-[var(--ink)]/75 leading-relaxed mb-6">
+                Standing notification 24 hours prior to public batch releases. Access to the digital field notes archive.
               </p>
+              <ul className="font-mono text-xs text-[var(--ink-muted)] space-y-2.5 pt-4 border-t border-hairline/60">
+                <li>✓ 24hr priority batch release</li>
+                <li>✓ Digital journal access</li>
+                <li>✓ Lifetime repair registration</li>
+              </ul>
             </div>
-            <div style={{ marginTop: '2rem' }}>
-              <p style={{ fontSize: '0.82rem', color: 'var(--otaru-gold-dim)', letterSpacing: '0.06em', marginBottom: '1rem' }}>
-                Free with an account
-              </p>
-              <Link href="/sign-in" className="btn-primary" style={{ display: 'block', width: '100%', textAlign: 'center', textDecoration: 'none' }}>
-                Join Vanguard
+
+            <div className="pt-8 mt-8 border-t border-hairline">
+              <span className="font-mono text-xs text-[var(--ink-muted)] block mb-3">
+                Complimentary with account
+              </span>
+              <Link
+                href="/sign-in"
+                className="block w-full py-3 text-center border border-hairline text-xs font-mono uppercase tracking-wider text-[var(--ink)] hover:border-[var(--ink)] transition-colors"
+              >
+                Join Vanguard →
               </Link>
             </div>
           </div>
-        </RevealOnScroll>
 
-        <RevealOnScroll staggerIndex={1}>
-          <div className="tier-card" style={{ border: '1px solid var(--otaru-gold-dim)', padding: '2.5rem', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', backgroundColor: 'var(--otaru-dusk)' }}>
+          {/* Tier 2: Archival Circle (Subtly Emphasised + Honest 112/150 Availability) */}
+          <div className="border-2 border-[var(--indigo)] bg-[var(--paper)] p-8 flex flex-col justify-between relative shadow-sm">
+            <span className="absolute -top-3 left-8 px-3 py-0.5 bg-[var(--indigo)] text-white font-mono text-[10px] uppercase tracking-widest">
+              Subtly Recommended · Honest Allocation
+            </span>
+
             <div>
-              <span style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--otaru-gold)' }}>Recommended</span>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', color: 'var(--otaru-parchment)', marginTop: '0.3rem' }}>Archival</h2>
-              <p style={{ marginTop: '0.8rem', color: 'var(--otaru-parchment-dim)', fontSize: '0.92rem', lineHeight: 1.6 }}>
-                Everything in Vanguard, plus guaranteed allocation on restocks, priority concierge, and archival milestone reservations.
+              <div className="font-mono text-xs text-[var(--indigo)] uppercase tracking-wider mb-2 font-medium">
+                Tier II · Limited Roster
+              </div>
+              <h2 className="font-display text-3xl text-[var(--ink)] mb-3">
+                Archival Circle
+              </h2>
+              <p className="text-sm text-[var(--ink)]/75 leading-relaxed mb-4">
+                Guaranteed size allocation on every batch, private courier dispatch, and annual complimentary studio boro repair.
               </p>
+
+              {/* Honest Scarcity Badge (Prompt 7 requirement) */}
+              <div className="p-3 bg-[var(--paper-2)] border border-hairline font-mono text-xs text-[var(--ink)] mb-6">
+                <span className="text-[var(--indigo)] font-semibold">112 of 150 places claimed</span>
+                <span className="text-[var(--ink-muted)] block text-[11px] mt-0.5">38 openings remain for 2026</span>
+              </div>
+
+              <ul className="font-mono text-xs text-[var(--ink)]/85 space-y-2.5 pt-4 border-t border-hairline/60">
+                <li>✓ 48hr priority access to live batches</li>
+                <li>✓ Guaranteed size reservation</li>
+                <li>✓ Annual canal re-waxing & boro repair</li>
+                <li>✓ Studio anniversary linen monograph</li>
+              </ul>
             </div>
-            <div style={{ marginTop: '2rem' }}>
-              <p style={{ fontSize: '0.82rem', color: 'var(--otaru-gold)', letterSpacing: '0.06em', marginBottom: '1rem' }}>
-                {formatPrice(120)} / year
-              </p>
-              <Link href="/sign-in" className="btn-primary" style={{ display: 'block', width: '100%', textAlign: 'center', textDecoration: 'none' }}>
-                Subscribe to Archival
+
+            <div className="pt-8 mt-8 border-t border-hairline">
+              <div className="flex items-baseline justify-between mb-3">
+                <span className="font-display text-2xl text-[var(--ink)]">{formatPrice(120)}</span>
+                <span className="font-mono text-xs text-[var(--ink-muted)]">/ annual</span>
+              </div>
+              <Link
+                href="/checkout?plan=archival"
+                className="block w-full py-3 text-center bg-[var(--indigo)] text-white text-xs font-mono uppercase tracking-wider hover:bg-[var(--indigo-hover)] transition-colors"
+              >
+                Claim Archival Place →
               </Link>
             </div>
           </div>
-        </RevealOnScroll>
 
-        <RevealOnScroll staggerIndex={2}>
-          <div className="tier-card" style={{ border: '1px solid var(--otaru-line)', padding: '2.5rem', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          {/* Tier 3: Atelier Circle */}
+          <div className="border border-hairline bg-[var(--paper-2)] p-8 flex flex-col justify-between">
             <div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', color: 'var(--otaru-parchment)', margin: 0 }}>Atelier</h2>
-              <p style={{ marginTop: '0.8rem', color: 'var(--otaru-parchment-dim)', fontSize: '0.92rem', lineHeight: 1.6 }}>
-                By application. Custom commissions, bespoke fittings in our Otaru warehouse, and direct line with our master cutters.
+              <div className="font-mono text-xs text-[var(--ink-muted)] uppercase tracking-wider mb-2">
+                Tier III · Private Roster
+              </div>
+              <h2 className="font-display text-3xl text-[var(--ink)] mb-3">
+                Atelier Circle
+              </h2>
+              <p className="text-sm text-[var(--ink)]/75 leading-relaxed mb-6">
+                Bespoke pattern cuts, private fittings at the Otaru canal stone warehouse, and direct commissions with our craftspeople.
               </p>
+              <ul className="font-mono text-xs text-[var(--ink-muted)] space-y-2.5 pt-4 border-t border-hairline/60">
+                <li>✓ Bespoke one-off garment commissions</li>
+                <li>✓ Private warehouse fittings in Otaru</li>
+                <li>✓ Archive reserve vault access</li>
+              </ul>
             </div>
-            <div style={{ marginTop: '2rem' }}>
-              <p style={{ fontSize: '0.82rem', color: 'var(--otaru-gold-dim)', letterSpacing: '0.06em', marginBottom: '1rem' }}>
-                By invitation
-              </p>
-              <a href="mailto:studio@otaru.in" className="btn-secondary" style={{ display: 'block', width: '100%', textAlign: 'center', textDecoration: 'none' }}>
-                Inquire for Atelier
+
+            <div className="pt-8 mt-8 border-t border-hairline">
+              <span className="font-mono text-xs text-[var(--ink-muted)] block mb-3">
+                By referral & application
+              </span>
+              <a
+                href="mailto:atelier@otaru.in"
+                className="block w-full py-3 text-center border border-hairline text-xs font-mono uppercase tracking-wider text-[var(--ink)] hover:border-[var(--ink)] transition-colors"
+              >
+                Inquire for Atelier →
               </a>
             </div>
           </div>
-        </RevealOnScroll>
+
+        </div>
+
       </div>
     </div>
   );
 }
+
+export default MembershipPage;

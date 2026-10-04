@@ -4,13 +4,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 /**
- * ArchivePageTransition
- * Smooth, calm dark veil transition between archival routes.
- * Skips initial mount to ensure initial page load animations remain crisp and undisturbed.
+ * ArchivePageTransition — "Indigo Dip"
+ * A full-screen indigo veil wipes up (400ms) concealing route swaps, then lifts (400ms)
+ * unhurried like dyed cloth lifted from a fermentation vat.
  */
 export function ArchivePageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [dipState, setDipState] = useState<'idle' | 'covering' | 'revealing'>('idle');
   const isFirstMount = useRef(true);
 
   useEffect(() => {
@@ -19,24 +19,55 @@ export function ArchivePageTransition({ children }: { children: React.ReactNode 
       return;
     }
 
-    setIsTransitioning(true);
-    const timer = setTimeout(() => {
-      setIsTransitioning(false);
-    }, 420);
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
 
-    return () => clearTimeout(timer);
+    // Trigger Indigo Dip: Wipe up -> Lift
+    setDipState('covering');
+    const swapTimer = setTimeout(() => {
+      setDipState('revealing');
+    }, 400);
+
+    const finishTimer = setTimeout(() => {
+      setDipState('idle');
+    }, 850);
+
+    return () => {
+      clearTimeout(swapTimer);
+      clearTimeout(finishTimer);
+    };
   }, [pathname]);
 
   return (
-    <div
-      style={{
-        opacity: isTransitioning ? 0.94 : 1,
-        transform: isTransitioning ? 'translateY(4px)' : 'none',
-        transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-        minHeight: '100vh',
-      }}
-    >
-      {children}
-    </div>
+    <>
+      {/* Indigo Dip Curtain */}
+      <div
+        aria-hidden="true"
+        className="fixed inset-0 z-[100] pointer-events-none bg-[var(--indigo)]"
+        style={{
+          transform:
+            dipState === 'idle'
+              ? 'translateY(100%)'
+              : dipState === 'covering'
+              ? 'translateY(0%)'
+              : 'translateY(-100%)',
+          transition:
+            dipState === 'idle'
+              ? 'none'
+              : 'transform 420ms cubic-bezier(0.22, 1, 0.36, 1)',
+        }}
+      />
+
+      {/* Main Page Content */}
+      <div
+        style={{
+          minHeight: '100vh',
+          opacity: dipState === 'covering' ? 0.8 : 1,
+          transition: 'opacity 300ms ease',
+        }}
+      >
+        {children}
+      </div>
+    </>
   );
 }

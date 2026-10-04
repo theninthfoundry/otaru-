@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/hooks/use-cart';
@@ -16,19 +17,20 @@ declare global {
 }
 
 const SANDBOX_METHODS = [
-  { id: 'upi', label: 'UPI', icon: '⟡', desc: 'Google Pay, PhonePe, Paytm' },
-  { id: 'card', label: 'Card', icon: '▭', desc: 'Visa, Mastercard, Amex' },
-  { id: 'netbanking', label: 'Netbanking', icon: '⌘', desc: 'SBI, HDFC, ICICI, Axis' },
-  { id: 'wallet', label: 'Wallet', icon: '◈', desc: 'Paytm, Amazon Pay' },
+  { id: 'upi', label: 'UPI Instant', icon: '⟡', desc: 'Google Pay, PhonePe, Paytm, BHIM' },
+  { id: 'card', label: 'Archival Card', icon: '▭', desc: 'Visa, Mastercard, Amex, JCB' },
+  { id: 'netbanking', label: 'Netbanking', icon: '⌘', desc: 'HDFC, ICICI, SBI, Axis' },
+  { id: 'wallet', label: 'Studio Wallet', icon: '◈', desc: 'Apple Pay, Vault Balance' },
 ];
 
 const SUBMISSION_STEPS = [
-  'Establishing cryptographic ledger tunnel...',
-  'Verifying inventory allocation at Kuroki & Biella studios...',
-  'Authorizing payment block on Razorpay network...',
-  'Sealing archival packaging & generating provenance serial...',
+  'Verifying garment reservation in Hokkaido ledger...',
+  'Reserving allocation from numbered run...',
+  'Authorizing 256-bit TLS encrypted transaction...',
+  'Affixing atelier wax seal & generating provenance serial...',
 ];
 
+type StepNumber = 1 | 2 | 3;
 type PaymentTab = 'razorpay' | 'sandbox';
 type SandboxStep = 'method' | 'details' | 'processing' | 'done' | 'failed';
 
@@ -38,14 +40,24 @@ export default function CheckoutPage() {
   const { user, isAuthenticated, openAuthModal } = useAuth();
   const razorpayScriptRef = useRef(false);
 
+  // Active Collapsible Step
+  const [currentStep, setCurrentStep] = useState<StepNumber>(1);
+
+  // Form Fields
   const [formData, setFormData] = useState({
     email: '',
+    phone: '',
     firstName: '',
     lastName: '',
     address: '',
     city: '',
+    state: '',
     zip: '',
+    country: 'India',
   });
+
+  // Touched state for onBlur validation
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   // Auto-populate customer information if authenticated
   useEffect(() => {
@@ -63,7 +75,6 @@ export default function CheckoutPage() {
   }, [isAuthenticated, user]);
 
   const [activeTab, setActiveTab] = useState<PaymentTab>('razorpay');
-
   const [sandboxOpen, setSandboxOpen] = useState(false);
   const [sandboxStep, setSandboxStep] = useState<SandboxStep>('method');
   const [selectedMethod, setSelectedMethod] = useState<string>('upi');
@@ -79,7 +90,6 @@ export default function CheckoutPage() {
 
   const [orderId, setOrderId] = useState<string | null>(null);
   const [internalOrderId, setInternalOrderId] = useState<string | null>(null);
-  const [, setCartToken] = useState<string | null>(null);
   const [nonce, setNonce] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [shippingEstimate, setShippingEstimate] = useState<{
@@ -90,12 +100,18 @@ export default function CheckoutPage() {
     estimatedDeliveryDate?: string;
   } | null>(null);
 
-  const idempotencyKey = useMemo(() => crypto.randomUUID(), []);
+  const idempotencyKey = useMemo(() => {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    return 'idemp-' + Math.random().toString(36).substring(2, 15);
+  }, []);
 
   const currency = 'USD';
   const shipping = subtotal > 300 ? 0 : 15;
   const total = subtotal + shipping;
 
+  // Pincode lookup on blur or 6-digit match
   useEffect(() => {
     const cleanZip = formData.zip.trim();
     if (/^\d{6}$/.test(cleanZip)) {
@@ -104,8 +120,8 @@ export default function CheckoutPage() {
         .then((data) => {
           if (data.serviceable) {
             setShippingEstimate(data);
-            if (!formData.city) {
-              setFormData((prev) => ({ ...prev, city: data.city }));
+            if (!formData.city && data.city) {
+              setFormData((prev) => ({ ...prev, city: data.city, state: data.state || prev.state }));
             }
           }
         })
@@ -115,6 +131,7 @@ export default function CheckoutPage() {
     }
   }, [formData.zip, formData.city]);
 
+  // Load Razorpay checkout script
   useEffect(() => {
     if (razorpayScriptRef.current) return;
     razorpayScriptRef.current = true;
@@ -123,563 +140,819 @@ export default function CheckoutPage() {
     script.async = true;
     document.body.appendChild(script);
     return () => {
-      document.body.removeChild(script);
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
     };
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const createOrder = useCallback(async () => {
-    const payload = {
-      cart: {
-        lines: items.map((line) => ({
-          id: line.id,
-          quantity: line.qty,
-          cost: {
-            totalAmount: {
-              amount: String(line.price * line.qty),
-              currencyCode: 'USD',
-            },
-          },
-          merchandise: {
-            id: line.id,
-            title: line.name,
-            price: {
-              amount: String(line.price),
-            },
-            product: {
-              id: line.id,
-              title: line.name,
-            },
-          },
-        })),
-      },
-      customer: formData,
-    };
-    const res = await fetch('/api/checkout/razorpay/order', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Idempotency-Key': idempotencyKey,
-      },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) throw new Error('Order creation failed.');
-    const data = await res.json();
-    if (data.cartToken) setCartToken(data.cartToken);
-    if (data.nonce) setNonce(data.nonce);
-    return data;
-  }, [items, formData, idempotencyKey]);
+  const handleBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
 
-  const runSubmissionOverlay = useCallback((onComplete: () => void) => {
+  // Validation checks
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim());
+  const isStep1Valid = isEmailValid;
+
+  const isStep2Valid =
+    formData.firstName.trim().length > 0 &&
+    formData.lastName.trim().length > 0 &&
+    formData.address.trim().length > 3 &&
+    formData.city.trim().length > 1 &&
+    formData.zip.trim().length >= 4;
+
+  const handleCompleteStep1 = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setTouched((prev) => ({ ...prev, email: true }));
+    if (isStep1Valid) {
+      setCurrentStep(2);
+    }
+  };
+
+  const handleCompleteStep2 = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setTouched((prev) => ({
+      ...prev,
+      firstName: true,
+      lastName: true,
+      address: true,
+      city: true,
+      zip: true,
+    }));
+    if (isStep2Valid) {
+      setCurrentStep(3);
+    }
+  };
+
+  const createOrder = useCallback(async () => {
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Idempotency-Key': idempotencyKey,
+        },
+        body: JSON.stringify({
+          items,
+          customer: {
+            email: formData.email,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            address: formData.address,
+            city: formData.city,
+            zip: formData.zip,
+          },
+          currency,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to initialize registry ledger order');
+      }
+
+      setOrderId(data.orderId);
+      setInternalOrderId(data.internalOrderId);
+      setNonce(data.nonce);
+      return data;
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Ledger initiation failed';
+      setError(message);
+      return null;
+    }
+  }, [formData, items, currency, idempotencyKey]);
+
+  const redirectToSuccess = useCallback((orderNum: string, finalTotal: number) => {
+    clearCart();
+    router.push(`/checkout/success?order=${orderNum}&total=${finalTotal}`);
+  }, [clearCart, router]);
+
+  const runSubmissionOverlay = (callback: () => void) => {
     setIsSubmitting(true);
     setSubmissionStep(0);
-    let step = 0;
     const interval = setInterval(() => {
-      if (step < SUBMISSION_STEPS.length - 1) {
-        step++;
-        setSubmissionStep(step);
-      } else {
+      setSubmissionStep((prev) => {
+        if (prev < SUBMISSION_STEPS.length - 1) return prev + 1;
         clearInterval(interval);
-        onComplete();
-      }
-    }, 900);
-  }, []);
-
-  const redirectToSuccess = useCallback((orderNum: string, amount: number) => {
-    clearCart();
-    router.push(`/checkout/success?orderId=${orderNum}&amount=${amount}&artNum=041`);
-  }, [clearCart, router]);
+        setTimeout(callback, 500);
+        return prev;
+      });
+    }, 700);
+  };
 
   const handleRazorpayPayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    try {
-      const orderData = await createOrder();
-      const { orderId: rzpOrderId, internalOrderId: intId, amount, mock } = orderData;
-      setOrderId(rzpOrderId);
-      setInternalOrderId(intId);
 
-      if (mock || !window.Razorpay) {
-        setActiveTab('sandbox');
-        setSandboxOpen(true);
-        setSandboxStep('method');
-        return;
-      }
+    let currentOrderId = orderId;
+    let currentNonce = nonce;
+    let currentInternalId = internalOrderId;
 
-      const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
-      const rzp = new window.Razorpay({
-        key: keyId,
-        amount,
-        currency: orderData.currency,
-        order_id: rzpOrderId,
-        name: 'Otaru — Garments Worth Keeping',
-        description: 'Registry Checkout — Archival Acquisition',
-        image: '/logo.svg',
-        theme: { color: '#1a1a18' },
-        prefill: {
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-          contact: '',
-        },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handler: async (response: any) => {
-          const verifyRes = await fetch('/api/checkout/razorpay/verify', {
+    if (!currentOrderId || !currentNonce) {
+      const order = await createOrder();
+      if (!order) return;
+      currentOrderId = order.orderId;
+      currentNonce = order.nonce;
+      currentInternalId = order.internalOrderId;
+    }
+
+    if (!window.Razorpay) {
+      setError('Payment gateway initializing. Please retry in a moment.');
+      return;
+    }
+
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+      amount: Math.round(total * 100),
+      currency: currency,
+      name: 'Otaru Atelier',
+      description: `Archival Acquisition ${currentInternalId || ''}`,
+      order_id: currentOrderId,
+      prefill: {
+        name: `${formData.firstName} ${formData.lastName}`.trim(),
+        email: formData.email,
+      },
+      theme: {
+        color: '#161616',
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      handler: async function (response: any) {
+        try {
+          const verifyRes = await fetch('/api/checkout/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
-              mock: false,
-              nonce: nonce ?? undefined,
+              internalOrderId: currentInternalId,
+              nonce: currentNonce,
             }),
           });
-          const verifyData = await verifyRes.json();
-          if (verifyData.verified) {
-            runSubmissionOverlay(() => {
-              const orderNum = intId.split('-').pop() || '1001';
-              redirectToSuccess(orderNum, total);
-            });
-          } else {
-            setError('Payment verification failed. Please contact support.');
-          }
+
+          if (!verifyRes.ok) throw new Error('Payment verification signature check failed');
+
+          runSubmissionOverlay(() => {
+            const orderNum = currentInternalId?.split('-').pop() || `${Math.floor(Math.random() * 900) + 1000}`;
+            redirectToSuccess(orderNum, total);
+          });
+        } catch (err: unknown) {
+          setError(err instanceof Error ? err.message : 'Verification failed');
+        }
+      },
+      modal: {
+        ondismiss: function () {
+          setError('Payment process was dismissed.');
         },
-        modal: {
-          ondismiss: () => {
-            setError('Payment was cancelled. Your cart is safe.');
-          },
-        },
-      });
+      },
+    };
+
+    try {
+      const rzp = new window.Razorpay(options);
       rzp.open();
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } catch {
+      setError('Unable to load payment terminal. You may test via the Registry Escrow Sandbox.');
     }
   };
 
-  const handleSandboxFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSandboxSimulate = async () => {
     setSandboxStep('processing');
     setSandboxProcessingStep(0);
 
-    let step = 0;
     const interval = setInterval(() => {
-      if (step < 3) {
-        step++;
-        setSandboxProcessingStep(step);
-      } else {
+      setSandboxProcessingStep((prev) => {
+        if (prev < 2) return prev + 1;
         clearInterval(interval);
-        setTimeout(async () => {
-          if (sandboxOutcome === 'success') {
-            let useOrderId = orderId;
-            let useInternalOrderId = internalOrderId;
-            if (!useOrderId) {
-              try {
-                const orderData = await createOrder();
-                useOrderId = orderData.orderId;
-                useInternalOrderId = orderData.internalOrderId;
-                setOrderId(useOrderId);
-                setInternalOrderId(useInternalOrderId);
-              } catch {
-                setSandboxStep('failed');
-                return;
-              }
-            }
+        return prev;
+      });
+    }, 700);
 
-            try {
-              await fetch('/api/checkout/razorpay/verify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  razorpay_order_id: useOrderId,
-                  razorpay_payment_id: `pay_MOCK_${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
-                  razorpay_signature: 'mock_signature_approved',
-                  mock: true,
-                }),
-              });
-            } catch {
-              // Sandbox fallback
-            }
+    setTimeout(async () => {
+      clearInterval(interval);
+      if (sandboxOutcome === 'success') {
+        let useInternalOrderId = internalOrderId;
+        if (!useInternalOrderId) {
+          const order = await createOrder();
+          useInternalOrderId = order?.internalOrderId;
+        }
 
-            setSandboxStep('done');
-            setTimeout(() => {
-              setSandboxOpen(false);
-              runSubmissionOverlay(() => {
-                const orderNum = useInternalOrderId?.split('-').pop() || `${Math.floor(Math.random() * 900) + 1000}`;
-                redirectToSuccess(orderNum, total);
-              });
-            }, 1800);
-          } else {
-            setSandboxStep('failed');
-          }
-        }, 600);
+        try {
+          await fetch('/api/checkout/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              internalOrderId: useInternalOrderId || `OT-ARC-001`,
+              mock: true,
+            }),
+          });
+        } catch {
+          // Fallback simulation
+        }
+
+        setSandboxStep('done');
+        setTimeout(() => {
+          setSandboxOpen(false);
+          runSubmissionOverlay(() => {
+            const orderNum = useInternalOrderId?.split('-').pop() || `${Math.floor(Math.random() * 900) + 1000}`;
+            redirectToSuccess(orderNum, total);
+          });
+        }, 1200);
+      } else {
+        setSandboxStep('failed');
       }
-    }, 750);
-  };
-
-  const resetSandbox = () => {
-    setSandboxStep('method');
-    setSandboxProcessingStep(0);
-    setUpiId('');
-    setCardNumber('');
-    setCardExpiry('');
-    setCardCvv('');
+    }, 2400);
   };
 
   if (items.length === 0) {
     return (
-      <div className="grid-container py-20 text-center space-y-4">
-        <h1 className="text-display-sm font-semibold text-otaru-ink">Registry Checkout</h1>
-        <p className="text-body-md text-otaru-ink-muted">No artifacts in your bag to acquire.</p>
-        <a
+      <main className="min-h-screen bg-[var(--otaru-canvas)] text-[var(--otaru-ink)] flex flex-col items-center justify-center p-6 text-center">
+        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--otaru-ink-subtle)] mb-3">
+          Atelier Archive
+        </span>
+        <h1 className="font-serif text-3xl font-light tracking-tight mb-3">Your acquisition bag is empty.</h1>
+        <p className="text-[13px] text-[var(--otaru-ink-muted)] max-w-sm mb-8 leading-relaxed">
+          Limited batch garments are catalogued in the permanent archive. Explore numbered runs from Kuroki and Biella.
+        </p>
+        <Link
           href="/archive"
-          className="inline-block px-6 py-2.5 bg-otaru-ink text-otaru-chalk text-xs font-semibold rounded-full hover:bg-otaru-ink-muted transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--otaru-ink)] text-[var(--otaru-chalk)] text-xs tracking-wider uppercase font-mono hover:bg-[var(--otaru-ink-light)] transition-colors"
         >
-          Return to Archive
-        </a>
-      </div>
+          Return to Archive →
+        </Link>
+      </main>
     );
   }
 
   return (
-    <>
-      <section id="checkout" aria-label="Checkout" className="py-12 md:py-20">
-        <div className="grid-container max-w-6xl">
-          <h1 className="text-display-md font-bold tracking-tight text-otaru-ink mb-10 border-b border-otaru-border/20 pb-4">
-            Registry Checkout
-          </h1>
+    <div className="min-h-screen bg-[var(--otaru-canvas)] text-[var(--otaru-ink)] selection:bg-[var(--otaru-indigo)] selection:text-white">
+      {/* Quiet Distraction-free Header */}
+      <header className="sticky top-0 z-40 bg-[var(--otaru-canvas)]/95 backdrop-blur-md border-b border-[var(--otaru-hairline)]">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-baseline gap-3 group">
+            <span className="font-serif text-lg tracking-[0.2em] font-normal group-hover:text-[var(--otaru-indigo)] transition-colors">
+              OTARU
+            </span>
+            <span className="font-mono text-[9px] uppercase tracking-widest text-[var(--otaru-ink-subtle)] hidden sm:inline">
+              Hokkaido Atelier
+            </span>
+          </Link>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            <div className="lg:col-span-7 space-y-10">
-              <div className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-otaru-border/30 pb-2">
-                    <h3 className="text-heading-sm font-semibold text-otaru-ink">
-                      01 &bull; Contact Info
-                    </h3>
-                    {isAuthenticated ? (
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-otaru-gold font-semibold flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-otaru-gold inline-block" />
-                        Sovereign Collector
-                      </span>
-                    ) : (
+          <div className="flex items-center gap-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block animate-pulse" />
+            <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--otaru-ink-subtle)]">
+              Secure Checkout
+            </span>
+            <span className="text-[10px] font-serif text-[var(--otaru-ink-subtle)] border border-[var(--otaru-hairline)] px-1.5 py-0.5 rounded-sm">
+              印
+            </span>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Checkout Grid */}
+      <main className="max-w-6xl mx-auto px-6 py-10 lg:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* Left Column: 3 Calm Collapsible Steps */}
+          <div className="lg:col-span-7 space-y-6">
+            {/* Step 1: Collector Contact */}
+            <div className="border border-[var(--otaru-hairline)] bg-[var(--otaru-chalk-warm)]/30 rounded-sm overflow-hidden transition-all duration-300">
+              <div
+                className={`p-5 flex items-center justify-between cursor-pointer select-none ${
+                  currentStep === 1 ? 'border-b border-[var(--otaru-hairline)] bg-[var(--otaru-canvas)]' : ''
+                }`}
+                onClick={() => setCurrentStep(1)}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-[11px] text-[var(--otaru-ink-subtle)]">01</span>
+                  <h2 className="text-sm font-medium tracking-tight">Collector Contact</h2>
+                  {currentStep > 1 && isStep1Valid && (
+                    <span className="font-mono text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-xs">
+                      Confirmed
+                    </span>
+                  )}
+                </div>
+                {currentStep !== 1 && isStep1Valid && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCurrentStep(1);
+                    }}
+                    className="font-mono text-[10px] uppercase tracking-wider text-[var(--otaru-ink-subtle)] hover:text-[var(--otaru-ink)] transition-colors underline underline-offset-4"
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+
+              {currentStep === 1 ? (
+                <div className="p-6 space-y-5">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-[var(--otaru-ink-muted)]">
+                      Order dispatch confirmation and provenance certificate will be issued to this email.
+                    </p>
+                    {!isAuthenticated && (
                       <button
                         type="button"
                         onClick={() => openAuthModal()}
-                        className="text-[11px] font-semibold text-otaru-gold uppercase tracking-wider hover:underline"
+                        className="font-mono text-[10px] uppercase tracking-wider text-[var(--otaru-indigo)] hover:underline shrink-0 ml-4"
                       >
-                        Sign In (SMS / OTP) →
+                        Sign In →
                       </button>
                     )}
                   </div>
 
                   {isAuthenticated && user && (
-                    <div className="p-3 bg-otaru-gold/10 border border-otaru-gold/30 rounded-xs flex items-center justify-between text-xs">
-                      <div>
-                        <span className="font-semibold text-otaru-ink">
-                          {user.name || user.email || user.phone}
-                        </span>
-                        <span className="text-otaru-ink-subtle ml-2">
-                          · {user.membershipTier || user.role || 'Archival'} Tier
-                        </span>
-                      </div>
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-otaru-gold">
-                        ✓ Authenticated
+                    <div className="p-3 bg-[var(--otaru-canvas)] border border-[var(--otaru-hairline)] rounded-xs flex items-center justify-between text-xs">
+                      <span className="font-medium">{user.name || user.email || 'Authenticated Collector'}</span>
+                      <span className="font-mono text-[10px] text-[var(--otaru-ink-subtle)] uppercase tracking-wider">
+                        Archive Member
                       </span>
                     </div>
                   )}
 
-                  <div className="flex flex-col gap-1">
-                    <label htmlFor="email" className="text-[10px] uppercase font-mono tracking-widest text-otaru-ink-subtle">
-                      Email Registry Address
-                    </label>
-                    <input
-                      id="email" name="email" type="email" required
-                      value={formData.email} onChange={handleInputChange}
-                      placeholder="email@example.com"
-                      className="bg-otaru-cream/30 border border-otaru-border rounded-xs px-4 py-3 text-body-sm focus:outline-none focus:border-otaru-ink transition-colors"
-                    />
-                  </div>
-                </div>
+                  <form onSubmit={handleCompleteStep1} className="space-y-4">
+                    <div>
+                      <label htmlFor="email" className="block font-mono text-[10px] uppercase tracking-wider text-[var(--otaru-ink-subtle)] mb-1.5">
+                        Email Address *
+                      </label>
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        onBlur={() => handleBlur('email')}
+                        placeholder="collector@domain.com"
+                        className={`w-full bg-[var(--otaru-canvas)] border rounded-xs px-3.5 py-2.5 text-xs text-[var(--otaru-ink)] placeholder-[var(--otaru-ink-subtle)]/40 focus:outline-none transition-colors ${
+                          touched.email && !isEmailValid
+                            ? 'border-[#8B263E]'
+                            : 'border-[var(--otaru-hairline)] focus:border-[var(--otaru-ink)]'
+                        }`}
+                      />
+                      {touched.email && !isEmailValid && (
+                        <p className="mt-1 font-mono text-[10px] text-[#8B263E]">
+                          Please enter a valid dispatch email.
+                        </p>
+                      )}
+                    </div>
 
-                <div className="space-y-4">
-                  <h3 className="text-heading-sm font-semibold text-otaru-ink border-b border-otaru-border/30 pb-2">
-                    02 &bull; Shipping Destination
-                  </h3>
+                    <button
+                      type="submit"
+                      disabled={!formData.email.trim()}
+                      className="w-full py-3 bg-[var(--otaru-ink)] text-[var(--otaru-chalk)] text-xs font-mono uppercase tracking-widest hover:bg-[var(--otaru-ink-light)] transition-colors disabled:opacity-40"
+                    >
+                      Continue to Delivery →
+                    </button>
+                  </form>
+                </div>
+              ) : (
+                <div className="px-5 py-3 text-xs text-[var(--otaru-ink-muted)] flex items-center justify-between bg-[var(--otaru-canvas)]/50">
+                  <span className="font-mono text-[11px] text-[var(--otaru-ink)]">{formData.email}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Step 2: Dispatch Address */}
+            <div className="border border-[var(--otaru-hairline)] bg-[var(--otaru-chalk-warm)]/30 rounded-sm overflow-hidden transition-all duration-300">
+              <div
+                className={`p-5 flex items-center justify-between cursor-pointer select-none ${
+                  currentStep === 2 ? 'border-b border-[var(--otaru-hairline)] bg-[var(--otaru-canvas)]' : ''
+                }`}
+                onClick={() => {
+                  if (isStep1Valid) setCurrentStep(2);
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-[11px] text-[var(--otaru-ink-subtle)]">02</span>
+                  <h2 className="text-sm font-medium tracking-tight">Dispatch Destination</h2>
+                  {currentStep > 2 && isStep2Valid && (
+                    <span className="font-mono text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-xs">
+                      Confirmed
+                    </span>
+                  )}
+                </div>
+                {currentStep !== 2 && isStep2Valid && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCurrentStep(2);
+                    }}
+                    className="font-mono text-[10px] uppercase tracking-wider text-[var(--otaru-ink-subtle)] hover:text-[var(--otaru-ink)] transition-colors underline underline-offset-4"
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+
+              {currentStep === 2 ? (
+                <form onSubmit={handleCompleteStep2} className="p-6 space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    {(['firstName', 'lastName'] as const).map((field) => (
-                      <div key={field} className="flex flex-col gap-1">
-                        <label htmlFor={field} className="text-[10px] uppercase font-mono tracking-widest text-otaru-ink-subtle">
-                          {field === 'firstName' ? 'First Name' : 'Last Name'}
-                        </label>
-                        <input
-                          id={field} name={field} type="text" required
-                          value={formData[field]} onChange={handleInputChange}
-                          placeholder={field === 'firstName' ? 'Jane' : 'Doe'}
-                          className="bg-otaru-cream/30 border border-otaru-border rounded-xs px-4 py-3 text-body-sm focus:outline-none focus:border-otaru-ink transition-colors"
-                        />
-                      </div>
-                    ))}
+                    <div>
+                      <label htmlFor="firstName" className="block font-mono text-[10px] uppercase tracking-wider text-[var(--otaru-ink-subtle)] mb-1.5">
+                        First Name *
+                      </label>
+                      <input
+                        id="firstName"
+                        name="firstName"
+                        type="text"
+                        required
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                        onBlur={() => handleBlur('firstName')}
+                        placeholder="Kenji"
+                        className={`w-full bg-[var(--otaru-canvas)] border rounded-xs px-3.5 py-2.5 text-xs text-[var(--otaru-ink)] focus:outline-none transition-colors ${
+                          touched.firstName && !formData.firstName.trim()
+                            ? 'border-[#8B263E]'
+                            : 'border-[var(--otaru-hairline)] focus:border-[var(--otaru-ink)]'
+                        }`}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="lastName" className="block font-mono text-[10px] uppercase tracking-wider text-[var(--otaru-ink-subtle)] mb-1.5">
+                        Last Name *
+                      </label>
+                      <input
+                        id="lastName"
+                        name="lastName"
+                        type="text"
+                        required
+                        value={formData.lastName}
+                        onChange={handleInputChange}
+                        onBlur={() => handleBlur('lastName')}
+                        placeholder="Takahashi"
+                        className={`w-full bg-[var(--otaru-canvas)] border rounded-xs px-3.5 py-2.5 text-xs text-[var(--otaru-ink)] focus:outline-none transition-colors ${
+                          touched.lastName && !formData.lastName.trim()
+                            ? 'border-[#8B263E]'
+                            : 'border-[var(--otaru-hairline)] focus:border-[var(--otaru-ink)]'
+                        }`}
+                      />
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <label htmlFor="address" className="text-[10px] uppercase font-mono tracking-widest text-otaru-ink-subtle">
-                      Street Address
+
+                  <div>
+                    <label htmlFor="address" className="block font-mono text-[10px] uppercase tracking-wider text-[var(--otaru-ink-subtle)] mb-1.5">
+                      Delivery Address *
                     </label>
                     <input
-                      id="address" name="address" type="text" required
-                      value={formData.address} onChange={handleInputChange}
-                      placeholder="123 Garment Ave, Apt 4"
-                      className="bg-otaru-cream/30 border border-otaru-border rounded-xs px-4 py-3 text-body-sm focus:outline-none focus:border-otaru-ink transition-colors"
+                      id="address"
+                      name="address"
+                      type="text"
+                      required
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      onBlur={() => handleBlur('address')}
+                      placeholder="Canal Warehouse No. 4, Ironai 1-chome"
+                      className={`w-full bg-[var(--otaru-canvas)] border rounded-xs px-3.5 py-2.5 text-xs text-[var(--otaru-ink)] focus:outline-none transition-colors ${
+                        touched.address && !formData.address.trim()
+                          ? 'border-[#8B263E]'
+                          : 'border-[var(--otaru-hairline)] focus:border-[var(--otaru-ink)]'
+                      }`}
                     />
                   </div>
+
                   <div className="grid grid-cols-2 gap-4">
-                    {(['city', 'zip'] as const).map((field) => (
-                      <div key={field} className="flex flex-col gap-1">
-                        <label htmlFor={field} className="text-[10px] uppercase font-mono tracking-widest text-otaru-ink-subtle">
-                          {field === 'city' ? 'City' : 'Postal Code / ZIP'}
-                        </label>
-                        <input
-                          id={field} name={field} type="text" required
-                          value={formData[field]} onChange={handleInputChange}
-                          placeholder={field === 'city' ? 'New Delhi' : '110001'}
-                          className="bg-otaru-cream/30 border border-otaru-border rounded-xs px-4 py-3 text-body-sm focus:outline-none focus:border-otaru-ink transition-colors"
-                        />
-                      </div>
-                    ))}
+                    <div>
+                      <label htmlFor="zip" className="block font-mono text-[10px] uppercase tracking-wider text-[var(--otaru-ink-subtle)] mb-1.5">
+                        Postal Code / Pincode *
+                      </label>
+                      <input
+                        id="zip"
+                        name="zip"
+                        type="text"
+                        required
+                        value={formData.zip}
+                        onChange={handleInputChange}
+                        onBlur={() => handleBlur('zip')}
+                        placeholder="110001 or 047-0031"
+                        className={`w-full bg-[var(--otaru-canvas)] border rounded-xs px-3.5 py-2.5 text-xs text-[var(--otaru-ink)] focus:outline-none transition-colors ${
+                          touched.zip && !formData.zip.trim()
+                            ? 'border-[#8B263E]'
+                            : 'border-[var(--otaru-hairline)] focus:border-[var(--otaru-ink)]'
+                        }`}
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="city" className="block font-mono text-[10px] uppercase tracking-wider text-[var(--otaru-ink-subtle)] mb-1.5">
+                        City *
+                      </label>
+                      <input
+                        id="city"
+                        name="city"
+                        type="text"
+                        required
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        onBlur={() => handleBlur('city')}
+                        placeholder="Otaru / New Delhi"
+                        className={`w-full bg-[var(--otaru-canvas)] border rounded-xs px-3.5 py-2.5 text-xs text-[var(--otaru-ink)] focus:outline-none transition-colors ${
+                          touched.city && !formData.city.trim()
+                            ? 'border-[#8B263E]'
+                            : 'border-[var(--otaru-hairline)] focus:border-[var(--otaru-ink)]'
+                        }`}
+                      />
+                    </div>
                   </div>
 
                   {shippingEstimate && (
-                    <div className="p-3 bg-otaru-gold/10 border border-otaru-gold/30 rounded-xs flex items-center justify-between text-xs">
-                      <span className="text-otaru-ink font-medium">
-                        ✓ {shippingEstimate.courierName || 'Express Courier'} · {shippingEstimate.city}, {shippingEstimate.state}
+                    <div className="p-3 bg-[var(--otaru-canvas)] border border-[var(--otaru-hairline)] rounded-xs flex items-center justify-between text-xs">
+                      <span className="text-[var(--otaru-ink)] font-mono text-[11px]">
+                        ✓ {shippingEstimate.courierName || 'Archival Express'} · {shippingEstimate.city}, {shippingEstimate.state}
                       </span>
-                      <span className="font-mono text-otaru-gold uppercase tracking-wider text-[11px]">
-                        Est. {shippingEstimate.estimatedDays || '2-3 Days'}
+                      <span className="font-mono text-[var(--otaru-indigo)] text-[10px] tracking-wider uppercase">
+                        Est. {shippingEstimate.estimatedDays || '3–5 days'}
                       </span>
                     </div>
                   )}
+
+                  <button
+                    type="submit"
+                    className="w-full mt-2 py-3 bg-[var(--otaru-ink)] text-[var(--otaru-chalk)] text-xs font-mono uppercase tracking-widest hover:bg-[var(--otaru-ink-light)] transition-colors"
+                  >
+                    Continue to Payment →
+                  </button>
+                </form>
+              ) : currentStep > 2 ? (
+                <div className="px-5 py-3 text-xs text-[var(--otaru-ink-muted)] flex items-center justify-between bg-[var(--otaru-canvas)]/50">
+                  <span className="font-mono text-[11px] text-[var(--otaru-ink)] truncate max-w-sm">
+                    {formData.firstName} {formData.lastName}, {formData.address}, {formData.city} {formData.zip}
+                  </span>
+                  {shippingEstimate && (
+                    <span className="font-mono text-[10px] text-[var(--otaru-ink-subtle)] shrink-0 ml-2">
+                      Est: {shippingEstimate.estimatedDays || '3–5 days'}
+                    </span>
+                  )}
+                </div>
+              ) : null}
+            </div>
+
+            {/* Step 3: Payment Method */}
+            <div className="border border-[var(--otaru-hairline)] bg-[var(--otaru-chalk-warm)]/30 rounded-sm overflow-hidden transition-all duration-300">
+              <div className={`p-5 flex items-center justify-between ${currentStep === 3 ? 'border-b border-[var(--otaru-hairline)] bg-[var(--otaru-canvas)]' : ''}`}>
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-[11px] text-[var(--otaru-ink-subtle)]">03</span>
+                  <h2 className="text-sm font-medium tracking-tight">Settlement & Escrow</h2>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <h3 className="text-heading-sm font-semibold text-otaru-ink border-b border-otaru-border/30 pb-2">
-                  03 &bull; Payment Authorization
-                </h3>
-
-                <div className="flex gap-2 p-1 bg-otaru-cream/50 border border-otaru-border/40 rounded-sm">
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('razorpay')}
-                    className={`flex-1 py-2.5 text-xs font-semibold uppercase tracking-widest rounded-xs transition-all duration-200 ${
-                      activeTab === 'razorpay'
-                        ? 'bg-otaru-ink text-otaru-chalk shadow-otaru-sm'
-                        : 'text-otaru-ink-muted hover:text-otaru-ink'
-                    }`}
-                  >
-                    Razorpay Secure
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('sandbox')}
-                    className={`flex-1 py-2.5 text-xs font-semibold uppercase tracking-widest rounded-xs transition-all duration-200 ${
-                      activeTab === 'sandbox'
-                        ? 'bg-otaru-ink text-otaru-chalk shadow-otaru-sm'
-                        : 'text-otaru-ink-muted hover:text-otaru-ink'
-                    }`}
-                  >
-                    Registry Escrow
-                  </button>
-                </div>
-
-                <AnimatePresence mode="wait">
-                  {activeTab === 'razorpay' && (
-                    <motion.div
-                      key="razorpay-tab"
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.2 }}
+              {currentStep === 3 && (
+                <div className="p-6 space-y-6">
+                  {/* Gateway selector tabs */}
+                  <div className="flex gap-2 p-1 bg-[var(--otaru-canvas)] border border-[var(--otaru-hairline)] rounded-xs">
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('razorpay')}
+                      className={`flex-1 py-2 text-[11px] font-mono uppercase tracking-wider rounded-xs transition-colors ${
+                        activeTab === 'razorpay'
+                          ? 'bg-[var(--otaru-ink)] text-[var(--otaru-chalk)]'
+                          : 'text-[var(--otaru-ink-muted)] hover:text-[var(--otaru-ink)]'
+                      }`}
                     >
-                      <div className="border border-otaru-border/40 rounded-sm p-5 bg-otaru-cream/20 space-y-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-[#072654] rounded-sm flex items-center justify-center">
-                            <span className="text-white font-bold text-xs">R</span>
-                          </div>
-                          <div>
-                            <p className="text-xs font-semibold text-otaru-ink">Razorpay Secure Checkout</p>
-                            <p className="text-[10px] text-otaru-ink-subtle font-mono">
-                              UPI · Cards · Netbanking · Wallets — 256-bit TLS encrypted
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex gap-2 flex-wrap">
-                          {['UPI', 'Visa', 'Mastercard', 'Netbanking', 'Wallets'].map((m) => (
-                            <span key={m} className="px-2 py-1 text-[9px] font-mono uppercase tracking-wider border border-otaru-border/50 rounded-xs text-otaru-ink-muted">
-                              {m}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="text-[10px] text-otaru-ink-subtle leading-relaxed">
-                          You will be redirected to a secure Razorpay modal. Your payment credentials are never stored on Otaru servers.
-                        </p>
-                      </div>
-
-                      {error && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="p-3 bg-red-50 border border-red-200 rounded-xs"
-                        >
-                          <p className="text-xs text-red-700 font-mono">{error}</p>
-                        </motion.div>
-                      )}
-
-                      <form onSubmit={handleRazorpayPayment}>
-                        <button
-                          type="submit"
-                          className="w-full mt-4 py-4 bg-otaru-ink text-otaru-chalk text-body-sm font-semibold hover:bg-otaru-ink-muted transition-colors rounded-xs shadow-otaru-md"
-                        >
-                          {`Pay ${formatPrice(total.toString(), currency)} via Razorpay →`}
-                        </button>
-                      </form>
-                    </motion.div>
-                  )}
-
-                  {activeTab === 'sandbox' && (
-                    <motion.div
-                      key="sandbox-tab"
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.2 }}
+                      Razorpay Gateway
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('sandbox')}
+                      className={`flex-1 py-2 text-[11px] font-mono uppercase tracking-wider rounded-xs transition-colors ${
+                        activeTab === 'sandbox'
+                          ? 'bg-[var(--otaru-ink)] text-[var(--otaru-chalk)]'
+                          : 'text-[var(--otaru-ink-muted)] hover:text-[var(--otaru-ink)]'
+                      }`}
                     >
-                      <div className="border border-otaru-border/40 rounded-sm p-5 bg-otaru-cream/20 space-y-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-otaru-stone rounded-sm flex items-center justify-center">
-                            <span className="text-otaru-chalk font-bold text-xs font-mono">⌖</span>
-                          </div>
-                          <div>
-                            <p className="text-xs font-semibold text-otaru-ink">Registry Escrow Simulator</p>
-                            <p className="text-[10px] text-otaru-ink-subtle font-mono">
-                              Interactive sandbox — No real payment is processed.
-                            </p>
-                          </div>
-                        </div>
+                      Studio Sandbox Simulator
+                    </button>
+                  </div>
 
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={() => setSandboxOutcome('success')}
-                            className={`flex-1 py-2 text-[10px] font-mono uppercase tracking-wider rounded-xs border transition-colors ${
-                              sandboxOutcome === 'success'
-                                ? 'bg-emerald-900 text-emerald-100 border-emerald-700'
-                                : 'border-otaru-border/40 text-otaru-ink-muted hover:border-otaru-ink'
-                            }`}
-                          >
-                            ✓ Simulate Success
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setSandboxOutcome('failure')}
-                            className={`flex-1 py-2 text-[10px] font-mono uppercase tracking-wider rounded-xs border transition-colors ${
-                              sandboxOutcome === 'failure'
-                                ? 'bg-red-950 text-red-200 border-red-800'
-                                : 'border-otaru-border/40 text-otaru-ink-muted hover:border-otaru-ink'
-                            }`}
-                          >
-                            ✗ Simulate Failure
-                          </button>
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => setSandboxOpen(true)}
-                        className="w-full mt-4 py-4 border-2 border-otaru-ink text-otaru-ink text-body-sm font-semibold hover:bg-otaru-ink hover:text-otaru-chalk transition-all rounded-xs"
+                  <AnimatePresence mode="wait">
+                    {activeTab === 'razorpay' && (
+                      <motion.div
+                        key="razorpay-tab"
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        className="space-y-4"
                       >
-                        Launch Escrow Simulator →
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                        <div className="border border-[var(--otaru-hairline)] rounded-xs p-4 bg-[var(--otaru-canvas)] space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium">Razorpay 256-bit Encrypted Checkout</span>
+                            <span className="font-mono text-[10px] text-[var(--otaru-ink-subtle)] uppercase">
+                              UPI · Cards · Netbanking
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-[var(--otaru-ink-muted)] leading-relaxed">
+                            You will complete your acquisition via the secure encrypted modal. Garment reservation is immediately recorded upon settlement.
+                          </p>
+                        </div>
+
+                        {error && (
+                          <div className="p-3 border border-[#8B263E]/30 bg-[#8B263E]/5 rounded-xs">
+                            <p className="text-[11px] font-mono text-[#8B263E]">{error}</p>
+                          </div>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={handleRazorpayPayment}
+                          className="w-full py-4 bg-[var(--otaru-ink)] text-[var(--otaru-chalk)] text-xs font-mono uppercase tracking-widest hover:bg-[var(--otaru-ink-light)] transition-colors"
+                        >
+                          Complete Acquisition — {formatPrice(total.toString(), currency)} →
+                        </button>
+                      </motion.div>
+                    )}
+
+                    {activeTab === 'sandbox' && (
+                      <motion.div
+                        key="sandbox-tab"
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        className="space-y-4"
+                      >
+                        <div className="border border-[var(--otaru-hairline)] rounded-xs p-4 bg-[var(--otaru-canvas)] space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium">Test Escrow Simulation Mode</span>
+                            <span className="font-mono text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-xs">
+                              Dev Ready
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-[var(--otaru-ink-muted)] leading-relaxed">
+                            Simulate full dispatch telemetry and receipt creation without charging a live card.
+                          </p>
+
+                          <div className="flex gap-2 pt-1">
+                            <button
+                              type="button"
+                              onClick={() => setSandboxOutcome('success')}
+                              className={`flex-1 py-1.5 text-[10px] font-mono uppercase tracking-wider rounded-xs border transition-colors ${
+                                sandboxOutcome === 'success'
+                                  ? 'bg-emerald-950 text-emerald-200 border-emerald-800'
+                                  : 'border-[var(--otaru-hairline)] text-[var(--otaru-ink-muted)]'
+                              }`}
+                            >
+                              ✓ Simulate Success
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setSandboxOutcome('failure')}
+                              className={`flex-1 py-1.5 text-[10px] font-mono uppercase tracking-wider rounded-xs border transition-colors ${
+                                sandboxOutcome === 'failure'
+                                  ? 'bg-[#8B263E] text-white border-[#8B263E]'
+                                  : 'border-[var(--otaru-hairline)] text-[var(--otaru-ink-muted)]'
+                              }`}
+                            >
+                              ✗ Simulate Failure
+                            </button>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => setSandboxOpen(true)}
+                          className="w-full py-4 border border-[var(--otaru-ink)] text-[var(--otaru-ink)] hover:bg-[var(--otaru-ink)] hover:text-[var(--otaru-chalk)] text-xs font-mono uppercase tracking-widest transition-colors"
+                        >
+                          Launch Escrow Simulator →
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <div className="pt-2 border-t border-[var(--otaru-hairline)] flex items-center justify-between text-[10px] font-mono text-[var(--otaru-ink-subtle)]">
+                    <span>TLS 256-BIT ENCRYPTION</span>
+                    <span>ATELIER SEAL [印]</span>
+                    <span>HOKKAIDO CANAL REGISTRY</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right Column: Order Summary */}
+          <div className="lg:col-span-5 bg-[var(--otaru-chalk-warm)]/40 border border-[var(--otaru-hairline)] p-6 md:p-8 rounded-sm sticky top-24 space-y-6">
+            <div className="flex items-baseline justify-between border-b border-[var(--otaru-hairline)] pb-4">
+              <h3 className="font-mono text-xs uppercase tracking-widest text-[var(--otaru-ink)]">
+                Acquisition Summary
+              </h3>
+              <span className="font-mono text-[10px] text-[var(--otaru-ink-subtle)]">
+                {items.length} {items.length === 1 ? 'Artifact' : 'Artifacts'}
+              </span>
+            </div>
+
+            {/* Line items list */}
+            <div className="divide-y divide-[var(--otaru-hairline)] max-h-72 overflow-y-auto pr-1 space-y-3">
+              {items.map((line) => (
+                <div key={line.id} className="flex gap-4 pt-3 first:pt-0">
+                  <div className="w-14 h-18 bg-[var(--otaru-canvas)] border border-[var(--otaru-hairline)] rounded-xs overflow-hidden shrink-0">
+                    <ImagePlaceholder ratio="portrait" label="" />
+                  </div>
+                  <div className="flex-1 flex flex-col justify-between text-xs py-0.5">
+                    <div>
+                      <span className="font-medium text-[var(--otaru-ink)] block line-clamp-1">
+                        {line.name}
+                      </span>
+                      <span className="text-[var(--otaru-ink-subtle)] font-mono text-[10px] block mt-0.5">
+                        {line.meta} {line.size ? `· ${line.size}` : ''}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-baseline font-mono text-[11px] mt-1">
+                      <span className="text-[var(--otaru-ink-subtle)]">Qty {line.qty}</span>
+                      <span className="text-[var(--otaru-ink)] font-medium">
+                        {formatPrice((line.price * line.qty).toString(), currency)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Totals Breakdown */}
+            <div className="border-t border-[var(--otaru-hairline)] pt-4 space-y-2.5 text-xs font-mono">
+              <div className="flex justify-between text-[var(--otaru-ink-muted)]">
+                <span>Subtotal</span>
+                <span>{formatPrice(subtotal.toString(), currency)}</span>
+              </div>
+              <div className="flex justify-between text-[var(--otaru-ink-muted)]">
+                <span>Hokkaido Archival Dispatch</span>
+                <span>{shipping === 0 ? 'Complimentary' : formatPrice(shipping.toString(), currency)}</span>
+              </div>
+              {shipping > 0 && (
+                <p className="text-[10px] text-[var(--otaru-ink-subtle)]">
+                  Complimentary worldwide dispatch on orders over $300.
+                </p>
+              )}
+              <div className="flex justify-between border-t border-[var(--otaru-hairline)] pt-3 text-sm font-semibold font-mono text-[var(--otaru-ink)]">
+                <span>Total</span>
+                <span>{formatPrice(total.toString(), currency)}</span>
               </div>
             </div>
 
-            <div className="lg:col-span-5 bg-otaru-chalk-warm/40 border border-otaru-border/60 p-6 md:p-8 rounded-sm self-start space-y-6 sticky top-8">
-              <h3 className="text-overline uppercase tracking-widest text-otaru-ink font-semibold text-xs border-b border-otaru-border/30 pb-3">
-                Order Details
-              </h3>
-
-              <div className="divide-y divide-otaru-border/20 max-h-[300px] overflow-y-auto pr-2 space-y-3">
-                {items.map((line) => (
-                  <div key={line.id} className="flex gap-4 pt-3 first:pt-0">
-                    <div className="w-14 h-18 bg-otaru-cream rounded-xs overflow-hidden shrink-0">
-                      <ImagePlaceholder ratio="portrait" label="" />
-                    </div>
-                    <div className="flex-1 flex flex-col justify-between text-xs">
-                      <div>
-                        <span className="font-medium text-otaru-ink block line-clamp-1">
-                          {line.name}
-                        </span>
-                        <span className="text-otaru-ink-subtle block font-mono text-[10px] mt-0.5">
-                          {line.meta} {line.size ? `· Size ${line.size}` : ''}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-baseline text-caption mt-1">
-                        <span className="text-otaru-ink-muted font-mono">Qty {line.qty}</span>
-                        <span className="font-semibold text-otaru-ink">
-                          {formatPrice(line.price * line.qty)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+            {/* Quiet Guarantee Notice */}
+            <div className="p-3 border border-[var(--otaru-hairline)] rounded-xs bg-[var(--otaru-canvas)]/40 text-[10px] font-mono text-[var(--otaru-ink-subtle)] space-y-1">
+              <div className="flex items-center gap-1.5 text-[var(--otaru-ink)]">
+                <span>印</span>
+                <span className="uppercase tracking-wider">Garment Provenance Guarantee</span>
               </div>
-
-              <div className="border-t border-otaru-border/40 pt-4 space-y-2 text-caption text-xs">
-                <div className="flex justify-between">
-                  <span className="text-otaru-ink-muted">Subtotal</span>
-                  <span className="font-medium text-otaru-ink">{formatPrice(subtotal.toString(), currency)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-otaru-ink-muted">Archival Courier</span>
-                  <span className="font-medium text-otaru-ink">
-                    {shipping === 0 ? 'Complementary' : formatPrice(shipping.toString(), currency)}
-                  </span>
-                </div>
-                <div className="flex justify-between border-t border-otaru-border/20 pt-3 text-body-sm font-semibold">
-                  <span className="text-otaru-ink">Total</span>
-                  <span className="text-otaru-ink">{formatPrice(total.toString(), currency)}</span>
-                </div>
-              </div>
-
-              <div className="border border-otaru-border/30 rounded-xs p-3 space-y-1 bg-otaru-cream/30">
-                <p className="text-[9px] font-mono uppercase tracking-widest text-otaru-ink-subtle">Otaru Security Core</p>
-                <div className="flex flex-col gap-1">
-                  {['CSRF Guard Active', 'Rate Limiter Active', 'TLS 256-bit Encrypted', 'Ledger Registry Sealed'].map((s) => (
-                    <span key={s} className="text-[10px] font-mono text-otaru-ink-muted flex items-center gap-1.5">
-                      <span className="text-emerald-600">✓</span> {s}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              <p className="leading-relaxed">
+                Includes numbered certificate of origin, spare mother-of-pearl hardware, and lifetime atelier repair entitlement.
+              </p>
             </div>
           </div>
         </div>
-      </section>
+      </main>
 
+      {/* Submission Step Modal Overlay */}
+      <AnimatePresence>
+        {isSubmitting && (
+          <motion.div
+            className="fixed inset-0 z-[100] bg-[var(--otaru-canvas)]/90 backdrop-blur-md flex items-center justify-center p-6 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="max-w-md space-y-6">
+              <span className="w-10 h-10 border border-[var(--otaru-ink)] rounded-full flex items-center justify-center mx-auto text-sm font-serif">
+                印
+              </span>
+              <div className="space-y-2">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--otaru-ink-subtle)]">
+                  Atelier Dispatch Protocol
+                </span>
+                <p className="font-serif text-lg tracking-tight text-[var(--otaru-ink)]">
+                  {SUBMISSION_STEPS[submissionStep]}
+                </p>
+              </div>
+              <div className="w-48 h-0.5 bg-[var(--otaru-hairline)] mx-auto overflow-hidden">
+                <motion.div
+                  className="h-full bg-[var(--otaru-indigo)]"
+                  initial={{ width: '0%' }}
+                  animate={{ width: `${((submissionStep + 1) / SUBMISSION_STEPS.length) * 100}%` }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Sandbox Simulator Modal */}
       <AnimatePresence>
         {sandboxOpen && (
           <>
             <motion.div
-              className="fixed inset-0 z-[60] bg-otaru-ink/80 backdrop-blur-md"
+              className="fixed inset-0 z-[60] bg-[var(--otaru-ink)]/70 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => { if (sandboxStep !== 'processing') setSandboxOpen(false); }}
+              onClick={() => {
+                if (sandboxStep !== 'processing') setSandboxOpen(false);
+              }}
             />
 
             <motion.div
@@ -688,26 +961,20 @@ export default function CheckoutPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <motion.div
-                className="pointer-events-auto w-full max-w-md bg-[#0f0f0e] border border-white/10 rounded-sm shadow-2xl overflow-hidden"
-                initial={{ scale: 0.95, y: 20 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.95, y: 20 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+              <div className="pointer-events-auto w-full max-w-md bg-[var(--otaru-canvas)] border border-[var(--otaru-hairline)] rounded-sm shadow-2xl overflow-hidden text-[var(--otaru-ink)]">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--otaru-hairline)]">
                   <div>
-                    <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-white/40 block">
+                    <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[var(--otaru-ink-subtle)] block">
                       Otaru Escrow Simulator
                     </span>
-                    <span className="text-white font-semibold text-sm tracking-tight">
+                    <span className="font-serif text-sm">
                       Registry Sandbox — {formatPrice(total.toString(), currency)}
                     </span>
                   </div>
                   {sandboxStep !== 'processing' && (
                     <button
                       onClick={() => setSandboxOpen(false)}
-                      className="text-white/40 hover:text-white transition-colors text-lg leading-none"
+                      className="text-[var(--otaru-ink-subtle)] hover:text-[var(--otaru-ink)] transition-colors font-mono text-sm"
                     >
                       ✕
                     </button>
@@ -716,340 +983,161 @@ export default function CheckoutPage() {
 
                 <div className="p-6">
                   {sandboxStep === 'method' && (
-                    <motion.div
-                      key="method"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className="space-y-3"
-                    >
-                      <p className="text-white/50 text-xs font-mono mb-4">Select payment method</p>
+                    <div className="space-y-3">
+                      <p className="text-xs font-mono text-[var(--otaru-ink-muted)] mb-3">
+                        Choose test payment channel
+                      </p>
                       {SANDBOX_METHODS.map((m) => (
                         <button
                           key={m.id}
                           type="button"
                           onClick={() => setSelectedMethod(m.id)}
-                          className={`w-full flex items-center gap-4 p-4 rounded-xs border transition-all duration-200 text-left ${
+                          className={`w-full flex items-center gap-4 p-3.5 rounded-xs border transition-all text-left ${
                             selectedMethod === m.id
-                              ? 'border-white/40 bg-white/10'
-                              : 'border-white/10 hover:border-white/20 bg-transparent'
+                              ? 'border-[var(--otaru-ink)] bg-[var(--otaru-chalk-warm)]/60'
+                              : 'border-[var(--otaru-hairline)] hover:border-[var(--otaru-ink-subtle)] bg-transparent'
                           }`}
                         >
-                          <span className="text-white/60 text-lg font-mono w-6 text-center">{m.icon}</span>
+                          <span className="text-base font-mono w-6 text-center">{m.icon}</span>
                           <div>
-                            <p className="text-white text-xs font-semibold">{m.label}</p>
-                            <p className="text-white/40 text-[10px] font-mono">{m.desc}</p>
+                            <p className="text-xs font-medium">{m.label}</p>
+                            <p className="text-[10px] font-mono text-[var(--otaru-ink-subtle)]">{m.desc}</p>
                           </div>
                           {selectedMethod === m.id && (
-                            <span className="ml-auto text-emerald-400 text-xs">●</span>
+                            <span className="ml-auto text-emerald-700 text-xs">●</span>
                           )}
                         </button>
                       ))}
+
                       <button
                         type="button"
                         onClick={() => setSandboxStep('details')}
-                        className="w-full mt-4 py-3 bg-white text-black text-xs font-semibold uppercase tracking-widest rounded-xs hover:bg-white/90 transition-colors"
+                        className="w-full mt-4 py-3 bg-[var(--otaru-ink)] text-[var(--otaru-chalk)] text-xs font-mono uppercase tracking-widest hover:bg-[var(--otaru-ink-light)] transition-colors"
                       >
-                        Continue →
+                        Enter Test Credentials →
                       </button>
-                    </motion.div>
+                    </div>
                   )}
 
                   {sandboxStep === 'details' && (
-                    <motion.form
-                      key="details"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      onSubmit={handleSandboxFormSubmit}
-                      className="space-y-4"
-                    >
-                      <div className="flex items-center gap-2 mb-4">
-                        <button
-                          type="button"
-                          onClick={() => setSandboxStep('method')}
-                          className="text-white/40 hover:text-white text-xs font-mono transition-colors"
-                        >
-                          ← Back
-                        </button>
-                        <span className="text-white/20 text-xs">|</span>
-                        <span className="text-white/50 text-xs font-mono">
-                          {SANDBOX_METHODS.find(m => m.id === selectedMethod)?.label} Details
-                        </span>
-                      </div>
-
-                      {selectedMethod === 'upi' && (
-                        <div className="space-y-3">
-                          <div className="flex flex-col gap-1.5">
-                            <label className="text-[10px] font-mono uppercase tracking-widest text-white/40">UPI ID</label>
-                            <input
-                              type="text"
-                              value={upiId}
-                              onChange={(e) => setUpiId(e.target.value)}
-                              placeholder="yourname@upi"
-                              className="bg-white/5 border border-white/15 rounded-xs px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-white/40 placeholder:text-white/20 transition-colors"
-                            />
-                          </div>
-                          <div className="flex items-center gap-3 p-3 border border-white/10 rounded-xs bg-white/5">
-                            <div className="w-16 h-16 bg-white rounded-xs flex items-center justify-center shrink-0">
-                              <div className="grid grid-cols-5 gap-px p-1.5">
-                                {Array.from({ length: 25 }).map((_, i) => (
-                                  <div
-                                    key={i}
-                                    className={`w-1.5 h-1.5 ${Math.random() > 0.5 ? 'bg-black' : 'bg-transparent'}`}
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                            <div>
-                              <p className="text-white text-[10px] font-semibold">Scan with any UPI app</p>
-                              <p className="text-white/40 text-[9px] font-mono mt-0.5">QR valid for 10 minutes</p>
-                              <p className="text-white/30 text-[9px] font-mono">Sandbox — Not a real QR</p>
-                            </div>
-                          </div>
+                    <div className="space-y-4">
+                      {selectedMethod === 'upi' ? (
+                        <div>
+                          <label className="block font-mono text-[10px] uppercase tracking-wider text-[var(--otaru-ink-subtle)] mb-1">
+                            Virtual Payment Address (VPA)
+                          </label>
+                          <input
+                            type="text"
+                            value={upiId}
+                            onChange={(e) => setUpiId(e.target.value)}
+                            placeholder="collector@okhdfcbank"
+                            className="w-full bg-[var(--otaru-canvas)] border border-[var(--otaru-hairline)] rounded-xs px-3 py-2 text-xs font-mono"
+                          />
                         </div>
-                      )}
-
-                      {selectedMethod === 'card' && (
+                      ) : (
                         <div className="space-y-3">
-                          <div className="flex flex-col gap-1.5">
-                            <label className="text-[10px] font-mono uppercase tracking-widest text-white/40">Card Number</label>
+                          <div>
+                            <label className="block font-mono text-[10px] uppercase tracking-wider text-[var(--otaru-ink-subtle)] mb-1">
+                              Card Number
+                            </label>
                             <input
                               type="text"
                               value={cardNumber}
                               onChange={(e) => setCardNumber(e.target.value)}
-                              placeholder="•••• •••• •••• ••••"
-                              maxLength={19}
-                              className="bg-white/5 border border-white/15 rounded-xs px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-white/40 placeholder:text-white/20 tracking-widest transition-colors"
+                              placeholder="4111 2222 3333 4444"
+                              className="w-full bg-[var(--otaru-canvas)] border border-[var(--otaru-hairline)] rounded-xs px-3 py-2 text-xs font-mono"
                             />
                           </div>
                           <div className="grid grid-cols-2 gap-3">
-                            <div className="flex flex-col gap-1.5">
-                              <label className="text-[10px] font-mono uppercase tracking-widest text-white/40">Expiry</label>
-                              <input
-                                type="text"
-                                value={cardExpiry}
-                                onChange={(e) => setCardExpiry(e.target.value)}
-                                placeholder="MM/YY"
-                                maxLength={5}
-                                className="bg-white/5 border border-white/15 rounded-xs px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-white/40 placeholder:text-white/20 transition-colors"
-                              />
-                            </div>
-                            <div className="flex flex-col gap-1.5">
-                              <label className="text-[10px] font-mono uppercase tracking-widest text-white/40">CVV</label>
-                              <input
-                                type="password"
-                                value={cardCvv}
-                                onChange={(e) => setCardCvv(e.target.value)}
-                                placeholder="•••"
-                                maxLength={4}
-                                className="bg-white/5 border border-white/15 rounded-xs px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-white/40 placeholder:text-white/20 transition-colors"
-                              />
-                            </div>
+                            <input
+                              type="text"
+                              value={cardExpiry}
+                              onChange={(e) => setCardExpiry(e.target.value)}
+                              placeholder="MM/YY"
+                              className="w-full bg-[var(--otaru-canvas)] border border-[var(--otaru-hairline)] rounded-xs px-3 py-2 text-xs font-mono"
+                            />
+                            <input
+                              type="text"
+                              value={cardCvv}
+                              onChange={(e) => setCardCvv(e.target.value)}
+                              placeholder="CVV"
+                              className="w-full bg-[var(--otaru-canvas)] border border-[var(--otaru-hairline)] rounded-xs px-3 py-2 text-xs font-mono"
+                            />
                           </div>
                         </div>
                       )}
 
-                      {(selectedMethod === 'netbanking' || selectedMethod === 'wallet') && (
-                        <div className="grid grid-cols-2 gap-2">
-                          {(selectedMethod === 'netbanking'
-                            ? ['SBI', 'HDFC', 'ICICI', 'Axis', 'Kotak', 'PNB']
-                            : ['Paytm', 'Amazon Pay', 'PhonePe', 'Mobikwik']
-                          ).map((bank) => (
-                            <button
-                              key={bank}
-                              type="button"
-                              className="p-3 border border-white/10 rounded-xs text-white/60 text-xs font-mono hover:border-white/30 hover:text-white hover:bg-white/5 transition-all text-center"
-                            >
-                              {bank}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-
-                      <div className={`px-3 py-2 rounded-xs text-[10px] font-mono ${
-                        sandboxOutcome === 'success'
-                          ? 'bg-emerald-900/40 text-emerald-300 border border-emerald-800/50'
-                          : 'bg-red-900/40 text-red-300 border border-red-800/50'
-                      }`}>
-                        {sandboxOutcome === 'success' ? '✓ Configured for success simulation' : '✗ Configured for failure simulation'}
+                      <div className="flex gap-2 pt-2">
+                        <button
+                          type="button"
+                          onClick={() => setSandboxStep('method')}
+                          className="px-4 py-2.5 border border-[var(--otaru-hairline)] text-xs font-mono"
+                        >
+                          Back
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleSandboxSimulate}
+                          className="flex-1 py-2.5 bg-[var(--otaru-ink)] text-[var(--otaru-chalk)] text-xs font-mono uppercase tracking-widest hover:bg-[var(--otaru-ink-light)] transition-colors"
+                        >
+                          Authorize Payment →
+                        </button>
                       </div>
-
-                      <button
-                        type="submit"
-                        className="w-full py-3 bg-white text-black text-xs font-semibold uppercase tracking-widest rounded-xs hover:bg-white/90 transition-colors mt-2"
-                      >
-                        Authorize Payment — {formatPrice(total.toString(), currency)}
-                      </button>
-                    </motion.form>
+                    </div>
                   )}
 
                   {sandboxStep === 'processing' && (
-                    <motion.div
-                      key="processing"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="space-y-6 py-2"
-                    >
-                      <div className="text-center space-y-1">
-                        <div className="w-10 h-10 border border-white/20 rounded-full mx-auto flex items-center justify-center">
-                          <motion.div
-                            className="w-5 h-5 border-2 border-white/60 border-t-transparent rounded-full"
-                            animate={{ rotate: 360 }}
-                            transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
-                          />
-                        </div>
-                        <p className="text-white font-semibold text-sm mt-3">Processing Authorization</p>
-                        <p className="text-white/40 text-[10px] font-mono">Do not close this window</p>
-                      </div>
-
-                      <div className="space-y-3 font-mono text-[11px]">
-                        {[
-                          'Establishing encrypted channel...',
-                          'Validating payment credentials...',
-                          'Communicating with gateway...',
-                          'Sealing authorization token...',
-                        ].map((step, idx) => {
-                          const isCompleted = sandboxProcessingStep > idx;
-                          const isActive = sandboxProcessingStep === idx;
-                          return (
-                            <div
-                              key={idx}
-                              className={`flex items-center gap-3 transition-opacity duration-300 ${
-                                isCompleted ? 'text-white/80' : isActive ? 'text-white' : 'text-white/20'
-                              }`}
-                            >
-                              <span className="w-4 shrink-0">
-                                {isCompleted ? '✓' : isActive ? (
-                                  <motion.span
-                                    animate={{ opacity: [1, 0, 1] }}
-                                    transition={{ repeat: Infinity, duration: 0.8 }}
-                                  >→</motion.span>
-                                ) : '·'}
-                              </span>
-                              <span className={isActive ? 'animate-pulse' : ''}>{step}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      <div className="w-full bg-white/10 h-px rounded-full overflow-hidden">
-                        <motion.div
-                          className="bg-white h-full"
-                          initial={{ width: '0%' }}
-                          animate={{ width: `${((sandboxProcessingStep + 1) / 4) * 100}%` }}
-                          transition={{ duration: 0.4 }}
-                        />
-                      </div>
-                    </motion.div>
+                    <div className="py-8 text-center space-y-4">
+                      <div className="w-8 h-8 border-2 border-[var(--otaru-indigo)] border-t-transparent rounded-full animate-spin mx-auto" />
+                      <p className="font-mono text-xs text-[var(--otaru-ink-muted)]">
+                        {sandboxProcessingStep === 0
+                          ? 'Contacting bank network...'
+                          : sandboxProcessingStep === 1
+                          ? 'Validating 3D Secure challenge...'
+                          : 'Signing ledger transfer...'}
+                      </p>
+                    </div>
                   )}
 
                   {sandboxStep === 'done' && (
-                    <motion.div
-                      key="done"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="text-center space-y-4 py-4"
-                    >
-                      <motion.div
-                        className="w-14 h-14 rounded-full border border-emerald-500/50 bg-emerald-900/30 flex items-center justify-center mx-auto"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                      >
-                        <span className="text-emerald-400 text-xl">✓</span>
-                      </motion.div>
-                      <div>
-                        <p className="text-white font-semibold text-sm">Authorization Sealed</p>
-                        <p className="text-white/40 text-[10px] font-mono mt-1">Redirecting to registry confirmation...</p>
-                      </div>
-                    </motion.div>
+                    <div className="py-8 text-center space-y-3">
+                      <span className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center mx-auto text-lg">
+                        ✓
+                      </span>
+                      <h4 className="font-serif text-base">Payment Authorized</h4>
+                      <p className="text-xs text-[var(--otaru-ink-muted)]">
+                        Preparing your official acquisition dispatch manifest...
+                      </p>
+                    </div>
                   )}
 
                   {sandboxStep === 'failed' && (
-                    <motion.div
-                      key="failed"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="text-center space-y-4 py-4"
-                    >
-                      <motion.div
-                        className="w-14 h-14 rounded-full border border-red-500/50 bg-red-900/30 flex items-center justify-center mx-auto"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                      >
-                        <span className="text-red-400 text-xl">✕</span>
-                      </motion.div>
-                      <div>
-                        <p className="text-white font-semibold text-sm">Authorization Failed</p>
-                        <p className="text-white/40 text-[10px] font-mono mt-1">
-                          Payment rejected — INSUFFICIENT_FUNDS or bank declined.
-                        </p>
-                      </div>
+                    <div className="py-8 text-center space-y-4">
+                      <span className="w-10 h-10 rounded-full bg-[#8B263E]/10 text-[#8B263E] flex items-center justify-center mx-auto text-lg">
+                        ✕
+                      </span>
+                      <h4 className="font-serif text-base text-[#8B263E]">Payment Declined</h4>
+                      <p className="text-xs text-[var(--otaru-ink-muted)]">
+                        Simulated card decline. You can retry with successful outcome.
+                      </p>
                       <button
                         type="button"
-                        onClick={resetSandbox}
-                        className="px-6 py-2.5 border border-white/20 text-white/70 text-xs font-mono rounded-xs hover:border-white/40 hover:text-white transition-colors"
+                        onClick={() => {
+                          setSandboxStep('method');
+                          setSandboxOutcome('success');
+                        }}
+                        className="px-6 py-2 bg-[var(--otaru-ink)] text-[var(--otaru-chalk)] text-xs font-mono uppercase"
                       >
                         Try Again
                       </button>
-                    </motion.div>
+                    </div>
                   )}
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
-
-      <AnimatePresence>
-        {isSubmitting && (
-          <motion.div
-            className="fixed inset-0 bg-otaru-ink/95 backdrop-blur-lg z-50 flex flex-col items-center justify-center text-otaru-chalk p-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="space-y-8 max-w-md w-full border border-otaru-chalk/10 p-8 rounded-sm bg-otaru-ink/40">
-              <div className="space-y-2 text-center">
-                <span className="text-overline uppercase tracking-widest text-otaru-chalk/40 text-[9px] font-mono block">
-                  Otaru Security Core
-                </span>
-                <h2 className="text-heading-md font-bold tracking-wider text-otaru-chalk uppercase font-mono">
-                  Sealing Order Registry
-                </h2>
-              </div>
-
-              <div className="space-y-4 font-mono text-[11px] text-left max-w-xs mx-auto">
-                {SUBMISSION_STEPS.map((step, idx) => {
-                  const isCompleted = submissionStep > idx;
-                  const isActive = submissionStep === idx;
-                  return (
-                    <div
-                      key={idx}
-                      className={`flex items-start gap-3 transition-opacity duration-300 ${
-                        isCompleted ? 'text-otaru-chalk/90' : isActive ? 'text-otaru-chalk' : 'text-otaru-chalk/20'
-                      }`}
-                    >
-                      <span className="w-4 shrink-0 font-bold">
-                        {isCompleted ? '✓' : isActive ? '→' : '•'}
-                      </span>
-                      <span className={isActive ? 'animate-pulse font-medium text-otaru-chalk' : ''}>{step}</span>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="w-full bg-otaru-chalk/10 h-0.5 rounded-full overflow-hidden">
-                <motion.div
-                  className="bg-otaru-chalk h-full"
-                  animate={{ width: `${((submissionStep + 1) / SUBMISSION_STEPS.length) * 100}%` }}
-                  transition={{ duration: 0.7, ease: 'easeOut' }}
-                />
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+    </div>
   );
 }

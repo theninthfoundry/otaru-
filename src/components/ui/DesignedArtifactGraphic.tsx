@@ -10,7 +10,21 @@ interface GraphicProps {
 
 export function DesignedArtifactGraphic({ id, label = '' }: GraphicProps) {
   // Determine artifact theme/type
-  const num = id || (label.match(/\b(0\d{2})\b/)?.[1] ?? '041');
+  let num = id || label.match(/\b(0\d{2})\b/)?.[1];
+  
+  if (!num) {
+    const l = label.toLowerCase();
+    if (l.includes('trouser') || l.includes('wrap') || l.includes('kiryu') || l.includes('kiryū')) num = '042';
+    else if (l.includes('overshirt') || l.includes('biratori')) num = '043';
+    else if (l.includes('tote') || l.includes('hemp') || l.includes('ōmi') || l.includes('omi')) num = '044';
+    else if (l.includes('deck') || l.includes('coat')) num = '038';
+    else if (l.includes('apron') || l.includes('tsukiji')) num = '037';
+    else if (l.includes('cap') || l.includes('watch') || l.includes('hakodate')) num = '036';
+    else if (l.includes('nemuro')) num = '035';
+    else if (l.includes('rain') || l.includes('shell') || l.includes('rishiri')) num = '034';
+    else if (l.includes('muffler') || l.includes('wakkanai')) num = '033';
+    else num = '041';
+  }
 
   const DEFAULT_THEME = {
     title: 'YAMA FIELD JACKET',

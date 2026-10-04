@@ -1,37 +1,58 @@
 :root {
-  /* ===== COLOUR ===== */
-  --paper:     #F4F0E8;
-  --paper-2:   #EBE5D8;
-  --ink:       #151515;
-  --indigo:    #1F2A44;
-  --madder:    #A8372C;
-  --turmeric:  #D9A21B;
-  --hairline:  rgba(21, 21, 21, 0.14);
+  /* ===== PALETTE (Minimal, Tactile) ===== */
+  /* Undyed-linen paper range */
+  --paper:            #EFEBE3;
+  --paper-2:          #E6E1D8;
+  --paper-subtle:     #DED8CD;
+
+  /* Sumi ink (not pure #000) */
+  --ink:              #161616;
+  --ink-muted:        rgba(22, 22, 22, 0.65);
+  --ink-subtle:       rgba(22, 22, 22, 0.40);
+
+  /* ONE Accent: Indigo (<5% of any screen) */
+  --indigo:           #1F2A44;
+  --indigo-hover:     #293859;
+  --indigo-active:    #161F33;
+
+  /* Surfaces: Hairline 1px at 12% ink */
+  --hairline:         rgba(22, 22, 22, 0.12);
+  --hairline-strong:  rgba(22, 22, 22, 0.20);
+
+  /* Legacy alias mappings for backward compatibility */
+  --madder:           #1F2A44; /* unified into indigo accent */
+  --turmeric:         rgba(22, 22, 22, 0.65);
+
+  /* Dark mode: Indigo-black */
+  --paper-dark:       #0B111B;
+  --paper-2-dark:     #121B2A;
+  --ink-dark:         #EAE5DC;
+  --hairline-dark:    rgba(234, 229, 220, 0.12);
 
   /* ===== TYPOGRAPHY ===== */
-  --font-display:     'Shippori Mincho', serif;
+  --font-display:     'Fraunces', 'Shippori Mincho', serif;
   --font-devanagari:  'Tiro Devanagari Hindi', serif;
-  --font-body:        'Hanken Grotesk', sans-serif;
+  --font-body:        'Hanken Grotesk', system-ui, -apple-system, sans-serif;
   --font-mono:        'DM Mono', monospace;
 
-  /* ===== TYPE SCALE (fluid) ===== */
-  --display-xl:   clamp(3.5rem, 9vw, 9rem);
-  --display-l:    clamp(2.5rem, 6vw, 5.5rem);
+  /* ===== FLUID TYPE SCALE ===== */
+  --display-xl:   clamp(3rem, 8.5vw, 9.5rem);
+  --display-l:    clamp(2.5rem, 5.5vw, 5rem);
   --h2:           clamp(1.75rem, 3vw, 2.75rem);
   --body:         1.0625rem;
   --caption:      0.75rem;
 
-  --lh-display:   0.95;
+  --lh-display:   0.98;
   --lh-body:      1.65;
   --measure:      62ch;
 
-  /* ===== SPACING SCALE ===== */
-  --sp-1: 4px;   --sp-2: 8px;   --sp-3: 12px;
-  --sp-4: 16px;  --sp-6: 24px;  --sp-8: 32px;
-  --sp-12: 48px; --sp-18: 72px; --sp-28: 112px;
+  /* ===== 4PX BASE SPACING SCALE ===== */
+  --sp-1: 4px;    --sp-2: 8px;    --sp-3: 12px;
+  --sp-4: 16px;   --sp-6: 24px;   --sp-8: 32px;
+  --sp-12: 48px;  --sp-18: 72px;  --sp-28: 112px;
   --sp-42: 168px;
 
-  /* ===== LAYOUT ===== */
+  /* ===== GRID & LAYOUT ===== */
   --grid-columns:  12;
   --grid-gutter:   24px;
   --grid-margin:   clamp(20px, 4vw, 64px);
@@ -44,9 +65,23 @@
   --dur-normal:    300ms;
   --dur-cinematic: 700ms;
 
-  /* ===== SHAPE ===== */
-  --radius:   0px;
-  --radius-input: 2px;
+  /* ===== SHAPE & SURFACES ===== */
+  --radius:        0px;
+  --radius-input:  2px;
+
+  /* ONLY shadow allowed across entire system is the cart drawer */
+  --shadow-drawer: -12px 0 40px rgba(11, 17, 27, 0.22);
+}
+
+[data-theme="dark"],
+.dark {
+  --paper:            var(--paper-dark);
+  --paper-2:          var(--paper-2-dark);
+  --ink:              var(--ink-dark);
+  --ink-muted:        rgba(234, 229, 220, 0.65);
+  --ink-subtle:       rgba(234, 229, 220, 0.40);
+  --hairline:         var(--hairline-dark);
+  --hairline-strong:  rgba(234, 229, 220, 0.22);
 }
 
 @media (max-width: 767px) {

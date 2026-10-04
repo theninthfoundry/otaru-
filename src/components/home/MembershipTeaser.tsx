@@ -43,7 +43,7 @@ const TIERS: Tier[] = [
     desc: 'Private commissions, bespoke fitting sessions, and direct access to our 4 craftsmen.',
     priceType: 'custom',
     priceLabel: 'By invitation or personal referral',
-    features: ['Custom pattern cuts', 'Private warehouse fittings in Otaru', 'Archive reserve archives'],
+    features: ['Custom pattern cuts', 'Private warehouse fittings in Otaru', 'Archive reserve access'],
   },
 ];
 
