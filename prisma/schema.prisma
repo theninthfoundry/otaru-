@@ -742,3 +742,17 @@ model IdempotencyRecord {
   @@index([key, email])
   @@map("idempotency_records")
 }
+
+model Resident {
+  id            String    @id @default(uuid())
+  number        Int       @unique @default(autoincrement())
+  email         String    @unique
+  igHandle      String?   @map("ig_handle")
+  city          String?
+  interest      String?   // comma-separated piece slugs
+  referralCode  String    @unique @map("referral_code")
+  referredBy    String?   @map("referred_by")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@map("residents")
+}
