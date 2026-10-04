@@ -1,193 +1,82 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
+import { site } from '../../../content/site';
+import { strings } from '../../../content/strings';
 
 export function SiteFooter() {
-  const [email, setEmail] = useState('');
-  const [isSubscribed, setIsSubscribed] = useState(false);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      setIsSubscribed(true);
-      setEmail('');
-    }
-  };
+  const year = new Date().getFullYear();
 
   return (
-    <footer
-      style={{
-        backgroundColor: 'var(--otaru-ink)',
-        borderTop: '1px solid var(--otaru-line)',
-        padding: '5.5rem 0 3rem',
-        position: 'relative',
-        zIndex: 10,
-        overflow: 'hidden',
-      }}
-    >
-      <div className="wrap" style={{ position: 'relative', zIndex: 2 }}>
-        {/* Top Ledger Headline */}
-        <div style={{ maxWidth: '460px', marginBottom: '3.5rem' }}>
-          <Link
-            href="/"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontStyle: 'italic',
-              fontSize: '2.2rem',
-              color: 'var(--otaru-parchment)',
-              textDecoration: 'none',
-              display: 'inline-block',
-            }}
-          >
-            Otaru
-          </Link>
-          <p
-            style={{
-              marginTop: '0.8rem',
-              fontSize: '1.05rem',
-              fontFamily: 'var(--font-display)',
-              fontStyle: 'italic',
-              color: 'var(--otaru-parchment)',
-              lineHeight: 1.5,
-            }}
-          >
-            Garments worth keeping.
-          </p>
-          <p
-            style={{
-              marginTop: '0.3rem',
-              fontSize: '0.86rem',
-              color: 'var(--otaru-parchment-dim)',
-              lineHeight: 1.7,
-            }}
-          >
-            A small archive of limited-run objects made with intention, botanical dyes, and permanent craftsmanship in Hokkaido.
-          </p>
-
-          <div style={{ marginTop: '1.8rem' }}>
-            {isSubscribed ? (
-              <p style={{ fontSize: '0.78rem', letterSpacing: '0.08em', color: 'var(--otaru-gold)', textTransform: 'uppercase' }}>
-                Recorded in our dispatch list.
-              </p>
-            ) : (
-              <form onSubmit={handleSubscribe} style={{ display: 'flex', maxWidth: '340px' }}>
-                <input
-                  type="email"
-                  required
-                  placeholder="Dispatch ledger email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  style={{
-                    flex: 1,
-                    backgroundColor: 'rgba(23, 41, 62, 0.4)',
-                    border: '1px solid var(--otaru-line-strong)',
-                    borderRight: 'none',
-                    padding: '0.65rem 0.9rem',
-                    fontSize: '0.78rem',
-                    color: 'var(--otaru-parchment)',
-                    outline: 'none',
-                    borderRadius: '2px 0 0 2px',
-                  }}
-                />
-                <button
-                  type="submit"
-                  className="btn-primary"
-                  style={{
-                    padding: '0 1.2rem',
-                    fontSize: '0.7rem',
-                    borderRadius: '0 2px 2px 0',
-                  }}
-                >
-                  Join
-                </button>
-              </form>
-            )}
+    <footer className="bg-paper-2 border-t border-hairline py-16 md:py-24">
+      <div className="wrap">
+        <div className="grid-otaru">
+          
+          {/* Lockup */}
+          <div className="col-span-full md:col-span-4 mb-12 md:mb-0">
+            <div className="flex items-center gap-4 mb-6">
+              <span className="font-display text-3xl text-ink/20">{strings.ja.house}</span>
+              <span className="w-px h-8 bg-hairline" />
+              <span className="font-devanagari text-4xl text-ink/20">{strings.hi.house}</span>
+            </div>
+            <p className="caption text-ink/50 max-w-[20ch]">
+              {site.description}
+            </p>
           </div>
+
+          {/* Social / Contact */}
+          <div className="col-span-6 md:col-span-4 mb-8 md:mb-0">
+            <h4 className="caption text-ink/40 mb-6">Connect</h4>
+            <ul className="space-y-4 font-mono text-sm">
+              <li>
+                <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-madder transition-colors">
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a href={`mailto:${site.founder.email}`} className="hover:text-madder transition-colors">
+                  Email Studio
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal / Info */}
+          <div className="col-span-6 md:col-span-4">
+            <h4 className="caption text-ink/40 mb-6">Information</h4>
+            <ul className="space-y-4 font-mono text-sm">
+              <li>
+                <Link href="/shipping-exchanges" className="hover:text-madder transition-colors">
+                  Shipping & Exchanges
+                </Link>
+              </li>
+              <li>
+                <Link href="/size-guide" className="hover:text-madder transition-colors">
+                  Indian Size Guide
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="hover:text-madder transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-madder transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
+            </ul>
+          </div>
+
         </div>
 
-        <hr className="hairline" style={{ marginBottom: '3rem' }} />
-
-        {/* 4 Clean Columns */}
-        <div
-          className="footer-grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '2.5rem',
-          }}
-        >
-          <div>
-            <h3 style={{ fontSize: '0.68rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--otaru-gold-dim)', marginBottom: '1.1rem' }}>
-              The Archive
-            </h3>
-            <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              <li><Link href="/archive" className="nav-link" style={{ fontSize: '0.82rem' }}>All Objects</Link></li>
-              <li><Link href="/#new-drops" className="nav-link" style={{ fontSize: '0.82rem' }}>Live Batch Run</Link></li>
-              <li><Link href="/#craft" className="nav-link" style={{ fontSize: '0.82rem' }}>Material Ledger</Link></li>
-              <li><Link href="/archive" className="nav-link" style={{ fontSize: '0.82rem' }}>Outerwear Pieces</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 style={{ fontSize: '0.68rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--otaru-gold-dim)', marginBottom: '1.1rem' }}>
-              Chapters
-            </h3>
-            <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              <li><Link href="/chapters" className="nav-link" style={{ fontSize: '0.82rem' }}>Chapter I · Kyoto Nights</Link></li>
-              <li><Link href="/chapters" className="nav-link" style={{ fontSize: '0.82rem' }}>Chapter II · Otaru Harbor</Link></li>
-              <li><Link href="/chapters" className="nav-link" style={{ fontSize: '0.82rem' }}>Chapter III · Quiet Interior</Link></li>
-              <li><Link href="/chapters" className="nav-link" style={{ fontSize: '0.82rem' }}>Chapter 0 · Prototypes</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 style={{ fontSize: '0.68rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--otaru-gold-dim)', marginBottom: '1.1rem' }}>
-              Studio & Craft
-            </h3>
-            <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              <li><Link href="/studio" className="nav-link" style={{ fontSize: '0.82rem' }}>Warehouse History</Link></li>
-              <li><Link href="/journal" className="nav-link" style={{ fontSize: '0.82rem' }}>Field Notes Journal</Link></li>
-              <li><Link href="/studio" className="nav-link" style={{ fontSize: '0.82rem' }}>Canal Dyehouse</Link></li>
-              <li><Link href="/studio" className="nav-link" style={{ fontSize: '0.82rem' }}>Lifetime Repairs</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 style={{ fontSize: '0.68rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--otaru-gold-dim)', marginBottom: '1.1rem' }}>
-              Concierge
-            </h3>
-            <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              <li><Link href="/profile" className="nav-link" style={{ fontSize: '0.82rem' }}>Collector Profile</Link></li>
-              <li><Link href="/track-order" className="nav-link" style={{ fontSize: '0.82rem' }}>Track Dispatch</Link></li>
-              <li><Link href="/membership" className="nav-link" style={{ fontSize: '0.82rem' }}>Archival Circle</Link></li>
-              <li><Link href="/studio" className="nav-link" style={{ fontSize: '0.82rem' }}>Contact Atelier</Link></li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom Coordinates & Legal */}
-        <div
-          style={{
-            marginTop: '3.5rem',
-            paddingTop: '1.5rem',
-            borderTop: '1px solid var(--otaru-line)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '1rem',
-            fontSize: '0.66rem',
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            color: 'var(--otaru-horizon)',
-          }}
-        >
-          <span>© MMXXVI OTARU · ESTABLISHED IN HOKKAIDO · 43.1907° N, 140.9947° E</span>
-          <div style={{ display: 'flex', gap: '1.5rem' }}>
-            <span>ALL OBJECTS PROTECTED</span>
-            <span>ZERO MASS-PRODUCTION</span>
-          </div>
+        {/* Bottom Bar */}
+        <div className="mt-24 pt-8 border-t border-hairline flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="caption text-ink/40">
+            &copy; {year} {site.name}. All rights reserved.
+          </p>
+          <p className="caption text-ink/30">
+            {site.legal.trademark}
+          </p>
         </div>
       </div>
     </footer>
