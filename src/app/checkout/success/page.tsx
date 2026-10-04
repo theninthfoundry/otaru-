@@ -1,104 +1,135 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { KanjiStamp } from '@/components/ui/ArchivalBackgroundArt';
 
 function SuccessContent() {
   const searchParams = useSearchParams();
-  const orderId = searchParams.get('orderId') || '1000';
-  const amount = searchParams.get('amount') || '0';
-  const artNum = searchParams.get('artNum') || '001';
+  const orderId = searchParams.get('order') || searchParams.get('orderId') || 'ARC-1042';
+  const amount = searchParams.get('total') || searchParams.get('amount') || '480';
+  const [password, setPassword] = useState('');
+  const [accountCreated, setAccountCreated] = useState(false);
 
-  const serialNumber = `OTARU-${artNum}-${orderId}`;
+  // Estimated dispatch calculation (2 days from today)
+  const dispatchDate = new Date();
+  dispatchDate.setDate(dispatchDate.getDate() + 2);
+  const formattedDispatch = dispatchDate.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
+  });
 
-  const handlePrint = () => {
-    if (typeof window !== 'undefined') {
-      window.print();
-    }
+  const handleCreateAccount = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!password) return;
+    setAccountCreated(true);
   };
 
   return (
-    <div className="relative bg-otaru-chalk border-4 border-double border-otaru-ink p-8 md:p-12 rounded-sm space-y-8 max-w-xl mx-auto shadow-2xl font-sans animate-fadeIn print:border-none print:shadow-none">
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.02] overflow-hidden select-none" aria-hidden="true">
-        <span className="text-[12rem] font-bold tracking-tighter uppercase font-mono">OTARU</span>
+    <div className="max-w-xl mx-auto py-16 px-6 sm:px-8 border border-white/20 bg-[#162238] shadow-2xl relative">
+      
+      {/* Archive Header & Signature Stamp */}
+      <div className="flex items-center justify-between pb-6 border-b border-white/15">
+        <div>
+          <span className="font-mono text-[10px] tracking-widest uppercase text-white/60 block mb-1">
+            Archival Entry Recorded
+          </span>
+          <h1 className="font-display text-3xl sm:text-4xl text-[#F4F0E8] font-normal">
+            NO. {orderId}
+          </h1>
+        </div>
+        <KanjiStamp text="印" style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#F4F0E8', width: '2rem', height: '2rem' }} />
       </div>
 
-      <div className="text-center space-y-3 border-b border-otaru-border/40 pb-6 relative z-10">
-        <div className="w-10 h-10 rounded-full border border-otaru-ink text-otaru-ink flex items-center justify-center font-light text-sm mx-auto mb-2 select-none">
-          ✓
-        </div>
-        <span className="text-[10px] uppercase tracking-[0.2em] text-otaru-ink font-semibold font-mono block">
-          Archival Vault Record Sealed
-        </span>
-        <h1 className="text-display-sm font-bold tracking-tight text-otaru-ink">
-          Order Registered
-        </h1>
-        <p className="text-caption text-xs text-otaru-ink-muted leading-relaxed max-w-sm mx-auto">
-          Your piece is officially registered inside the Otaru permanent ledger catalog.
+      {/* Handwritten-Style Studio Thank You Note */}
+      <div className="py-8 border-b border-white/15 space-y-3">
+        <p className="font-display text-xl sm:text-2xl text-[#EAE4D7] leading-snug italic">
+          “Thank you for securing this piece. We hold the cloth gently, and it is now recorded under your personal provenance.”
+        </p>
+        <p className="font-mono text-xs text-white/60">
+          — Otaru Canal Studio, Hokkaido MMXXVI
         </p>
       </div>
 
-      <div className="bg-otaru-cream/40 border border-otaru-border/70 p-5 rounded-xs space-y-3.5 text-caption text-xs relative z-10">
-        <div className="flex justify-between items-baseline border-b border-otaru-border/20 pb-2">
-          <span className="text-otaru-ink-muted">Registry Code</span>
-          <span className="font-mono font-semibold text-otaru-ink">#OTARU-{orderId}</span>
+      {/* Dispatch Telemetry */}
+      <div className="py-6 border-b border-white/15 font-mono text-xs space-y-2.5">
+        <div className="flex justify-between">
+          <span className="text-white/60">Registered Value</span>
+          <span className="text-white font-medium">${amount} USD</span>
         </div>
-        <div className="flex justify-between items-baseline border-b border-otaru-border/20 pb-2">
-          <span className="text-otaru-ink-muted">Authorized Value</span>
-          <span className="font-semibold text-otaru-ink">${amount} USD</span>
+        <div className="flex justify-between">
+          <span className="text-white/60">Estimated Studio Dispatch</span>
+          <span className="text-white">{formattedDispatch}</span>
         </div>
-        <div className="flex justify-between items-baseline">
-          <span className="text-otaru-ink-muted">Assigned Serial</span>
-          <span className="font-mono font-bold text-otaru-ink tracking-wider">{serialNumber}</span>
+        <div className="flex justify-between">
+          <span className="text-white/60">Repair Ledger Status</span>
+          <span className="text-white/90">Active · Lifetime Warranty</span>
         </div>
       </div>
 
-      <div className="space-y-3 pt-2 relative z-10 print:hidden">
+      {/* Actions: Track Dispatch */}
+      <div className="pt-6 space-y-4">
         <Link
           href={`/track-order?order=${orderId}`}
-          className="block w-full text-center py-3.5 bg-otaru-ink text-otaru-chalk text-xs font-semibold uppercase tracking-wider rounded-full hover:bg-otaru-ink-muted transition-colors"
+          className="block w-full py-4 bg-[#F4F0E8] text-[#1F2A44] font-mono text-xs uppercase tracking-widest text-center font-medium hover:bg-white transition-colors"
         >
-          Track Shipment
+          Track Dispatch Ledger →
         </Link>
-        <Link
-          href={`/verify?serial=${serialNumber}`}
-          className="block w-full text-center py-3.5 border border-otaru-border text-otaru-ink text-xs font-semibold uppercase tracking-wider rounded-full hover:border-otaru-ink transition-colors"
-        >
-          Verify NFC Provenance
-        </Link>
-        
-        <div className="grid grid-cols-2 gap-3 pt-2">
-          <button
-            onClick={handlePrint}
-            className="py-2.5 border border-otaru-border/60 text-otaru-ink-muted text-[10px] font-semibold uppercase tracking-wider rounded-full hover:text-otaru-ink hover:border-otaru-ink transition-colors font-mono"
-          >
-            Print Record
-          </button>
+
+        {/* Optional Account Creation with Single Password Field (Prompt 6 requirement) */}
+        {!accountCreated ? (
+          <div className="pt-6 mt-6 border-t border-white/15">
+            <span className="font-mono text-[10px] tracking-widest uppercase text-white/60 block mb-2">
+              Save Provenance Record
+            </span>
+            <p className="text-xs text-white/70 mb-4 leading-relaxed">
+              Create a collector account to manage lifetime repair requests and view your owned archive catalogue.
+            </p>
+            <form onSubmit={handleCreateAccount} className="flex gap-2">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Create password"
+                required
+                className="flex-1 bg-black/20 border border-white/20 px-3 py-2 text-xs font-mono text-white placeholder:text-white/40 focus:outline-none focus:border-white"
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 bg-white/15 hover:bg-white/25 border border-white/30 text-white font-mono text-xs uppercase tracking-wider transition-colors"
+              >
+                Save
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div className="p-3 bg-white/10 border border-white/20 text-xs font-mono text-white/90 text-center">
+            ✓ Collector account secured. Your repair ledger has been initialized.
+          </div>
+        )}
+
+        <div className="pt-4 text-center">
           <Link
             href="/archive"
-            className="py-2.5 border border-otaru-border/60 text-otaru-ink-muted text-center text-[10px] font-semibold uppercase tracking-wider rounded-full hover:text-otaru-ink hover:border-otaru-ink transition-colors font-mono"
+            className="font-mono text-xs text-white/50 hover:text-white uppercase tracking-wider transition-colors"
           >
-            Archive Index
+            ← Return to Archive Holdings
           </Link>
         </div>
       </div>
+
     </div>
   );
 }
 
 export default function CheckoutSuccessPage() {
   return (
-    <section id="checkout-success" aria-label="Order Success" className="py-16 md:py-24">
-      <div className="grid-container">
-        <Suspense fallback={
-          <div className="text-center py-10 text-otaru-ink-subtle text-caption">
-            Loading success details...
-          </div>
-        }>
-          <SuccessContent />
-        </Suspense>
-      </div>
+    <section className="min-h-screen bg-[var(--indigo)] text-[#F4F0E8] flex items-center justify-center py-20 px-4">
+      <Suspense fallback={<div className="font-mono text-xs text-white/60">Loading confirmation record...</div>}>
+        <SuccessContent />
+      </Suspense>
     </section>
   );
 }

@@ -6,7 +6,7 @@ export default function Loading() {
         <div className="mt-4 h-4 w-96 bg-otaru-cream rounded" />
         <div className="mt-2 h-4 w-80 bg-otaru-cream rounded" />
       </div>
-      <span className="visually-hidden">Loading...</span>
+      <span className="sr-only">Loading...</span>
     </div>
   );
 }

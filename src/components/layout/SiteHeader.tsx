@@ -1,327 +1,154 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { CartButton } from '@/components/cart/CartButton';
-import clsx from 'clsx';
+import { useCart } from '@/lib/cart';
+import { SearchModal } from '@/components/search/SearchModal';
 
-interface SiteHeaderProps {
-  onSearchOpen?: () => void;
-}
-
-export function SiteHeader({ onSearchOpen }: SiteHeaderProps) {
-  const [isSolid, setIsSolid] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+export function SiteHeader() {
   const pathname = usePathname();
+  const { openCart, itemCount } = useCart();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const isHome = pathname === '/';
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const y = window.scrollY || document.documentElement.scrollTop;
-      setIsSolid(y > 40 || !isHome);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isHome]);
-
-  const handleOpenSearch = () => {
-    if (onSearchOpen) {
-      onSearchOpen();
-    } else {
-      window.dispatchEvent(
-        new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true })
-      );
-    }
-  };
+  const navLinks = [
+    { label: 'Archive', href: '/archive' },
+    { label: 'Journal', href: '/journal' },
+    { label: 'Studio', href: '/studio' },
+  ];
 
   return (
     <>
-      <header
-        className={clsx('site-header', isSolid && 'is-solid')}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          padding: isSolid ? '0.85rem 0' : '1.25rem 0',
-          backgroundColor: isSolid ? 'rgba(11, 20, 32, 0.94)' : 'transparent',
-          backdropFilter: isSolid ? 'blur(12px)' : 'none',
-          WebkitBackdropFilter: isSolid ? 'blur(12px)' : 'none',
-          borderBottom: isSolid ? '1px solid var(--otaru-line)' : '1px solid transparent',
-          transition: 'all var(--duration-base) var(--ease-otaru)',
-        }}
-      >
-        <div className="wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-          <nav aria-label="Primary" className="hidden md:block">
-            <ul style={{ display: 'flex', gap: '1.9rem', listStyle: 'none', margin: 0, padding: 0 }}>
-              <li>
-                <Link
-                  href="/archive"
-                  className={clsx('nav-link', pathname === '/archive' && 'is-active')}
-                >
-                  Archive
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/journal"
-                  className={clsx('nav-link', pathname === '/journal' && 'is-active')}
-                >
-                  Journal
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/studio"
-                  className={clsx('nav-link', pathname === '/studio' && 'is-active')}
-                >
-                  Studio
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/chapters"
-                  className={clsx('nav-link', (pathname === '/chapters' || pathname === '/chapter') && 'is-active')}
-                >
-                  Chapters
-                </Link>
-              </li>
-            </ul>
-          </nav>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--paper)]/95 backdrop-blur-md border-b border-hairline transition-colors">
+        <div className="wrap h-16 flex items-center justify-between">
+          
+          {/* Left: Brand Wordmark */}
+          <div className="flex items-center gap-8">
+            <Link 
+              href="/" 
+              className="font-display text-xl tracking-tight hover:opacity-70 transition-opacity"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Otaru
+            </Link>
 
-          <Link
-            href="/"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontStyle: 'italic',
-              fontSize: '1.55rem',
-              letterSpacing: '0.02em',
-              color: 'var(--otaru-parchment)',
-              textDecoration: 'none',
-              transform: 'translateX(-1.5rem)',
-            }}
-          >
-            Otaru
-          </Link>
+            {/* Desktop Navigation Links (Archive, Journal, Studio) */}
+            <nav className="hidden md:flex items-center gap-7" aria-label="Main Navigation">
+              {navLinks.map((link) => {
+                const isActive = pathname.startsWith(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`text-sm tracking-wide transition-colors ${
+                      isActive 
+                        ? 'text-[var(--ink)] font-medium border-b border-[var(--ink)] pb-0.5' 
+                        : 'text-[var(--ink)]/70 hover:text-[var(--ink)]'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.1rem' }}>
-            {/* Search Trigger */}
+          {/* Right: Actions (Search, Account, Bag) */}
+          <div className="flex items-center gap-6">
             <button
               type="button"
-              className="icon-btn"
-              onClick={handleOpenSearch}
-              aria-label="Search the archive, command K"
+              onClick={() => setIsSearchOpen(true)}
+              className="text-sm tracking-wide text-[var(--ink)]/70 hover:text-[var(--ink)] transition-colors flex items-center gap-1.5"
+              aria-label="Search archive"
             >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-                <circle cx="11" cy="11" r="7" />
+              <span className="hidden sm:inline">Search</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+                <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </button>
 
-            {/* Account Link */}
             <Link
               href="/profile"
-              className="icon-btn"
-              aria-label="Sign in or view profile"
+              className="text-sm tracking-wide text-[var(--ink)]/70 hover:text-[var(--ink)] transition-colors hidden sm:block"
             >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-              </svg>
+              Account
             </Link>
 
-            {/* Cart Button */}
-            <CartButton />
-
-            {/* Mobile Hamburger */}
             <button
               type="button"
-              className="icon-btn md:hidden"
-              onClick={() => setIsMobileMenuOpen(true)}
-              aria-label="Open menu"
+              onClick={openCart}
+              className="text-sm tracking-wide text-[var(--ink)] hover:text-[var(--indigo)] transition-colors flex items-center gap-1 font-medium"
+              aria-label={`Open bag, ${itemCount} items`}
+            >
+              <span>Bag</span>
+              <span className="font-mono text-xs text-[var(--ink-muted)]">
+                ({itemCount})
+              </span>
+            </button>
+
+            {/* Mobile Toggle */}
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-1 text-[var(--ink)] focus:outline-none"
+              aria-label="Toggle mobile menu"
               aria-expanded={isMobileMenuOpen}
             >
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-                <line x1="3" y1="7" x2="21" y2="7" />
-                <line x1="3" y1="17" x2="21" y2="17" />
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                {isMobileMenuOpen ? (
+                  <>
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </>
+                ) : (
+                  <>
+                    <line x1="4" y1="8" x2="20" y2="8" />
+                    <line x1="4" y1="16" x2="20" y2="16" />
+                  </>
+                )}
               </svg>
             </button>
           </div>
+
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t border-hairline bg-[var(--paper)] px-6 py-8 flex flex-col gap-6">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="font-display text-2xl text-[var(--ink)]"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className="pt-4 border-t border-hairline flex flex-col gap-4">
+              <Link
+                href="/profile"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-sm tracking-wide text-[var(--ink)]/80"
+              >
+                Account
+              </Link>
+              <Link
+                href="/chapters"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-sm tracking-wide text-[var(--ink)]/60"
+              >
+                Chapters
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
-      {/* Mobile & Fullscreen Nav Drawer */}
-      <div
-        className={clsx('mobile-nav', isMobileMenuOpen && 'is-open')}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'var(--otaru-ink)',
-          zIndex: 150,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: 'clamp(2rem, 6vw, 5rem)',
-          transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(-100%)',
-          transition: 'transform var(--duration-base) var(--ease-otaru)',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Background Glowing Japanese Paper Lanterns Artwork */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            width: 'clamp(340px, 62vw, 900px)',
-            height: '100%',
-            pointerEvents: 'none',
-            zIndex: 0,
-            opacity: 0.45,
-            overflow: 'hidden',
-            userSelect: 'none',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 20%, rgba(0,0,0,1) 100%)',
-            maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 20%, rgba(0,0,0,1) 100%)',
-          }}
-        >
-          <Image
-            src="/api/art/lanterns"
-            alt="Japanese Paper Lanterns"
-            fill
-            unoptimized
-            style={{
-              objectFit: 'cover',
-              objectPosition: 'center right',
-              filter: 'contrast(1.18) saturate(1.1) brightness(0.95)',
-            }}
-          />
-        </div>
-
-        <button
-          type="button"
-          className="icon-btn"
-          onClick={() => setIsMobileMenuOpen(false)}
-          aria-label="Close menu"
-          style={{ position: 'absolute', top: '1.4rem', right: '1.4rem', zIndex: 10 }}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-            <line x1="4" y1="4" x2="20" y2="20" />
-            <line x1="20" y1="4" x2="4" y2="20" />
-          </svg>
-        </button>
-
-        {/* Navigation Links */}
-        <div
-          style={{
-            position: 'relative',
-            zIndex: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.6rem',
-            maxWidth: '450px',
-          }}
-        >
-          <span style={{ fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--otaru-gold-dim)', fontFamily: 'monospace' }}>
-            OTARU ARCHIVAL NAVIGATION
-          </span>
-
-          <Link
-            href="/archive"
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3rem)', color: 'var(--otaru-parchment)', textDecoration: 'none' }}
-          >
-            Archive
-          </Link>
-          <Link
-            href="/journal"
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3rem)', color: 'var(--otaru-parchment)', textDecoration: 'none' }}
-          >
-            Journal
-          </Link>
-          <Link
-            href="/studio"
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3rem)', color: 'var(--otaru-parchment)', textDecoration: 'none' }}
-          >
-            Studio
-          </Link>
-          <Link
-            href="/chapters"
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3rem)', color: 'var(--otaru-parchment)', textDecoration: 'none' }}
-          >
-            Chapters
-          </Link>
-          <Link
-            href="/profile"
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{ marginTop: '0.8rem', fontSize: '0.92rem', color: 'var(--otaru-gold)', textDecoration: 'none', letterSpacing: '0.1em', textTransform: 'uppercase' }}
-          >
-            Collector Dossier →
-          </Link>
-        </div>
-
-        {/* Right Corner Craft Watermark */}
-        <div
-          style={{
-            position: 'relative',
-            zIndex: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            gap: '1rem',
-            textAlign: 'right',
-            opacity: 0.45,
-          }}
-          className="hidden md:flex"
-        >
-          <div style={{ writingMode: 'vertical-rl', fontFamily: 'var(--font-display)', fontSize: '2.5rem', letterSpacing: '0.3em', color: 'var(--otaru-parchment)' }}>
-            小樽夜灯
-          </div>
-          <span style={{ fontSize: '0.62rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--otaru-gold-dim)', fontFamily: 'monospace' }}>
-            HOKKAIDO · 43.19° N
-          </span>
-        </div>
-      </div>
-
-      <style jsx>{`
-        .nav-link {
-          font-size: 0.74rem;
-          letter-spacing: var(--tracking-label);
-          text-transform: uppercase;
-          color: var(--otaru-parchment-dim);
-          padding: 0.3rem 0;
-          position: relative;
-          text-decoration: none;
-        }
-        .nav-link:hover, .nav-link.is-active {
-          color: var(--otaru-parchment);
-        }
-        .nav-link::after {
-          content: "";
-          position: absolute;
-          left: 0;
-          right: 100%;
-          bottom: -2px;
-          height: 1px;
-          background-color: var(--otaru-gold);
-          transition: right var(--duration-fast) var(--ease-otaru);
-        }
-        .nav-link:hover::after, .nav-link.is-active::after {
-          right: 0;
-        }
-      `}</style>
+      {/* Global Search Dialog */}
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );
 }

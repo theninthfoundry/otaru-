@@ -2,43 +2,45 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: '404 — Page Not Found | Otaru',
+  title: '404 — Archival Record Not Found | Otaru',
   description: 'The requested page or artifact could not be found in the Otaru archive.',
 };
 
 export default function NotFound() {
   return (
-    <section id="not-found" aria-label="Page not found" className="min-h-[70vh] flex flex-col justify-center py-20">
-      <div className="grid-container max-w-xl text-center space-y-6">
-        <span className="text-overline uppercase tracking-widest text-otaru-ink-subtle text-[11px] font-semibold">
-          Error 404 — Uncharted Location
+    <section className="min-h-[80vh] flex flex-col justify-center items-center py-28 bg-[var(--paper)] text-[var(--ink)]">
+      <div className="wrap max-w-lg text-center space-y-6">
+        <span className="font-mono text-xs uppercase tracking-widest text-[var(--ink-muted)] block">
+          404 · Uncharted Holding
         </span>
-        <h1 className="text-display-xl font-bold tracking-tight text-otaru-ink">
-          Page Not Found
+        <h1 className="display-l text-[var(--ink)]">
+          Object not found.
         </h1>
-        <p className="text-body-lg text-otaru-ink-muted font-light leading-relaxed">
-          The artifact or story you are seeking does not exist in the current catalog. It may have been archived or relocated.
+        <p className="text-sm text-[var(--ink)]/70 leading-relaxed max-w-[40ch] mx-auto">
+          The artifact, chapter, or dispatch ledger you are looking for has been relocated or concluded its archival sequence.
         </p>
 
-        <div className="pt-6 flex flex-wrap items-center justify-center gap-4 text-body-sm font-medium">
+        <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
           <Link
             href="/"
-            className="px-8 py-3 bg-otaru-ink text-otaru-chalk rounded-full hover:bg-otaru-ink-muted transition-colors"
+            className="px-6 py-3 bg-[var(--indigo)] text-white text-xs font-mono uppercase tracking-wider hover:bg-[var(--indigo-hover)] transition-colors"
           >
-            Return to Studio Home
+            Return to Studio
           </Link>
           <Link
             href="/archive"
-            className="px-8 py-3 bg-transparent border border-otaru-border text-otaru-ink rounded-full hover:border-otaru-ink transition-colors"
+            className="px-6 py-3 border border-hairline bg-[var(--paper-2)] text-[var(--ink)] text-xs font-mono uppercase tracking-wider hover:border-[var(--ink)] transition-colors"
           >
-            Explore Archive
+            Explore Archive Holdings
           </Link>
         </div>
 
-        <div className="pt-8 border-t border-otaru-border/40 text-caption text-xs text-otaru-ink-subtle flex items-center justify-center gap-6">
-          <Link href="/chapter" className="hover:text-otaru-ink underline">Chapters</Link>
-          <Link href="/journal" className="hover:text-otaru-ink underline">Journal</Link>
-          <Link href="/track-order" className="hover:text-otaru-ink underline">Track Order</Link>
+        <div className="pt-8 border-t border-hairline flex items-center justify-center gap-6 font-mono text-xs text-[var(--ink-muted)]">
+          <Link href="/chapters" className="hover:text-[var(--ink)] transition-colors">Chapters</Link>
+          <span>·</span>
+          <Link href="/journal" className="hover:text-[var(--ink)] transition-colors">Field Notes</Link>
+          <span>·</span>
+          <Link href="/track-order" className="hover:text-[var(--ink)] transition-colors">Track Dispatch</Link>
         </div>
       </div>
     </section>

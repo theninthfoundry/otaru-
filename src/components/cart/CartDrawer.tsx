@@ -1,16 +1,20 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useCart } from '@/lib/cart';
+import { useCart, CartLineItem as LineItemType } from '@/lib/cart';
 import { useCurrency } from '@/lib/currency';
 import { CartLineItem } from './CartLineItem';
+import { PRODUCT_CATALOG } from '@/lib/catalog';
 import clsx from 'clsx';
 
+const FREE_SHIPPING_THRESHOLD_USD = 250;
+
 export function CartDrawer() {
-  const { items, isOpen, closeCart, subtotal } = useCart();
+  const { items, isOpen, closeCart, subtotal, addToCart } = useCart();
   const { formatPrice } = useCurrency();
   const drawerRef = useRef<HTMLDivElement>(null);
+  const [lastRemoved, setLastRemoved] = useState<LineItemType | null>(null);
 
   useEffect(() => {
     const handleKeyDown = (ev: KeyboardEvent) => {
@@ -32,99 +36,130 @@ export function CartDrawer() {
     };
   }, [isOpen, closeCart]);
 
+  const handleUndoRemove = () => {
+    if (lastRemoved) {
+      addToCart(lastRemoved);
+      setLastRemoved(null);
+    }
+  };
+
+  const progressPct = Math.min(100, Math.floor((subtotal / FREE_SHIPPING_THRESHOLD_USD) * 100));
+  const diffToFree = Math.max(0, FREE_SHIPPING_THRESHOLD_USD - subtotal);
+
+  // 3 Curated Suggestions for empty state
+  const suggestions = ['041', '042', '043'];
+
   return (
     <>
+      {/* Backdrop */}
       <div
-        className={clsx('cart-overlay', isOpen && 'is-open')}
+        className={clsx(
+          'fixed inset-0 z-[110] bg-[var(--ink)]/65 backdrop-blur-sm transition-opacity duration-300',
+          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        )}
         onClick={closeCart}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 110,
-          backgroundColor: 'rgba(7, 13, 20, 0.75)',
-          backdropFilter: 'blur(4px)',
-          opacity: isOpen ? 1 : 0,
-          pointerEvents: isOpen ? 'auto' : 'none',
-          transition: 'opacity var(--duration-base) var(--ease-otaru)',
-        }}
       />
+
+      {/* 440px Drawer Panel (Right) */}
       <div
         ref={drawerRef}
-        className={clsx('cart-drawer', isOpen && 'is-open')}
         role="dialog"
         aria-modal="true"
-        aria-label="Your Archive"
+        aria-label="Archive Bag"
+        className={clsx(
+          'fixed top-0 right-0 bottom-0 z-[120] w-full max-w-[440px] bg-[var(--paper)] text-[var(--ink)] border-l border-hairline flex flex-col transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]',
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        )}
         style={{
-          position: 'fixed',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 120,
-          width: 'min(440px, 100vw)',
-          backgroundColor: 'var(--otaru-ink)',
-          borderLeft: '1px solid var(--otaru-line)',
-          display: 'flex',
-          flexDirection: 'column',
-          transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+          boxShadow: 'var(--shadow-drawer)',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '1.4rem 1.8rem',
-            borderBottom: '1px solid var(--otaru-line)',
-            position: 'relative',
-            zIndex: 2,
-          }}
-        >
+        {/* Header */}
+        <div className="p-6 border-b border-hairline flex items-center justify-between">
           <div>
-            <span className="eyebrow" style={{ fontSize: '0.62rem' }}>Archival Tray</span>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', margin: '0.2rem 0 0', color: 'var(--otaru-parchment)' }}>
-              Your Archive
+            <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--ink-muted)] block">
+              Allocation Tray
+            </span>
+            <h2 className="font-display text-2xl text-[var(--ink)]">
+              Your archive.
             </h2>
           </div>
           <button
             type="button"
-            className="icon-btn"
             onClick={closeCart}
-            aria-label="Close archive tray"
+            aria-label="Close archive bag"
+            className="p-2 font-mono text-sm hover:opacity-60 transition-opacity"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-              <line x1="4" y1="4" x2="20" y2="20" />
-              <line x1="20" y1="4" x2="4" y2="20" />
-            </svg>
+            ✕
           </button>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '0 1.8rem' }}>
-          {items.length === 0 ? (
+        {/* Free Shipping Goal Bar */}
+        <div className="px-6 py-3 bg-[var(--paper-2)] border-b border-hairline text-xs font-mono">
+          <div className="flex justify-between items-center mb-1.5 text-[var(--ink-muted)]">
+            <span>
+              {diffToFree === 0
+                ? '✓ Complimentary Dispatch Unlocked'
+                : `${formatPrice(diffToFree)} away from complimentary dispatch`}
+            </span>
+            <span>{progressPct}%</span>
+          </div>
+          <div className="w-full h-1 bg-[var(--hairline)] overflow-hidden">
             <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
-                height: '100%',
-                padding: '3rem 0',
-              }}
-            >
-              <span style={{ fontSize: '1.8rem', color: 'var(--otaru-gold-dim)', marginBottom: '0.8rem' }}>◇</span>
-              <p style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: '1.1rem', color: 'var(--otaru-parchment)' }}>Your archive is unoccupied.</p>
-              <p style={{ marginTop: '0.6rem', maxWidth: '28ch', fontSize: '0.84rem', lineHeight: 1.6, color: 'var(--otaru-parchment-dim)' }}>
-                Objects reserved here hold for 30 minutes before returning to the permanent catalog.
+              className="h-full bg-[var(--indigo)] transition-all duration-300"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Line Items List / Empty State */}
+        <div className="flex-1 overflow-y-auto px-6 divide-y divide-hairline">
+          {items.length === 0 ? (
+            <div className="py-12 text-center">
+              <span className="font-mono text-2xl text-[var(--ink-muted)] block mb-3">◇</span>
+              <p className="font-display text-xl text-[var(--ink)] mb-1">Your archive is unoccupied.</p>
+              <p className="text-xs text-[var(--ink-muted)] max-w-[28ch] mx-auto mb-8 leading-relaxed">
+                Garments held here remain reserved for 30 minutes before returning to catalog inventory.
               </p>
-              <button
-                type="button"
-                onClick={closeCart}
-                className="cta-link"
-                style={{ marginTop: '1.8rem' }}
-              >
-                Continue Exploring <span aria-hidden="true">→</span>
-              </button>
+
+              {/* 3 Empty State Suggestions */}
+              <div className="text-left border-t border-hairline pt-6">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--ink-muted)] block mb-3">
+                  Suggested for Batch 01
+                </span>
+                <div className="space-y-3">
+                  {suggestions.map((id) => {
+                    const prod = PRODUCT_CATALOG[id];
+                    if (!prod) return null;
+                    return (
+                      <div
+                        key={id}
+                        className="flex items-center justify-between p-2.5 border border-hairline bg-[var(--paper-2)] text-xs"
+                      >
+                        <div>
+                          <p className="font-medium text-[var(--ink)]">{prod.name}</p>
+                          <p className="font-mono text-[10px] text-[var(--ink-muted)]">{formatPrice(prod.price)}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            addToCart({
+                              id: `${id}-M`,
+                              name: prod.name,
+                              meta: prod.material.split(',')[0],
+                              price: prod.price,
+                              size: 'M',
+                            });
+                          }}
+                          className="px-3 py-1 bg-[var(--indigo)] text-white font-mono text-[10px] uppercase hover:bg-[var(--indigo-hover)]"
+                        >
+                          + Add
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           ) : (
             <div>
@@ -135,31 +170,40 @@ export function CartDrawer() {
           )}
         </div>
 
+        {/* Undo Toast when an item is removed */}
+        {lastRemoved && (
+          <div className="m-4 p-3 bg-[var(--ink)] text-white text-xs font-mono flex items-center justify-between">
+            <span>Removed {lastRemoved.name}</span>
+            <button
+              type="button"
+              onClick={handleUndoRemove}
+              className="text-[var(--paper)] underline uppercase tracking-wider"
+            >
+              Undo
+            </button>
+          </div>
+        )}
+
+        {/* Footer Subtotal & Checkout CTA */}
         {items.length > 0 && (
-          <div style={{ borderTop: '1px solid var(--otaru-line)', padding: '1.4rem 1.8rem', backgroundColor: 'rgba(23, 41, 62, 0.25)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.92rem', color: 'var(--otaru-parchment-dim)' }}>
-              <span>Subtotal</span>
-              <span style={{ color: 'var(--otaru-parchment)', fontWeight: 500 }}>{formatPrice(subtotal)}</span>
+          <div className="p-6 border-t border-hairline bg-[var(--paper-2)]">
+            <div className="flex justify-between items-baseline mb-1">
+              <span className="font-mono text-xs uppercase tracking-wider text-[var(--ink-muted)]">Subtotal</span>
+              <span className="font-display text-2xl text-[var(--ink)] font-normal">{formatPrice(subtotal)}</span>
             </div>
-            <p style={{ marginTop: '0.3rem', fontSize: '0.7rem', color: 'var(--otaru-horizon)', margin: 0 }}>
-              Direct studio dispatch from Hokkaido · Lifetime repair guaranteed.
+            <p className="font-mono text-[10px] text-[var(--ink-muted)] mb-4">
+              Taxes calculated at checkout · Free returns within 14 days
             </p>
             <Link
               href="/checkout"
               onClick={closeCart}
-              className="btn-primary"
-              style={{
-                display: 'block',
-                marginTop: '1.1rem',
-                width: '100%',
-                padding: '0.95rem',
-                textAlign: 'center',
-                textDecoration: 'none',
-                letterSpacing: '0.12em',
-              }}
+              className="block w-full py-4 text-center bg-[var(--indigo)] text-white text-xs font-mono uppercase tracking-widest hover:bg-[var(--indigo-hover)] transition-colors mb-3"
             >
-              Proceed to Archival Checkout
+              Proceed to Secure Checkout →
             </Link>
+            <p className="text-[10px] text-center text-[var(--ink-muted)] leading-tight">
+              Direct studio dispatch from Hokkaido · Registered under lifetime repair ledger.
+            </p>
           </div>
         )}
       </div>

@@ -93,14 +93,64 @@ export function ImagePlaceholder({
   let tagText = 'KYOTO NIGHTS · SUKUMO 14x';
   let sealText = '京';
 
-  if (label.includes('Chapter II') || label.includes('Otaru Harbor') || label.includes('Harbor')) {
+  const l = label.toLowerCase();
+
+  // Swatch-specific handling
+  if (ratio === 'swatch' || l.includes('swatch')) {
+    if (l.includes('indigo') || l.includes('twill') || l.includes('tokushima')) {
+      artSrc = '/api/art/cherry-blossom';
+      tagText = 'TOKUSHIMA · INDIGO SUKUMO';
+      sealText = '藍';
+    } else if (l.includes('hemp') || l.includes('canvas') || l.includes('ōmi') || l.includes('omi')) {
+      artSrc = '/api/art/poppies';
+      tagText = 'ŌMI · RAW HEMP CANVAS';
+      sealText = '麻';
+    } else if (l.includes('wool') || l.includes('biratori')) {
+      artSrc = '/api/art/great-wave';
+      tagText = 'BIRATORI · BOILED WOOL';
+      sealText = '羊';
+    } else if (l.includes('silk') || l.includes('kiryū') || l.includes('kiryu')) {
+      artSrc = '/api/art/cherry-blossom';
+      tagText = 'KIRYŪ · WASHED SILK';
+      sealText = '絹';
+    } else {
+      tagText = label.toUpperCase();
+      sealText = '布';
+    }
+  }
+  // Journal & Field Notes handling
+  else if (l.includes('field notes') || l.includes('journal') || l.includes('notes')) {
+    if (label.includes('/ 01') || l.includes('indigo')) {
+      artSrc = '/api/art/cherry-blossom';
+      tagText = 'FIELD NOTES 01 · INDIGO VAT CYCLE';
+      sealText = '誌';
+    } else if (label.includes('/ 02') || l.includes('loom') || l.includes('weaving')) {
+      artSrc = '/api/art/great-wave';
+      tagText = 'FIELD NOTES 02 · 1968 SHUTTLE LOOM';
+      sealText = '織';
+    } else if (label.includes('/ 03') || l.includes('repair') || l.includes('boro')) {
+      artSrc = '/api/art/poppies';
+      tagText = 'FIELD NOTES 03 · KANTHA & BORO REPAIR';
+      sealText = '補';
+    } else {
+      artSrc = '/api/art/cherry-blossom';
+      tagText = 'STUDIO FIELD NOTE · ATELIER STUDY';
+      sealText = '誌';
+    }
+  }
+  // Chapter-specific handling
+  else if (label.includes('Chapter II') || l.includes('otaru harbor') || l.includes('harbor')) {
     artSrc = '/api/art/great-wave';
-    tagText = 'OTARU HARBOR · CANVAS 18oz';
+    tagText = 'CHAPTER II · OTARU HARBOR';
     sealText = '樽';
-  } else if (label.includes('Chapter III') || label.includes('Quiet') || label.includes('Journal') || label.includes('Studio')) {
+  } else if (label.includes('Chapter III') || l.includes('quiet interior') || l.includes('quiet')) {
     artSrc = '/api/art/poppies';
-    tagText = 'QUIET INTERIOR · WASHED SILK';
+    tagText = 'CHAPTER III · QUIET INTERIOR';
     sealText = '室';
+  } else if (label.includes('Chapter I') || l.includes('kyoto nights')) {
+    artSrc = '/api/art/cherry-blossom';
+    tagText = 'CHAPTER I · KYOTO NIGHTS';
+    sealText = '京';
   }
 
   return (
