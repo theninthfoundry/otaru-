@@ -1,44 +1,24 @@
-import type { Metadata } from 'next';
-import { Hero } from '@/components/home/Hero';
-import { NewDrops } from '@/components/home/NewDrops';
-import { ChapterShowcase } from '@/components/home/ChapterShowcase';
-import { ArchiveTeaser } from '@/components/home/ArchiveTeaser';
-import { StoryJourney } from '@/components/home/StoryJourney';
-import { Craftsmanship } from '@/components/home/Craftsmanship';
-import { Philosophy } from '@/components/home/Philosophy';
-import { MembershipTeaser } from '@/components/home/MembershipTeaser';
-import { CollectorPassportSection } from '@/components/home/CollectorPassportSection';
-import { JournalTeaser } from '@/components/home/JournalTeaser';
-import { NewsletterSignup } from '@/components/home/NewsletterSignup';
-
-export const metadata: Metadata = {
-  title: 'Otaru — Living Image Archive',
-  description:
-    'The mountain remembers. A world of water, timber, cloth, and the objects that pass through it.',
-};
+import React from 'react';
+import { HeroSection } from '@/components/home/HeroSection';
+import { StorySection } from '@/components/home/StorySection';
+import { CraftPairsSection } from '@/components/home/CraftPairsSection';
+import { DropSection } from '@/components/home/DropSection';
+import { ResidentsSection } from '@/components/home/ResidentsSection';
+import { FieldNotesSection } from '@/components/home/FieldNotesSection';
+import { ClosingSection } from '@/components/home/ClosingSection';
+import { Thread } from '@/components/ui/Thread';
 
 export default function HomePage() {
   return (
     <>
-      <Hero />
-      <div className="section-connector" />
-      <NewDrops />
-      <div className="section-connector" />
-      <ChapterShowcase />
-      <div className="section-connector" />
-      <ArchiveTeaser />
-      <div className="section-connector" />
-      <StoryJourney />
-      <Craftsmanship />
-      <Philosophy />
-      <div className="section-connector" />
-      <MembershipTeaser />
-      <div className="section-connector" />
-      <CollectorPassportSection />
-      <div className="section-connector" />
-      <JournalTeaser />
-      <div className="section-connector" />
-      <NewsletterSignup />
+      <Thread />
+      <HeroSection />
+      <StorySection />
+      <CraftPairsSection />
+      <DropSection />
+      <ResidentsSection />
+      <FieldNotesSection />
+      <ClosingSection />
     </>
   );
 }
