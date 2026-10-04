@@ -7,8 +7,8 @@
 
   /* Sumi ink (not pure #000) */
   --ink:              #161616;
-  --ink-muted:        rgba(22, 22, 22, 0.65);
-  --ink-subtle:       rgba(22, 22, 22, 0.40);
+  --ink-muted:        #44403B; /* 8.3:1 contrast against #EFEBE3, strictly >= 4.5:1 across all surfaces */
+  --ink-subtle:       rgba(22, 22, 22, 0.58);
 
   /* ONE Accent: Indigo (<5% of any screen) */
   --indigo:           #1F2A44;

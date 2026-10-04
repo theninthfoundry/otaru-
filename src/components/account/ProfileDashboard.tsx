@@ -81,7 +81,7 @@ const RECENT_ORDERS = [
     courier: 'Yamato Archival Express',
     trackingNumber: 'OTA-7739-8821',
     items: ['Yama Field Jacket (Size III)'],
-    total: '$520',
+    total: '$480',
   },
   {
     id: 'ARC-8104',
@@ -175,10 +175,10 @@ export function ProfileDashboard() {
             <div className="flex items-center gap-4">
               <div className="px-4 py-2 border border-[var(--otaru-hairline)] bg-[var(--otaru-chalk-warm)]/40 rounded-xs text-right">
                 <span className="block font-mono text-[9px] uppercase tracking-widest text-[var(--otaru-ink-subtle)]">
-                  Patron Tier
+                  Member Tier
                 </span>
                 <span className="font-mono text-xs font-medium text-[var(--otaru-indigo)]">
-                  Archival Circle Sovereign
+                  Archival Circle
                 </span>
               </div>
 
