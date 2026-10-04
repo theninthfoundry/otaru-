@@ -1,8 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  env: {
+    FEATURE_FULL_ARCHIVE: process.env.FEATURE_FULL_ARCHIVE || 'false',
+    FEATURE_COMMERCE: process.env.FEATURE_COMMERCE || 'false',
+    FEATURE_MEMBERSHIP: process.env.FEATURE_MEMBERSHIP || 'false',
+    FEATURE_AUTH: process.env.FEATURE_AUTH || 'false',
+    FEATURE_TRACKING: process.env.FEATURE_TRACKING || 'false',
+  },
   generateBuildId: async () => {
-    return process.env.VERCEL_GIT_COMMIT_SHA || process.env.BUILD_ID || 'otaru-v1.0-architecture';
+    return process.env.VERCEL_GIT_COMMIT_SHA || process.env.BUILD_ID || 'otaru-v2.0-two-harbours';
   },
   experimental: {
     webpackBuildWorker: false,
