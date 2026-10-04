@@ -43,6 +43,27 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // 0c. Legacy Route Redirects
+  const redirects: Record<string, string> = {
+    '/archive': '/',
+    '/chapters': '/',
+    '/studio': '/story',
+    '/membership': '/',
+    '/profile': '/',
+    '/track-order': '/',
+    '/bag': '/',
+    '/sign-in': '/',
+    '/verify': '/',
+    '/account': '/',
+    '/wishlist': '/',
+  };
+  
+  if (redirects[pathname]) {
+    const redirectUrl = new URL(request.url);
+    redirectUrl.pathname = redirects[pathname];
+    return NextResponse.redirect(redirectUrl, { status: 301 });
+  }
+
   // 1. Admin Security Guard (/admin/* and /api/admin/*)
   if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
     const authHeader = request.headers.get('authorization');
