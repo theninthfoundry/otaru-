@@ -1,0 +1,65 @@
+:root {
+  /* ===== COLOUR ===== */
+  --paper:     #F4F0E8;
+  --paper-2:   #EBE5D8;
+  --ink:       #151515;
+  --indigo:    #1F2A44;
+  --madder:    #A8372C;
+  --turmeric:  #D9A21B;
+  --hairline:  rgba(21, 21, 21, 0.14);
+
+  /* ===== TYPOGRAPHY ===== */
+  --font-display:     'Shippori Mincho', serif;
+  --font-devanagari:  'Tiro Devanagari Hindi', serif;
+  --font-body:        'Hanken Grotesk', sans-serif;
+  --font-mono:        'DM Mono', monospace;
+
+  /* ===== TYPE SCALE (fluid) ===== */
+  --display-xl:   clamp(3.5rem, 9vw, 9rem);
+  --display-l:    clamp(2.5rem, 6vw, 5.5rem);
+  --h2:           clamp(1.75rem, 3vw, 2.75rem);
+  --body:         1.0625rem;
+  --caption:      0.75rem;
+
+  --lh-display:   0.95;
+  --lh-body:      1.65;
+  --measure:      62ch;
+
+  /* ===== SPACING SCALE ===== */
+  --sp-1: 4px;   --sp-2: 8px;   --sp-3: 12px;
+  --sp-4: 16px;  --sp-6: 24px;  --sp-8: 32px;
+  --sp-12: 48px; --sp-18: 72px; --sp-28: 112px;
+  --sp-42: 168px;
+
+  /* ===== LAYOUT ===== */
+  --grid-columns:  12;
+  --grid-gutter:   24px;
+  --grid-margin:   clamp(20px, 4vw, 64px);
+  --grid-max:      1360px;
+  --section-pad:   clamp(96px, 14vw, 200px);
+
+  /* ===== MOTION ===== */
+  --ease:          cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast:      150ms;
+  --dur-normal:    300ms;
+  --dur-cinematic: 700ms;
+
+  /* ===== SHAPE ===== */
+  --radius:   0px;
+  --radius-input: 2px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --grid-columns: 4;
+    --grid-gutter:  16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast:      0ms;
+    --dur-normal:    0ms;
+    --dur-cinematic: 0ms;
+  }
+}
