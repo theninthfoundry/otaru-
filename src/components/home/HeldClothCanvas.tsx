@@ -217,7 +217,7 @@ export function HeldClothCanvas({ className = '', scrollProgress = 0 }: HeldClot
         gl.deleteShader(fs);
       }
     };
-  }, [scrollProgress]);
+  }, []);
 
   // Handle pointer tracking with normalized coordinates
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
