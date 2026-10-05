@@ -15,25 +15,25 @@ export interface ProductImages {
 export const PRODUCT_IMAGES: Record<string, ProductImages> = {
   // New Drops
   '041': {
-    primary: '', // e.g. '/images/products/041-primary.jpg'
-    secondary: '',
-    detail: '',
+    primary: '/api/images/041',
+    secondary: '/api/images/041-secondary',
+    detail: '/api/images/041-detail',
     alt: 'Artifact 041 — Yama Field Jacket',
   },
   '042': {
-    primary: '', // e.g. '/images/products/042-primary.jpg'
+    primary: '/api/images/042',
     secondary: '',
     detail: '',
     alt: 'Artifact 042 — Kiryū Wrap Trouser',
   },
   '043': {
-    primary: '', // e.g. '/images/products/043-primary.jpg'
+    primary: '/api/images/043',
     secondary: '',
     detail: '',
     alt: 'Artifact 043 — Biratori Overshirt',
   },
   '044': {
-    primary: '', // e.g. '/images/products/044-primary.jpg'
+    primary: '/api/images/044',
     secondary: '',
     detail: '',
     alt: 'Artifact 044 — Ōmi Hemp Tote',
@@ -86,16 +86,16 @@ export const CHAPTER_IMAGES: Record<string, string> = {
 };
 
 export const MATERIAL_SWATCHES: Record<string, string> = {
-  'Indigo cotton twill': '', // e.g. '/images/swatches/indigo.jpg'
+  'Indigo cotton twill': '/api/images/macro-indigo',
   'Raw hemp canvas': '',
   'Boiled wool': '',
   'Washed silk': '',
 };
 
 export const STUDIO_IMAGES = {
-  main: '',   // e.g. '/images/studio/warehouse.jpg'
-  harbor: '', // e.g. '/images/studio/harbor.jpg'
-  loom: '',   // e.g. '/images/studio/loom.jpg'
+  main: '/api/images/studio-hands',
+  harbor: '',
+  loom: '',
 };
 
 export const JOURNAL_IMAGES: Record<string, string> = {
