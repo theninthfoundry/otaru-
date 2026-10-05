@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { DesignedArtifactGraphic } from './DesignedArtifactGraphic';
+import { PRODUCT_IMAGES } from '@/lib/images';
 
 export type AspectRatio = 'portrait' | 'square' | 'wide' | 'tall' | 'swatch';
 
@@ -31,35 +32,54 @@ export function ImagePlaceholder({
   label = '',
   ratio = 'portrait',
   src,
+  secondarySrc,
   alt = '',
   className = '',
   children,
   style,
+  enableHoverSwap = true,
 }: ImagePlaceholderProps) {
-  // 1. If explicit real image provided
-  if (src) {
+  // Extract product ID if present in label
+  const prodMatch = label.match(/\b(0\d{2})\b/);
+  const productId = prodMatch ? prodMatch[1] : null;
+  const registered = productId ? PRODUCT_IMAGES[productId] : null;
+
+  const resolvedSrc = src || (registered?.primary ? registered.primary : undefined);
+  const resolvedSecondary = secondarySrc || (registered?.secondary ? registered.secondary : undefined);
+
+  // 1. If explicit or registered real image provided
+  if (resolvedSrc) {
     return (
       <div
         className={clsx('otaru-img-container watoji-frame group', RATIO_CLASSES[ratio], className)}
         style={{
           position: 'relative',
           overflow: 'hidden',
-          backgroundColor: 'var(--otaru-dusk)',
+          backgroundColor: 'var(--paper-2)',
           ...style,
         }}
       >
-        <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', border: '1px dashed rgba(217,189,131,0.35)', borderRadius: '2px' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
           <Image
-            src={src}
+            src={resolvedSrc}
             alt={alt || label || 'Otaru Artifact'}
             fill
             unoptimized
-            style={{
-              objectFit: 'cover',
-              objectPosition: 'center',
-            }}
+            className={clsx(
+              'object-cover object-center transition-all duration-700 ease-out',
+              resolvedSecondary && enableHoverSwap ? 'group-hover:opacity-0 group-hover:scale-105' : 'group-hover:scale-[1.03]'
+            )}
           />
-          {/* Vermilion Atelier Seal */}
+          {resolvedSecondary && enableHoverSwap && (
+            <Image
+              src={resolvedSecondary}
+              alt={`${alt || label} — secondary study`}
+              fill
+              unoptimized
+              className="object-cover object-center absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out group-hover:scale-[1.03]"
+            />
+          )}
+          {/* Subtle Hanko seal mark */}
           <div className="hanko-stamp">小樽</div>
         </div>
         {children}
