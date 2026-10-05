@@ -198,8 +198,8 @@ input, select, textarea {
   user-select: none;
 }
 
-/* Strict surface rule: No shadows anywhere except the drawer */
-body *:not([role="dialog"]):not([role="dialog"] *):not(.cart-drawer):not(.cart-drawer *) {
+/* Shadow rule: allow on dialogs, drawers, panels, and concierge */
+body *:not([role="dialog"]):not([role="dialog"] *):not(.cart-drawer):not(.cart-drawer *):not(.concierge-panel):not(.concierge-panel *):not(.quick-view-panel):not(.quick-view-panel *) {
   box-shadow: none !important;
 }
 
@@ -218,4 +218,3 @@ body *:not([role="dialog"]):not([role="dialog"] *):not(.cart-drawer):not(.cart-d
     scroll-behavior: auto !important;
   }
 }
-
