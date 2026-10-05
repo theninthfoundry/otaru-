@@ -15,6 +15,12 @@
   --indigo-hover:     #293859;
   --indigo-active:    #161F33;
 
+  /* Mineral neutrals — restrained editorial warmth */
+  --gold:             #8B7355;
+  --gold-muted:       rgba(139, 115, 85, 0.6);
+  --stone-warm:       #A49787;
+  --mineral:          #6B6259;
+
   /* Surfaces: Hairline 1px at 12% ink */
   --hairline:         rgba(22, 22, 22, 0.12);
   --hairline-strong:  rgba(22, 22, 22, 0.20);
@@ -61,16 +67,20 @@
 
   /* ===== MOTION ===== */
   --ease:          cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-settle:   cubic-bezier(0.33, 1, 0.68, 1);
   --dur-fast:      150ms;
   --dur-normal:    300ms;
-  --dur-cinematic: 700ms;
+  --dur-slow:      600ms;
+  --dur-cinematic: 900ms;
 
   /* ===== SHAPE & SURFACES ===== */
   --radius:        0px;
   --radius-input:  2px;
 
-  /* ONLY shadow allowed across entire system is the cart drawer */
+  /* ONLY shadow allowed across entire system is the cart drawer and concierge panel */
   --shadow-drawer: -12px 0 40px rgba(11, 17, 27, 0.22);
+  --shadow-panel:  0 -4px 40px rgba(11, 17, 27, 0.12);
 }
 
 [data-theme="dark"],
@@ -95,6 +105,7 @@
   :root {
     --dur-fast:      0ms;
     --dur-normal:    0ms;
+    --dur-slow:      0ms;
     --dur-cinematic: 0ms;
   }
 }
