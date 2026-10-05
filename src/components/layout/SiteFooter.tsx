@@ -3,11 +3,13 @@
 import React from 'react';
 import Link from 'next/link';
 import { useCurrency, CURRENCIES, CurrencyCode } from '@/lib/currency';
+import { useConcierge } from '@/lib/concierge';
 import { KanjiStamp } from '@/components/ui/ArchivalBackgroundArt';
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
   const { currency, setCurrency } = useCurrency();
+  const { openConcierge } = useConcierge();
 
   return (
     <footer className="bg-[var(--paper-2)] border-t border-hairline py-16 md:py-24 text-[var(--ink)]">
@@ -19,7 +21,7 @@ export function SiteFooter() {
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <Link href="/" className="font-display text-2xl tracking-tight">
-                  House of Otaru
+                  Otaru
                 </Link>
                 <KanjiStamp text="印" />
               </div>
@@ -89,9 +91,13 @@ export function SiteFooter() {
             </h4>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="mailto:concierge@otaru.in" className="text-[var(--ink)]/75 hover:text-[var(--indigo)] transition-colors">
+                <button
+                  type="button"
+                  onClick={() => openConcierge('fit')}
+                  className="text-[var(--ink)]/75 hover:text-[var(--indigo)] transition-colors text-left"
+                >
                   Concierge Desk
-                </a>
+                </button>
               </li>
               <li>
                 <Link href="/track-order" className="text-[var(--ink)]/75 hover:text-[var(--indigo)] transition-colors">
@@ -116,7 +122,7 @@ export function SiteFooter() {
         {/* Bottom Hairline Bar */}
         <div className="mt-16 pt-8 border-t border-hairline flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-mono text-[var(--ink-muted)]">
           <p>
-            &copy; {year} House of Otaru. Limited batch archive.
+            &copy; {year} Otaru. Limited batch archive.
           </p>
           <div className="flex items-center gap-6">
             <Link href="/privacy" className="hover:text-[var(--ink)] transition-colors">

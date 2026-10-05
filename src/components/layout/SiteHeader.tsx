@@ -4,11 +4,18 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/lib/cart';
+import { useConcierge } from '@/lib/concierge';
 import { SearchModal } from '@/components/search/SearchModal';
 
+/**
+ * SiteHeader — Quiet, premium, functional.
+ * Otaru wordmark | Archive · Journal · Studio | Search · Concierge · Bag(n)
+ * No status theater. No telemetry. No fictional system indicators.
+ */
 export function SiteHeader() {
   const pathname = usePathname();
   const { openCart, itemCount } = useCart();
+  const { openConcierge } = useConcierge();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -33,7 +40,7 @@ export function SiteHeader() {
               Otaru
             </Link>
 
-            {/* Desktop Navigation Links (Archive, Journal, Studio) */}
+            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-7" aria-label="Main Navigation">
               {navLinks.map((link) => {
                 const isActive = pathname.startsWith(link.href);
@@ -43,8 +50,8 @@ export function SiteHeader() {
                     href={link.href}
                     className={`text-sm tracking-wide transition-colors ${
                       isActive 
-                        ? 'text-[var(--ink)] font-medium border-b border-[var(--ink)] pb-0.5' 
-                        : 'text-[var(--ink)]/70 hover:text-[var(--ink)]'
+                        ? 'text-[var(--ink)]' 
+                        : 'text-[var(--ink-muted)] hover:text-[var(--ink)]'
                     }`}
                   >
                     {link.label}
@@ -54,12 +61,12 @@ export function SiteHeader() {
             </nav>
           </div>
 
-          {/* Right: Actions (Search, Account, Bag) */}
+          {/* Right: Actions */}
           <div className="flex items-center gap-6">
             <button
               type="button"
               onClick={() => setIsSearchOpen(true)}
-              className="text-sm tracking-wide text-[var(--ink)]/70 hover:text-[var(--ink)] transition-colors flex items-center gap-1.5"
+              className="text-sm tracking-wide text-[var(--ink-muted)] hover:text-[var(--ink)] transition-colors flex items-center gap-1.5"
               aria-label="Search archive"
             >
               <span className="hidden sm:inline">Search</span>
@@ -69,23 +76,27 @@ export function SiteHeader() {
               </svg>
             </button>
 
-            <Link
-              href="/profile"
-              className="text-sm tracking-wide text-[var(--ink)]/70 hover:text-[var(--ink)] transition-colors hidden sm:block"
+            <button
+              type="button"
+              onClick={() => openConcierge('fit')}
+              className="hidden sm:inline text-sm tracking-wide text-[var(--ink-muted)] hover:text-[var(--ink)] transition-colors"
+              aria-label="Atelier concierge desk"
             >
-              Account
-            </Link>
+              Concierge
+            </button>
 
             <button
               type="button"
               onClick={openCart}
-              className="text-sm tracking-wide text-[var(--ink)] hover:text-[var(--indigo)] transition-colors flex items-center gap-1 font-medium"
+              className="text-sm tracking-wide text-[var(--ink)] hover:text-[var(--indigo)] transition-colors flex items-center gap-1.5"
               aria-label={`Open bag, ${itemCount} items`}
             >
               <span>Bag</span>
-              <span className="font-mono text-xs text-[var(--ink-muted)]">
-                ({itemCount})
-              </span>
+              {itemCount > 0 && (
+                <span className="font-mono text-[11px] text-[var(--ink-muted)]">
+                  ({itemCount})
+                </span>
+              )}
             </button>
 
             {/* Mobile Toggle */}
@@ -114,7 +125,7 @@ export function SiteHeader() {
 
         </div>
 
-        {/* Mobile Navigation Drawer */}
+        {/* Mobile Navigation — clean, large type */}
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-hairline bg-[var(--paper)] px-6 py-8 flex flex-col gap-6">
             {navLinks.map((link) => (
@@ -129,16 +140,9 @@ export function SiteHeader() {
             ))}
             <div className="pt-4 border-t border-hairline flex flex-col gap-4">
               <Link
-                href="/profile"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-sm tracking-wide text-[var(--ink)]/80"
-              >
-                Account
-              </Link>
-              <Link
                 href="/chapters"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-sm tracking-wide text-[var(--ink)]/60"
+                className="text-sm tracking-wide text-[var(--ink-muted)]"
               >
                 Chapters
               </Link>

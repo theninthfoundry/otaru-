@@ -7,12 +7,24 @@ import { useCurrency } from '@/lib/currency';
 import { useCart } from '@/lib/cart';
 import { useSizeGuide } from '@/lib/size-guide';
 import { PRODUCT_CATALOG, CARE_SETS, Product } from '@/lib/catalog';
+import { ObjectPassport } from './ObjectPassport';
+import { ObjectFitCalculator } from './ObjectFitCalculator';
+import { CraftProvenanceMap } from './CraftProvenanceMap';
+import { InspectModal } from './InspectModal';
 import clsx from 'clsx';
 
 interface ProductDetailViewProps {
   productId: string;
 }
 
+/**
+ * ProductDetailView — The Definitive Otaru PDP
+ * 
+ * ATMOSPHERE → DISCOVERY → DESIRE → PROOF → PURCHASE
+ * Features full-bleed tactile photography, solid scarcity indicator (no pulse),
+ * interactive ObjectFit sizing advisor, physical Object Passport,
+ * full-screen Hotspot Inspection, and visual Craft Provenance map.
+ */
 export function ProductDetailView({ productId }: ProductDetailViewProps) {
   const product: Product | undefined = PRODUCT_CATALOG[productId];
   const { formatPrice } = useCurrency();
@@ -26,7 +38,7 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
   const [pincode, setPincode] = useState('');
   const [deliveryDate, setDeliveryDate] = useState<string | null>(null);
   const [openAccordion, setOpenAccordion] = useState<string | null>('materials');
-  const [recentlyViewed, setRecentlyViewed] = useState<string[]>([]);
+  const [isInspectOpen, setIsInspectOpen] = useState(false);
 
   const isOneSize = Boolean(product && product.sizes.length === 1 && product.sizes[0]?.[0] === 'One Size');
 
@@ -36,13 +48,11 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
     else setSelectedSize(null);
     setSizeError(false);
 
-    // Track recently viewed in localStorage
     try {
       const stored = localStorage.getItem('otaru_recently_viewed');
       const list: string[] = stored ? JSON.parse(stored) : [];
       const updated = [productId, ...list.filter((id) => id !== productId)].slice(0, 6);
       localStorage.setItem('otaru_recently_viewed', JSON.stringify(updated));
-      setRecentlyViewed(updated.filter((id) => id !== productId).slice(0, 3));
     } catch {
       // Ignore storage errors
     }
@@ -87,8 +97,7 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
 
   const handlePincodeCheck = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pincode.length >= 5) {
-      // Calculate realistic delivery date (4-6 days from today)
+    if (pincode.length >= 4) {
       const d = new Date();
       d.setDate(d.getDate() + 5);
       setDeliveryDate(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' }));
@@ -104,6 +113,8 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
     .filter((id) => id !== productId)
     .slice(0, 2);
 
+  const primaryImage = `/api/images/${productId}`;
+
   return (
     <div className="bg-[var(--paper)] text-[var(--ink)] pt-24 pb-20">
       <div className="wrap">
@@ -114,35 +125,87 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
           <span>/</span>
           <span>{product.category}</span>
           <span>/</span>
-          <span className="text-[var(--ink)]">No. {productId}</span>
+          <span className="text-[var(--ink)] font-medium">{product.objectNumber}</span>
         </div>
 
         {/* 12-Column Layout: Left 7 Cols Gallery, Right 5 Cols Sticky Purchase Panel */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
           
           {/* =========================================================================
-              LEFT (7 Cols): Scrolling Gallery (Full-bleed, detail crops, macro weave)
+              LEFT (7 Cols): Scrolling Gallery (Full-bleed, detail crops, on-body)
               ========================================================================= */}
           <div className="lg:col-span-7 flex flex-col gap-6">
             
-            {/* 1. Main Full-Bleed Portrait */}
-            <div className="border border-hairline overflow-hidden bg-[var(--paper-2)]">
-              <ImagePlaceholder ratio="tall" label={`Artifact ${productId} — Primary Portrait`} />
+            {/* 1. Main Full-Bleed Portrait with Inspect Button */}
+            <div className="relative border border-hairline overflow-hidden bg-[var(--paper-2)] group">
+              <ImagePlaceholder
+                ratio="tall"
+                label={`Artifact ${productId} — Primary Portrait`}
+                alt={`${product.name} — Main Portrait`}
+              />
+
+              {/* Inspect Button Overlay */}
+              <button
+                type="button"
+                onClick={() => setIsInspectOpen(true)}
+                className="absolute top-4 right-4 z-10 font-mono text-[11px] uppercase tracking-wider px-3.5 py-1.5 bg-[var(--paper)]/95 border border-hairline text-[var(--ink)] hover:bg-[var(--indigo)] hover:text-white transition-colors flex items-center gap-1.5 shadow-sm"
+              >
+                <span>Inspect Detail</span>
+                <span>⊕</span>
+              </button>
             </div>
 
-            {/* 2. Detail Seam & Hardware Crop */}
-            <div className="grid grid-cols-2 gap-6">
-              <div className="border border-hairline overflow-hidden bg-[var(--paper-2)]">
-                <ImagePlaceholder ratio="square" label={`Artifact ${productId} — Seam Detail`} />
+            {/* 2. Detail Seam & Macro Weave */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div 
+                className="border border-hairline overflow-hidden bg-[var(--paper-2)] cursor-pointer group relative"
+                onClick={() => setIsInspectOpen(true)}
+              >
+                <ImagePlaceholder
+                  ratio="square"
+                  label={`Artifact ${productId} — Seam Detail`}
+                  src={`/api/images/${productId}-detail`}
+                  alt={`${product.name} — Hardware & Seam Detail`}
+                />
+                <span className="absolute bottom-3 left-3 z-10 font-mono text-[10px] tracking-wider uppercase bg-[var(--paper)]/90 px-2 py-1 text-[var(--ink-muted)] border border-hairline opacity-0 group-hover:opacity-100 transition-opacity">
+                  Hardware Study ⊕
+                </span>
               </div>
-              <div className="border border-hairline overflow-hidden bg-[var(--paper-2)]">
-                <ImagePlaceholder ratio="square" label={`Artifact ${productId} — Macro Weave`} />
+
+              <div 
+                className="border border-hairline overflow-hidden bg-[var(--paper-2)] cursor-pointer group relative"
+                onClick={() => setIsInspectOpen(true)}
+              >
+                <ImagePlaceholder
+                  ratio="square"
+                  label={`Artifact ${productId} — Macro Weave`}
+                  src="/api/images/macro-indigo"
+                  alt={`${product.name} — Weave Texture`}
+                />
+                <span className="absolute bottom-3 left-3 z-10 font-mono text-[10px] tracking-wider uppercase bg-[var(--paper)]/90 px-2 py-1 text-[var(--ink-muted)] border border-hairline opacity-0 group-hover:opacity-100 transition-opacity">
+                  Weave Macro ⊕
+                </span>
               </div>
             </div>
 
             {/* 3. On-Body Styling Silhouette */}
             <div className="border border-hairline overflow-hidden bg-[var(--paper-2)]">
-              <ImagePlaceholder ratio="wide" label={`Artifact ${productId} — On-Body Atelier Study`} />
+              <ImagePlaceholder
+                ratio="wide"
+                label={`Artifact ${productId} — On-Body Atelier Study`}
+                src={`/api/images/${productId}-secondary`}
+                alt={`${product.name} worn outdoors along Otaru canal`}
+              />
+            </div>
+
+            {/* 4. Visual Craft Provenance Map */}
+            <div className="mt-6">
+              <CraftProvenanceMap origin={product.origin} />
+            </div>
+
+            {/* 5. Physical Archival Object Passport */}
+            <div className="mt-2">
+              <ObjectPassport productId={productId} product={product} />
             </div>
 
           </div>
@@ -155,7 +218,7 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
             {/* 1. Header: Name, Price, One-line material */}
             <div className="border-b border-hairline pb-6">
               <div className="flex items-baseline justify-between gap-4 mb-2">
-                <span className="font-mono text-xs uppercase tracking-widest text-[var(--ink-muted)]">
+                <span className="font-mono text-xs uppercase tracking-widest text-[var(--indigo)] font-semibold">
                   {product.objectNumber || `OBJECT ${productId}`}
                 </span>
                 <span className="font-display text-2xl text-[var(--ink)] font-normal">
@@ -163,31 +226,32 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
                 </span>
               </div>
 
-              <h1 className="font-display text-3xl sm:text-4xl text-[var(--ink)] tracking-tight mb-2">
+              <h1 className="font-display text-3xl sm:text-4xl text-[var(--ink)] tracking-tight mb-3">
                 {product.name}
               </h1>
 
-              <p className="text-sm text-[var(--ink-muted)] leading-relaxed">
+              <p className="text-sm text-[var(--ink-muted)] leading-relaxed font-sans">
                 {product.material}
               </p>
             </div>
 
-            {/* 2. Honest Scarcity: "X of Y remain" (Live count) + Batch Number */}
+            {/* 2. Honest Scarcity: Solid Steady Dot (No animate-pulse) */}
             <div className="p-3.5 bg-[var(--paper-2)] border border-hairline flex items-center justify-between text-xs font-mono">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[var(--indigo)] animate-pulse" />
+                {/* Steady solid dot per luxury design spec */}
+                <span className="w-2 h-2 rounded-full bg-[var(--indigo)]" />
                 <span className="text-[var(--ink)] font-medium">
                   {remainingStock} of {totalRun} pieces remain
                 </span>
               </div>
               <span className="text-[var(--ink-muted)] uppercase tracking-wider">
-                Batch 01 · First Release
+                Batch 01 · Hand-Numbered
               </span>
             </div>
 
-            {/* 3. Size Selector with large tap targets (48px) + Size Guide Drawer trigger */}
-            <div className="border-b border-hairline pb-6">
-              <div className="flex items-center justify-between mb-3 text-xs font-mono uppercase tracking-wider">
+            {/* 3. Size Selector + Interactive Fit Tool */}
+            <div className="border-b border-hairline pb-6 space-y-4">
+              <div className="flex items-center justify-between text-xs font-mono uppercase tracking-wider">
                 <span className="text-[var(--ink-muted)]">Select Size</span>
                 {!isOneSize && (
                   <button
@@ -195,11 +259,12 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
                     onClick={() => openSizeGuide(productId)}
                     className="text-[var(--indigo)] hover:underline flex items-center gap-1"
                   >
-                    Size Guide & Fit Notes ↗
+                    Garment Specs ↗
                   </button>
                 )}
               </div>
 
+              {/* 48px Tap Targets */}
               <div className="grid grid-cols-5 gap-2">
                 {product.sizes.map(([sizeName, count]) => {
                   const isSoldOut = count === 0;
@@ -220,21 +285,33 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
                         !isSelected && !isSoldOut && 'border-hairline bg-[var(--paper)] text-[var(--ink)] hover:border-[var(--ink)]',
                         isSoldOut && 'border-hairline bg-[var(--paper-2)]/60 text-[var(--ink-muted)]/40 cursor-not-allowed'
                       )}
+                      aria-label={`Size ${sizeName}, ${isSoldOut ? 'Sold out' : `${count} available`}`}
                     >
-                      <span>{sizeName}</span>
+                      <span className="font-semibold">{sizeName}</span>
                       {isSoldOut ? (
                         <span className="text-[9px] uppercase tracking-tighter line-through opacity-70">Sold</span>
                       ) : (
-                        <span className="text-[9px] opacity-60">{count} left</span>
+                        <span className="text-[9px] opacity-70">{count} left</span>
                       )}
                     </button>
                   );
                 })}
               </div>
 
+              {/* Interactive Fit Calculator */}
+              {!isOneSize && (
+                <ObjectFitCalculator
+                  availableSizes={product.sizes}
+                  onSelectSize={(size) => {
+                    setSelectedSize(size);
+                    setSizeError(false);
+                  }}
+                />
+              )}
+
               {sizeError && (
-                <p className="mt-2 text-xs font-mono text-[var(--indigo)]">
-                  Please select a size to allocate this garment.
+                <p className="text-xs font-mono text-[var(--indigo)]">
+                  Please select a size to allocate this piece.
                 </p>
               )}
             </div>
@@ -244,7 +321,7 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
               <button
                 type="button"
                 onClick={handleAddToCart}
-                className="flex-1 py-4 bg-[var(--indigo)] text-white text-xs font-mono uppercase tracking-widest hover:bg-[var(--indigo-hover)] transition-colors flex items-center justify-center gap-2"
+                className="flex-1 py-4 bg-[var(--indigo)] text-white text-xs font-mono uppercase tracking-widest hover:bg-[var(--indigo-hover)] transition-colors flex items-center justify-center gap-2 shadow-sm"
               >
                 <span>{isAdded ? 'Added to Bag ✓' : 'Add to Archive'}</span>
               </button>
@@ -263,13 +340,13 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
             </div>
 
             {/* 5. Trust Row: Lifetime repair, dispatch from Hokkaido, delivery pincode */}
-            <div className="border border-hairline p-4 bg-[var(--paper-2)] space-y-3 text-xs">
+            <div className="border border-hairline p-4 bg-[var(--paper-2)] space-y-3 text-xs font-sans">
               <div className="flex items-center gap-2 text-[var(--ink)]">
-                <span className="font-mono text-sm">✦</span>
+                <span className="font-mono text-sm text-[var(--indigo)]">✦</span>
                 <span><strong>Lifetime Atelier Repair:</strong> Registered under studio repair ledger.</span>
               </div>
               <div className="flex items-center gap-2 text-[var(--ink)]">
-                <span className="font-mono text-sm">⟳</span>
+                <span className="font-mono text-sm text-[var(--indigo)]">⟳</span>
                 <span><strong>Complimentary Dispatch:</strong> Direct from Hokkaido canal workshop.</span>
               </div>
 
@@ -279,7 +356,7 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
                   type="text"
                   value={pincode}
                   onChange={(e) => setPincode(e.target.value)}
-                  placeholder="Enter postal pincode"
+                  placeholder="Enter postal code for dispatch estimate"
                   className="bg-[var(--paper)] border border-hairline px-3 py-1.5 text-xs font-mono text-[var(--ink)] flex-1 focus:outline-none focus:border-[var(--indigo)]"
                 />
                 <button
@@ -291,7 +368,7 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
               </form>
               {deliveryDate && (
                 <p className="text-[11px] font-mono text-[var(--indigo)]">
-                  ✓ Estimated dispatch arrival: <strong>{deliveryDate}</strong>
+                  ✓ Estimated arrival: <strong>{deliveryDate}</strong> (tracked express courier)
                 </p>
               )}
             </div>
@@ -386,14 +463,14 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
         </div>
 
         {/* =========================================================================
-            BELOW: "Worn with" (2 items) & Recently Viewed
+            BELOW: "Complete the Object" Wardrobe Connections
             ========================================================================= */}
         <div className="mt-28 pt-12 border-t border-hairline">
-          <span className="font-mono text-xs uppercase tracking-widest text-[var(--ink-muted)] block mb-6">
-            Recommended Pairing
+          <span className="font-mono text-xs uppercase tracking-widest text-[var(--ink-muted)] block mb-3">
+            Harmonious Pairings
           </span>
           <h2 className="display-l text-[var(--ink)] mb-8">
-            Worn with.
+            Complete the object.
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl">
@@ -401,14 +478,20 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
               const item = PRODUCT_CATALOG[id];
               if (!item) return null;
               return (
-                <Link key={id} href={`/product/${id}`} className="group border border-hairline bg-[var(--paper-2)] p-4 flex flex-col justify-between">
-                  <div className="border border-hairline overflow-hidden mb-4">
+                <Link key={id} href={`/product/${id}`} className="group border border-hairline bg-[var(--paper-2)] p-5 flex flex-col justify-between transition-colors hover:border-[var(--ink)]/40">
+                  <div className="border border-hairline overflow-hidden mb-4 bg-[var(--paper)]">
                     <ImagePlaceholder ratio="portrait" label={`No. ${id} — ${item.name}`} />
                   </div>
                   <div>
-                    <span className="font-mono text-[10px] uppercase text-[var(--ink-muted)]">No. {id}</span>
-                    <h3 className="font-display text-lg text-[var(--ink)] group-hover:text-[var(--indigo)] transition-colors">{item.name}</h3>
-                    <span className="font-mono text-xs text-[var(--ink-muted)]">{formatPrice(item.price)}</span>
+                    <span className="font-mono text-[10px] uppercase text-[var(--ink-muted)] block mb-1">
+                      {item.objectNumber}
+                    </span>
+                    <h3 className="font-display text-lg text-[var(--ink)] group-hover:text-[var(--indigo)] transition-colors mb-1">
+                      {item.name}
+                    </h3>
+                    <span className="font-mono text-xs font-medium text-[var(--ink)]">
+                      {formatPrice(item.price)}
+                    </span>
                   </div>
                 </Link>
               );
@@ -417,6 +500,15 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
         </div>
 
       </div>
+
+      {/* Full-Screen Hotspot Inspector Modal */}
+      <InspectModal
+        isOpen={isInspectOpen}
+        onClose={() => setIsInspectOpen(false)}
+        imageSrc={primaryImage}
+        productName={product.name}
+        objectNumber={product.objectNumber}
+      />
 
       {/* Mobile Sticky Bottom Action Bar */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--paper)]/95 backdrop-blur-md border-t border-hairline p-3 flex items-center justify-between gap-4">
@@ -427,9 +519,9 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
         <button
           type="button"
           onClick={handleAddToCart}
-          className="flex-1 py-3 bg-[var(--indigo)] text-white text-xs font-mono uppercase tracking-wider hover:bg-[var(--indigo-hover)]"
+          className="flex-1 py-3 bg-[var(--indigo)] text-white text-xs font-mono uppercase tracking-wider hover:bg-[var(--indigo-hover)] shadow-sm"
         >
-          {isAdded ? 'Added ✓' : selectedSize ? `Add Size ${selectedSize}` : 'Select Size to Add'}
+          {isAdded ? 'Added ✓' : selectedSize ? `Add Size ${selectedSize}` : 'Select Size'}
         </button>
       </div>
 

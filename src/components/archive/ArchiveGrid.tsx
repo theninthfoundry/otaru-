@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { useCurrency } from '@/lib/currency';
-import { useCart } from '@/lib/cart';
 import { Product } from '@/lib/catalog';
+import { ArchiveQuickView } from './ArchiveQuickView';
 
 interface ArchiveGridProps {
   products: { id: string; product: Product }[];
@@ -17,24 +17,7 @@ interface ArchiveGridProps {
 
 export function ArchiveGrid({ products, page, totalPages, onPageChange, onResetFilters }: ArchiveGridProps) {
   const { formatPrice } = useCurrency();
-  const { addToCart } = useCart();
-  const [addedId, setAddedId] = useState<string | null>(null);
-
-  const handleQuickAdd = (e: React.MouseEvent, id: string, product: Product) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    addToCart({
-      id: `${id}-M`,
-      name: product.name,
-      meta: product.material.split(',')[0] || '',
-      price: product.price,
-      size: product.sizes[0] ? product.sizes[0][0] : 'One Size',
-    });
-
-    setAddedId(id);
-    setTimeout(() => setAddedId(null), 1800);
-  };
+  const [quickViewProduct, setQuickViewProduct] = useState<{ id: string; product: Product } | null>(null);
 
   if (products.length === 0) {
     return (
@@ -59,11 +42,10 @@ export function ArchiveGrid({ products, page, totalPages, onPageChange, onResetF
 
   return (
     <div>
-      {/* 2-col mobile / 4-col desktop grid per Prompt 4 */}
+      {/* 2-col mobile / 4-col desktop grid with rich hover & quick-inspect */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mt-10">
         {products.map(({ id, product }) => {
           const isSoldOut = product.sizes.every((s) => s[1] === 0);
-          const isJustAdded = addedId === id;
 
           return (
             <div key={id} className="group flex flex-col justify-between">
@@ -78,14 +60,18 @@ export function ArchiveGrid({ products, page, totalPages, onPageChange, onResetF
                     Exhausted
                   </span>
                 ) : (
-                  /* Quick-Add on Hover */
+                  /* Quick-View Button on Hover */
                   <button
                     type="button"
-                    onClick={(e) => handleQuickAdd(e, id, product)}
-                    className="absolute bottom-2 right-2 z-10 font-mono text-[10px] uppercase tracking-wider px-3 py-1.5 bg-[var(--indigo)] text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[var(--indigo-hover)]"
-                    aria-label={`Quick add ${product.name}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setQuickViewProduct({ id, product });
+                    }}
+                    className="absolute bottom-2 right-2 z-10 font-mono text-[10px] uppercase tracking-wider px-3 py-1.5 bg-[var(--paper)] text-[var(--ink)] border border-hairline opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[var(--indigo)] hover:text-white shadow-sm"
+                    aria-label={`Quick inspect ${product.name}`}
                   >
-                    {isJustAdded ? 'Added ✓' : '+ Add'}
+                    Quick View
                   </button>
                 )}
               </div>
@@ -93,13 +79,13 @@ export function ArchiveGrid({ products, page, totalPages, onPageChange, onResetF
               {/* Card Meta */}
               <div className="pt-3">
                 <div className="flex items-baseline justify-between font-mono text-[10px] uppercase text-[var(--ink-muted)]">
-                  <span>No. {id}</span>
+                  <span>{product.objectNumber}</span>
                   <span>{formatPrice(product.price)}</span>
                 </div>
-                <h3 className="font-display text-base sm:text-lg text-[var(--ink)] mt-1 group-hover:opacity-75 transition-opacity line-clamp-1">
+                <h3 className="font-display text-base sm:text-lg text-[var(--ink)] mt-1 group-hover:text-[var(--indigo)] transition-colors line-clamp-1">
                   <Link href={`/product/${id}`}>{product.name}</Link>
                 </h3>
-                <p className="text-xs text-[var(--ink)]/60 line-clamp-1 mt-0.5">
+                <p className="text-xs text-[var(--ink)]/60 line-clamp-1 mt-0.5 font-sans">
                   {product.material.split(',')[0]}
                 </p>
               </div>
@@ -127,6 +113,13 @@ export function ArchiveGrid({ products, page, totalPages, onPageChange, onResetF
           ))}
         </nav>
       )}
+
+      {/* Quick View Drawer */}
+      <ArchiveQuickView
+        productId={quickViewProduct?.id ?? null}
+        product={quickViewProduct?.product ?? null}
+        onClose={() => setQuickViewProduct(null)}
+      />
     </div>
   );
 }

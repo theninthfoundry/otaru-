@@ -76,3 +76,31 @@ Global middleware coordinates security verification before any request is proces
 - **Fulfillment & Logistics**: Domestic dispatch and tracking are managed through Shiprocket's courier aggregation API. (Note: Shiprocket operates as shipping & courier aggregator; statutory GST invoicing is handled via Shopify India GST tax invoices / accounting ERP integration, not Shiprocket).
 - **Return & Refund Compliance**: Governed by India Consumer Protection (E-Commerce) Rules 2020, with clear replacement/exchange policies defined before purchase.
 
+---
+
+## 🎨 5. Experiential Architecture: The 12 Movements
+
+The digital platform is structured around a psychological arc of contemplative ownership:
+**ATMOSPHERE → DISCOVERY → DESIRE → PROOF → PURCHASE → LONG-TERM ATTACHMENT**
+
+### The 12 Homepage Movements
+1. **Movement 01 (Hero)**: `HeldHero` — 100svh backlit living cloth surface with clip-path entrance reveal.
+2. **Movement 02 (Signature Reveal)**: `ObjectReveal` — Quiet emergence of Object 041 Yama Field Jacket with kanji (山), Tokushima origin, and live edition allocation.
+3. **Movement 03 (Current Batch)**: `BatchSection` & `ObjectCard` — Asymmetric 12-column rhythm with dual-image on-body hover studies.
+4. **Movement 04 (Material Study)**: `MaterialMacroSection` — Interactive 1:1 scale macro textile photography with 4 clickable hotspot pins (Fiber, Weave, Dye, Wear).
+5. **Movement 05 (Why This Object Exists)**: `WhyThisObject` — Editorial justification: Material Sovereignty, Permanent Architecture, and Closed Run Intention.
+6. **Movement 06 (Chapter Worlds)**: `ChaptersScrollSnap` — Horizontal scroll-snap seasonal archives preserving continuity.
+7. **Movement 07 (Studio & Hands)**: `StudioStorySection` — 1907 Otaru stone canal warehouse history and artisan atelier photography.
+8. **Movement 08 (Object Life Timeline)**: `ObjectLifeTimeline` — 5-year evolution from crisp raw twill to personal patina and boro mending.
+9. **Movement 09 (Permanent Archive)**: `PermanentArchiveCta` — Portal to complete 10-piece historical collection.
+10. **Movement 10 (Studio Journal)**: `JournalThreeCards` — Field notes directly bridging philosophy to physical archive garments.
+11. **Movement 11 (Made to Remain)**: `MadeToRemain` — Wear-repair-return-wear lifecycle backed by lifetime atelier repair ledger.
+12. **Movement 12 (The Circle)**: `CircleEmailSection` — Priority cutting reservation without commercial promotion.
+
+### Atelier PDP Enhancements
+- **Inspect Mode**: Full-screen macro inspection modal with annotated hotspots for hardware and seams.
+- **Archival Object Passport**: Verified provenance certificate displaying Registry ID, Loom specification, and repair warranty.
+- **ObjectFit Sizing Advisor**: Interactive silhouette recommendation tool calculating individual sizing based on height and posture.
+- **Craft Provenance Map**: 5-stage production journey from botanical harvest to numbered vault storage.
+
+

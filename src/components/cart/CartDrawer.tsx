@@ -117,9 +117,9 @@ export function CartDrawer() {
           {items.length === 0 ? (
             <div className="py-12 text-center">
               <span className="font-mono text-2xl text-[var(--ink-muted)] block mb-3">◇</span>
-              <p className="font-display text-xl text-[var(--ink)] mb-1">Your archive is unoccupied.</p>
-              <p className="text-xs text-[var(--ink-muted)] max-w-[28ch] mx-auto mb-8 leading-relaxed">
-                Garments held here remain reserved for 30 minutes before returning to catalog inventory.
+              <p className="font-display text-xl text-[var(--ink)] mb-1">Your archive is empty.</p>
+              <p className="text-xs text-[var(--ink-muted)] max-w-[32ch] mx-auto mb-8 leading-relaxed">
+                Objects selected for allocation will appear here prior to checkout.
               </p>
 
               {/* 3 Empty State Suggestions */}
