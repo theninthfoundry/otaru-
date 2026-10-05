@@ -146,7 +146,7 @@ export function CartDrawer() {
                             addToCart({
                               id: `${id}-M`,
                               name: prod.name,
-                              meta: prod.material.split(',')[0],
+                              meta: prod.material.split(',')[0] || '',
                               price: prod.price,
                               size: 'M',
                             });

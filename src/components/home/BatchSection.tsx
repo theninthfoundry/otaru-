@@ -59,7 +59,7 @@ export function BatchSection() {
             if (!item) return null;
 
             // Extract total pieces and calculate live remaining count from sizes
-            const totalPieces = item.runQuantity ? parseInt(item.runQuantity.split(' ')[0], 10) || 44 : 44;
+            const totalPieces = item.runQuantity ? parseInt(item.runQuantity.split(' ')[0] ?? '44', 10) || 44 : 44;
             const remainingCount = item.sizes.reduce((sum, s) => sum + s[1], 0);
             const isJustAdded = addedId === id;
 

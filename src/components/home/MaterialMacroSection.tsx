@@ -60,7 +60,7 @@ const MATERIALS: MaterialSpec[] = [
 export function MaterialMacroSection() {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const current = MATERIALS[selectedIdx] || MATERIALS[0];
+  const current = (MATERIALS[selectedIdx] ?? MATERIALS[0])!;
 
   return (
     <section className="section-pad bg-[var(--paper)] text-[var(--ink)] border-t border-hairline" id="material">

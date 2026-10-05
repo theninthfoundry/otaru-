@@ -61,7 +61,7 @@ export function HeldHero() {
   const liveBatchQuantity = React.useMemo(() => {
     const obj41 = PRODUCT_CATALOG['041'];
     if (!obj41) return 44;
-    return obj41.runQuantity ? parseInt(obj41.runQuantity.split(' ')[0], 10) || 44 : 44;
+    return obj41.runQuantity ? parseInt(obj41.runQuantity.split(' ')[0] ?? '44', 10) || 44 : 44;
   }, []);
 
 >>>>>>> main

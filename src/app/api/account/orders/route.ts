@@ -92,8 +92,8 @@ export async function GET(request: NextRequest) {
           total: o.totalMinor / 100,
           currency: o.currency,
           items: o.items.map((it) => ({
-            name: it.artifactHandle,
-            handle: it.artifactHandle,
+            name: it.artifactHandle || 'Archival Object',
+            handle: it.artifactHandle || '',
             qty: it.quantity,
             price: it.unitPriceMinor / 100,
           })),

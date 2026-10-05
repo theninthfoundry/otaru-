@@ -63,7 +63,7 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
   }
 
   // Calculate live inventory numbers
-  const totalRun = product.runQuantity ? parseInt(product.runQuantity.split(' ')[0], 10) || 44 : 44;
+  const totalRun = product.runQuantity ? parseInt(product.runQuantity.split(' ')[0] ?? '44', 10) || 44 : 44;
   const remainingStock = product.sizes.reduce((acc, curr) => acc + curr[1], 0);
 
   const handleAddToCart = () => {

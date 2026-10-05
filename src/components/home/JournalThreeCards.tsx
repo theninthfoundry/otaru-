@@ -53,7 +53,7 @@ export function JournalThreeCards() {
               </div>
 
               <div className="pt-3 border-t border-hairline/60 font-mono text-[11px] text-[var(--indigo)] flex items-center justify-between">
-                <span>{post.readTime}</span>
+                <span>Read Note</span>
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </div>
             </Link>

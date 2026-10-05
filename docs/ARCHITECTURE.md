@@ -61,3 +61,18 @@ Global middleware coordinates security verification before any request is proces
 - **IP-Based Token Bucket Rate Limiting**: Guarding APIs from denial of service.
 - **CSRF Token Validation**: Authenticating request origin headers on mutations.
 - **Nonce Injection**: Securing style and script elements against scripting attacks.
+
+---
+
+## 🛍️ 4. Commerce Authority: Lean Shopify V1
+
+### Single Source of Truth
+- **Catalog, Stock & Cart**: Shopify Storefront API acts as the single source of truth for all live inventory, variants, prices, and cart operations.
+- **Single Checkout Authority**: All checkout flows resolve directly to native Shopify Checkout via cart checkout URLs (`cart.checkoutUrl`).
+- **Zero Simulator Drift**: Any custom escrow simulator, synthetic payment mock, or non-production test payment gate is strictly barred from production execution paths. There is only ONE checkout path.
+
+### India-Specific Localization & Fulfillment
+- **Payments**: Indian transactions process via Razorpay activated as an approved payment gateway on Shopify Checkout.
+- **Fulfillment & Logistics**: Domestic dispatch and tracking are managed through Shiprocket's courier aggregation API. (Note: Shiprocket operates as shipping & courier aggregator; statutory GST invoicing is handled via Shopify India GST tax invoices / accounting ERP integration, not Shiprocket).
+- **Return & Refund Compliance**: Governed by India Consumer Protection (E-Commerce) Rules 2020, with clear replacement/exchange policies defined before purchase.
+

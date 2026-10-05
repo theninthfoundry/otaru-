@@ -140,6 +140,7 @@ model User {
   carts           Cart[]
   ownedGarments   GarmentSerial[]   @relation("CurrentOwner")
   nfcScans        NfcScan[]
+  auditEvents     AuditEvent[]      @relation("ActionActor")
 
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt

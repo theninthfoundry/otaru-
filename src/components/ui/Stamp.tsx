@@ -15,7 +15,7 @@ export function Stamp({ number = '01', total = '40', className = '' }: StampProp
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setIsVisible(true);
           observer.disconnect();
         }

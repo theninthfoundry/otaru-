@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useCurrency } from '@/lib/currency';
 
-export function MembershipPage() {
+export default function MembershipPage() {
   const { formatPrice } = useCurrency();
 
   return (
@@ -142,5 +142,3 @@ export function MembershipPage() {
     </div>
   );
 }
-
-export default MembershipPage;
