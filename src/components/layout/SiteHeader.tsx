@@ -35,7 +35,7 @@ export function SiteHeader() {
   const navLinks = [
     { label: 'SHOP', href: '/#batch' },
     { label: 'CHAPTERS', href: '/#chapters' },
-    { label: 'STUDIO', href: '/studio' },
+    { label: 'STUDIO', href: '/#studio' },
     { label: 'JOURNAL', href: '/journal' },
   ];
 
