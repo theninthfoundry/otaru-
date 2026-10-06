@@ -2,151 +2,160 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { HeldClothCanvas } from './HeldClothCanvas';
+import Image from 'next/image';
 
 /**
- * Cinematic Hero — ATMOSPHERE stage
+ * Atmospheric Hero — House of Otaru
  * 
- * The first page of an art book, not an information panel.
- * Cloth surface → title reveal → subcopy → CTAs
- * Entry sequence < 2.0s, never blocking, reduced-motion compliant.
+ * Renders the definitive atelier indigo jacket still life with
+ * editorial typography, chapter kicker, and interactive anchors.
  */
 export function HeldHero() {
-  const [isSettled, setIsSettled] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const hasSeenHero =
-      typeof window !== 'undefined' &&
-      sessionStorage.getItem('otaru_hero_seen');
-    const prefersReducedMotion =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (hasSeenHero || prefersReducedMotion) {
-      setIsSettled(true);
-    } else {
-      const timer = setTimeout(() => {
-        setIsSettled(true);
-        try {
-          sessionStorage.setItem('otaru_hero_seen', '1');
-        } catch {
-          // ignore storage errors
-        }
-      }, 1400);
-      return () => clearTimeout(timer);
-    }
+    const timer = setTimeout(() => setIsLoaded(true), 100);
+    return () => clearTimeout(timer);
   }, []);
+
+  const handleScrollDown = () => {
+    const target = document.getElementById('batch') || document.getElementById('new-drops');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollBy({ top: window.innerHeight * 0.95, behavior: 'smooth' });
+    }
+  };
 
   return (
     <section
-      className="relative w-full h-[100svh] min-h-[600px] flex flex-col justify-end overflow-hidden bg-[var(--ink)] text-[#F4F0E8] select-none"
-      aria-label="Hero — The mountain remembers"
+      className="relative w-full h-[100svh] min-h-[640px] flex flex-col justify-between overflow-hidden bg-[#070D14] text-[#F4F0E8] select-none"
+      aria-label="House of Otaru — Chapter I"
     >
-      {/* Background Cloth Canvas — living material surface */}
-      <div
-        className="absolute inset-0 z-0 transition-all duration-[1400ms]"
-        style={{
-          clipPath: isSettled ? 'inset(0% 0%)' : 'inset(40% 0%)',
-          transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
-        }}
-      >
-        <HeldClothCanvas scrollProgress={0} />
+      {/* 1. Full-Bleed Atmospheric Still Life Background */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/api/hero-image?type=atelier"
+          alt="House of Otaru Atelier — Indigo garment, craft tools, and Ikebana still life"
+          fill
+          priority
+          sizes="100vw"
+          quality={95}
+          className={`object-cover object-[center_35%] transition-opacity duration-1000 ${
+            isLoaded ? 'opacity-95 scale-100' : 'opacity-0 scale-[1.02]'
+          }`}
+          style={{
+            transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        />
 
-        {/* Layered vignette: bottom heavy for text legibility, subtle top darkening */}
+        {/* Tailored Film Grade Vignette Overlays for Maximum Text Legibility */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background: [
-              'linear-gradient(to top, rgba(11, 17, 27, 0.92) 0%, rgba(11, 17, 27, 0.4) 40%, rgba(11, 17, 27, 0.15) 65%, rgba(11, 17, 27, 0.3) 100%)',
+              'linear-gradient(90deg, rgba(7, 13, 20, 0.82) 0%, rgba(7, 13, 20, 0.52) 38%, rgba(7, 13, 20, 0.18) 68%, rgba(7, 13, 20, 0.35) 100%)',
+              'linear-gradient(0deg, rgba(7, 13, 20, 0.85) 0%, rgba(7, 13, 20, 0.25) 25%, transparent 55%)',
+              'linear-gradient(180deg, rgba(7, 13, 20, 0.70) 0%, transparent 22%)',
             ].join(', '),
           }}
         />
       </div>
 
-      {/* Main Hero Content — desire, not information */}
-      <div className="relative z-10 wrap pb-16 sm:pb-20 lg:pb-24">
-        <div className="max-w-[820px]">
+      {/* 2. Main Editorial Left Stage */}
+      <div className="relative z-10 w-full px-6 sm:px-10 lg:px-14 xl:px-16 pt-28 sm:pt-36 lg:pt-40 flex-1 flex flex-col justify-center">
+        <div className="max-w-[760px]">
 
-          {/* Headline with line-mask entrance */}
-          <h1
-            className="font-display text-[clamp(3rem,8vw,8.5rem)] text-[#F4F0E8] leading-[0.95] tracking-[-0.025em] mb-8 overflow-hidden"
-          >
-            <span className="sr-only">The mountain remembers.</span>
-            <span aria-hidden="true">
-              <span className="block overflow-hidden">
-                <span
-                  className="block transition-transform duration-[900ms]"
-                  style={{
-                    transform: isSettled ? 'translateY(0)' : 'translateY(110%)',
-                    transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
-                    transitionDelay: '150ms',
-                  }}
-                >
-                  The mountain
-                </span>
-              </span>
-              <span className="block overflow-hidden">
-                <span
-                  className="block transition-transform duration-[900ms]"
-                  style={{
-                    transform: isSettled ? 'translateY(0)' : 'translateY(110%)',
-                    transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
-                    transitionDelay: '300ms',
-                  }}
-                >
-                  remembers.
-                </span>
-              </span>
-            </span>
+          {/* Region & Era Kicker */}
+          <div className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.26em] text-[#F4F0E8]/70 mb-7 sm:mb-9 space-y-1">
+            <p>JAPAN / INDIA</p>
+            <p className="text-[#F4F0E8]/50">MMXXVI</p>
+          </div>
+
+          {/* Chapter Eyebrow */}
+          <div className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.24em] text-[#F4F0E8]/80 mb-5 sm:mb-6">
+            CHAPTER I / KYOTO NIGHTS
+          </div>
+
+          {/* Master Display Quote */}
+          <h1 className="font-display text-[clamp(2.5rem,5.6vw,5.25rem)] text-[#F4F0E8] leading-[1.08] tracking-[-0.015em] mb-7 sm:mb-8 font-light sm:font-normal">
+            <span className="block">Inspired by the fear</span>
+            <span className="block">of being average,</span>
+            <span className="block italic font-normal text-[#F4F0E8]/95">and the perfect.</span>
           </h1>
 
-          {/* Subcopy — the bridge between atmosphere and desire */}
-          <p
-            className="text-white/80 text-base sm:text-lg max-w-[42ch] leading-relaxed mb-10 transition-opacity duration-700"
-            style={{
-              opacity: isSettled ? 1 : 0,
-              transitionDelay: '550ms',
-            }}
-          >
-            Japanese craft sensibility, Indian cloth and hands. Numbered objects, never restocked.
+          {/* Editorial Subcopy */}
+          <p className="font-sans text-sm sm:text-base text-[#F4F0E8]/75 leading-relaxed mb-9 sm:mb-11 max-w-[36ch]">
+            Japanese craft sensibility,
+            <br />
+            Indian cloth and hands.
           </p>
 
-          {/* Dual CTAs */}
-          <div
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-5 transition-opacity duration-700"
-            style={{
-              opacity: isSettled ? 1 : 0,
-              transitionDelay: '750ms',
-            }}
-          >
+          {/* CTA Link to Current Batch */}
+          <div>
             <Link
-              href="#batch"
-              className="inline-flex items-center gap-3 bg-[#F4F0E8] text-[var(--ink)] font-mono text-xs uppercase tracking-[0.15em] px-7 py-4 hover:bg-white transition-colors"
+              href="/#batch"
+              onClick={(e) => {
+                const target = document.getElementById('batch');
+                if (target) {
+                  e.preventDefault();
+                  target.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+              className="inline-flex items-center gap-3 font-mono text-[11px] sm:text-xs uppercase tracking-[0.22em] text-[#F4F0E8] border-b border-[#F4F0E8]/60 pb-1.5 hover:border-[#F4F0E8] hover:text-white transition-all group"
             >
-              <span>Discover the Current Batch</span>
-              <span className="font-display text-sm">→</span>
-            </Link>
-
-            <Link
-              href="/archive"
-              className="inline-flex items-center gap-3 text-white/70 font-mono text-xs uppercase tracking-[0.15em] border-b border-white/30 pb-1 hover:text-white hover:border-white/60 transition-colors"
-            >
-              <span>Enter the Archive</span>
+              <span>DISCOVER THE CURRENT BATCH</span>
+              <span className="transform group-hover:translate-x-1.5 transition-transform duration-300">→</span>
             </Link>
           </div>
+
         </div>
       </div>
 
-      {/* Scroll cue — barely visible, disappears once scrolled */}
-      <div
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 transition-opacity duration-500"
-        style={{
-          opacity: isSettled ? 0.4 : 0,
-          transitionDelay: '1000ms',
-        }}
-      >
-        <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50">Scroll</span>
-        <span className="w-px h-6 bg-white/30" />
+      {/* 3. Mid-Right Vertical Tagline Specimen */}
+      <div className="hidden lg:flex absolute right-6 sm:right-10 lg:right-14 xl:right-16 top-1/2 -translate-y-1/2 flex-col items-end text-right font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.30em] text-[#F4F0E8]/50 leading-[1.9] pointer-events-none z-10">
+        <span>OBJECTS</span>
+        <span>FOR A</span>
+        <span>LONGER</span>
+        <span>TOMORROW</span>
+      </div>
+
+      {/* 4. Bottom Horizon Bar (Left Origins + Right Scroll Cue) */}
+      <div className="relative z-10 w-full px-6 sm:px-10 lg:px-14 xl:px-16 pb-8 sm:pb-10 flex items-center justify-between pointer-events-auto">
+        
+        {/* Bottom Left Triad */}
+        <div className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.24em] text-[#F4F0E8]/45">
+          KYOTO / TOKYO / OTARU
+        </div>
+
+        {/* Bottom Right Interactive Scroll Button */}
+        <button
+          type="button"
+          onClick={handleScrollDown}
+          className="flex items-center gap-3 text-[#F4F0E8]/55 hover:text-[#F4F0E8] transition-colors group cursor-pointer focus:outline-none"
+          aria-label="Scroll to next section"
+        >
+          <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.24em]">
+            SCROLL
+          </span>
+          <div className="w-6 h-6 rounded-full border border-white/20 group-hover:border-white/60 flex items-center justify-center transition-colors">
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="transform group-hover:translate-y-0.5 transition-transform"
+            >
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <polyline points="19 12 12 19 5 12" />
+            </svg>
+          </div>
+        </button>
+
       </div>
     </section>
   );
