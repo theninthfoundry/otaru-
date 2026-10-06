@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-const ARTIFACT_DIR = 'C:/Users/namir/.gemini/antigravity-ide/brain/162753e9-e443-47b9-9c9b-5a5b41ace49d';
+const ARTIFACT_DIRS = [
+  'C:/Users/namir/.gemini/antigravity-ide/brain/4bc2bd3d-ccb4-4fd5-a1fa-496dd5ca5dd9',
+  'C:/Users/namir/.gemini/antigravity-ide/brain/162753e9-e443-47b9-9c9b-5a5b41ace49d',
+  path.join(process.cwd(), 'public', 'images', 'products'),
+  path.join(process.cwd(), 'public', 'images', 'hero'),
+];
 
 const IMAGE_MAP: Record<string, string> = {
   '041': 'yama_field_jacket_1791216680861.jpg',
@@ -17,6 +22,9 @@ const IMAGE_MAP: Record<string, string> = {
   '044-primary': 'omi_hemp_tote_1791216815305.jpg',
   'macro-indigo': 'macro_indigo_twill_1791216835608.jpg',
   'studio-hands': 'studio_hands_craft_1791216857752.jpg',
+  'atelier': 'atelier_indigo_hero_1791225223047.jpg',
+  'hero-atelier': 'atelier_indigo_hero_1791225223047.jpg',
+  'atelier-indigo': 'atelier-indigo.jpg',
 };
 
 export async function GET(
@@ -26,37 +34,34 @@ export async function GET(
   try {
     const { id } = await params;
     const cleanId = id.replace(/\.(jpg|jpeg|png|webp)$/i, '');
-    const filename = IMAGE_MAP[cleanId];
+    const filename = IMAGE_MAP[cleanId] || `${cleanId}.jpg`;
 
-    if (!filename) {
-      return new NextResponse('Image not found in registry', { status: 404 });
-    }
+    for (const dir of ARTIFACT_DIRS) {
+      const filePath = path.join(dir, filename);
+      if (fs.existsSync(filePath)) {
+        const buffer = fs.readFileSync(filePath);
 
-    const artifactPath = path.join(ARTIFACT_DIR, filename);
-
-    if (fs.existsSync(artifactPath)) {
-      const buffer = fs.readFileSync(artifactPath);
-
-      // Best effort cache to public directory
-      try {
-        const publicDir = path.join(process.cwd(), 'public', 'images', 'products');
-        if (!fs.existsSync(publicDir)) {
-          fs.mkdirSync(publicDir, { recursive: true });
+        // Best effort cache to public directory
+        try {
+          const publicDir = path.join(process.cwd(), 'public', 'images', 'products');
+          if (!fs.existsSync(publicDir)) {
+            fs.mkdirSync(publicDir, { recursive: true });
+          }
+          const publicFile = path.join(publicDir, `${cleanId}.jpg`);
+          if (!fs.existsSync(publicFile)) {
+            fs.writeFileSync(publicFile, buffer);
+          }
+        } catch (e) {
+          // Ignore background caching errors
         }
-        const publicFile = path.join(publicDir, `${cleanId}.jpg`);
-        if (!fs.existsSync(publicFile)) {
-          fs.writeFileSync(publicFile, buffer);
-        }
-      } catch (e) {
-        // Ignore background caching errors
+
+        return new NextResponse(new Uint8Array(buffer), {
+          headers: {
+            'Content-Type': 'image/jpeg',
+            'Cache-Control': 'public, max-age=31536000, immutable',
+          },
+        });
       }
-
-      return new NextResponse(new Uint8Array(buffer), {
-        headers: {
-          'Content-Type': 'image/jpeg',
-          'Cache-Control': 'public, max-age=31536000, immutable',
-        },
-      });
     }
 
     return new NextResponse('Asset source file missing', { status: 404 });

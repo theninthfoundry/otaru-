@@ -1,3 +1,28 @@
+import fs from 'fs';
+import path from 'path';
+
+// Synchronize hero image to public/images/hero on config load
+try {
+  const sourceCandidates = [
+    'C:/Users/namir/.gemini/antigravity-ide/brain/d99372f4-137f-400c-8ca7-53cfb22560ee/.tempmediaStorage/media_1791313662732.jpg',
+    'C:/Users/namir/.gemini/antigravity-ide/brain/4bc2bd3d-ccb4-4fd5-a1fa-496dd5ca5dd9/atelier_indigo_hero_1791225223047.jpg',
+  ];
+  const targetDir = path.join(process.cwd(), 'public', 'images', 'hero');
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir, { recursive: true });
+  }
+  for (const src of sourceCandidates) {
+    if (fs.existsSync(src)) {
+      const buf = fs.readFileSync(src);
+      fs.writeFileSync(path.join(targetDir, 'hero-atelier.jpg'), buf);
+      fs.writeFileSync(path.join(targetDir, 'atelier-indigo.jpg'), buf);
+      break;
+    }
+  }
+} catch (e) {
+  // Ignore sync error in constrained environments
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
