@@ -125,15 +125,15 @@ export const HERO_SLIDES: Array<{
 }> = [
   {
     id: 1,
-    image: '', // e.g. '/images/hero/hero-1.jpg'
-    tag: 'CAMPAIGN 01 / 03 — MMXXVI',
-    eyebrow: 'Otaru / Living Image Archive',
-    title: 'The mountain remembers.',
-    subtitle: 'A world of water, timber, cloth, and the objects that pass through it.',
-    ctaText: 'Enter the Archive',
-    ctaLink: '/archive',
+    image: '/api/hero-image?type=atelier',
+    tag: 'JAPAN / INDIA · MMXXVI',
+    eyebrow: 'CHAPTER I / KYOTO NIGHTS',
+    title: 'Inspired by the fear\nof being average,\nand the perfect.',
+    subtitle: 'Japanese craft sensibility,\nIndian cloth and hands.',
+    ctaText: 'Discover the Current Batch',
+    ctaLink: '/#batch',
     secondaryCta: 'Explore Chapters',
-    secondaryLink: '/chapters',
-    badge: 'Origin: Hokkaido · Archive MMXXVI',
+    secondaryLink: '/#chapters',
+    badge: 'KYOTO / TOKYO / OTARU',
   },
 ];
