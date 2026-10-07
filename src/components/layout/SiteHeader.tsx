@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/lib/cart';
 import { useConcierge } from '@/lib/concierge';
+import { useAuth } from '@/context/auth-context';
 import { SearchModal } from '@/components/search/SearchModal';
 
 /**
@@ -13,12 +14,13 @@ import { SearchModal } from '@/components/search/SearchModal';
  * Layout:
  * - Left: SHOP · CHAPTERS · STUDIO · JOURNAL (pushed to far left)
  * - Center: HOUSE OF OTARU (exact display typography, stacked)
- * - Right: Search · Profile · Cart (0) · Hamburger Menu (pushed to far right)
+ * - Right: Search · Profile · Cart (0) · 2-Bar Archival Menu (pushed to far right)
  */
 export function SiteHeader() {
   const pathname = usePathname();
   const { openCart, itemCount } = useCart();
   const { openConcierge } = useConcierge();
+  const { isAuthenticated, openAuthModal } = useAuth();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -115,7 +117,7 @@ export function SiteHeader() {
             </Link>
           </div>
 
-          {/* Right: Actions (Search, Profile, Cart, Menu) */}
+          {/* Right: Actions (Search, Profile, Cart, 2-Bar Menu) */}
           <div className="flex-1 flex items-center justify-end gap-5 sm:gap-6 lg:gap-7 text-[#F4F0E8]">
             
             {/* Search */}
@@ -125,45 +127,59 @@ export function SiteHeader() {
               className="text-[#F4F0E8]/80 hover:text-[#F4F0E8] transition-colors p-1"
               aria-label="Search archive"
             >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </button>
 
             {/* Profile / Account */}
-            <Link
-              href="/account"
-              className="text-[#F4F0E8]/80 hover:text-[#F4F0E8] transition-colors p-1"
-              aria-label="Member account"
-            >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-            </Link>
+            {isAuthenticated ? (
+              <Link
+                href="/account"
+                className="text-[#F4F0E8]/80 hover:text-[#F4F0E8] transition-colors p-1"
+                aria-label="Member account"
+              >
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </Link>
+            ) : (
+              <button
+                type="button"
+                onClick={() => openAuthModal()}
+                className="text-[#F4F0E8]/80 hover:text-[#F4F0E8] transition-colors p-1"
+                aria-label="Member sign in"
+              >
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </button>
+            )}
 
             {/* Cart / Bag with circular badge count */}
             <button
               type="button"
               onClick={openCart}
               className="text-[#F4F0E8]/85 hover:text-[#F4F0E8] transition-colors p-1 relative flex items-center justify-center group"
-              aria-label={`Open bag, ${itemCount > 0 ? itemCount : 3} items`}
+              aria-label={`Open bag, ${itemCount} items`}
             >
               <div className="relative flex items-center justify-center">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
                   <line x1="3" y1="6" x2="21" y2="6" />
                   <path d="M16 10a4 4 0 0 1-8 0" />
                 </svg>
                 {/* Circular count badge matching reference image */}
                 <span className="absolute -top-1.5 -right-2 min-w-[15px] h-[15px] px-0.5 rounded-full bg-white/20 text-[#F4F0E8] text-[9px] font-mono leading-none flex items-center justify-center border border-white/25">
-                  {itemCount > 0 ? itemCount : 3}
+                  {itemCount}
                 </span>
               </div>
             </button>
 
-            {/* Hamburger Menu Toggle */}
+            {/* Archival 2-Bar Menu Toggle */}
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -171,17 +187,16 @@ export function SiteHeader() {
               aria-label="Toggle navigation menu"
               aria-expanded={isMobileMenuOpen}
             >
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 {isMobileMenuOpen ? (
                   <>
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
+                    <line x1="5" y1="5" x2="19" y2="19" />
+                    <line x1="5" y1="19" x2="19" y2="5" />
                   </>
                 ) : (
                   <>
-                    <line x1="4" y1="7" x2="20" y2="7" />
-                    <line x1="4" y1="12" x2="20" y2="12" />
-                    <line x1="4" y1="17" x2="20" y2="17" />
+                    <line x1="3.5" y1="9" x2="20.5" y2="9" />
+                    <line x1="3.5" y1="15" x2="20.5" y2="15" />
                   </>
                 )}
               </svg>
@@ -207,13 +222,26 @@ export function SiteHeader() {
             </div>
 
             <div className="pt-6 border-t border-white/10 flex flex-wrap gap-6 text-xs font-mono uppercase tracking-[0.18em] text-[#F4F0E8]/60">
-              <Link
-                href="/account"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="hover:text-[#F4F0E8] transition-colors"
-              >
-                Member Account
-              </Link>
+              {isAuthenticated ? (
+                <Link
+                  href="/account"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="hover:text-[#F4F0E8] transition-colors"
+                >
+                  Member Account
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    openAuthModal();
+                  }}
+                  className="hover:text-[#F4F0E8] transition-colors"
+                >
+                  Collector Sign In
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => {
