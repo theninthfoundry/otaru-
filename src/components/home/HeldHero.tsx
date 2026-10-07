@@ -35,7 +35,7 @@ export function HeldHero() {
       {/* 1. Full-Bleed Atmospheric Still Life Background */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/api/hero-image?type=atelier"
+          src="/images/hero/hero-atelier.jpg"
           alt="House of Otaru Atelier — Indigo garment, craft tools, and Ikebana still life"
           fill
           priority
