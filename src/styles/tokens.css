@@ -25,6 +25,26 @@
   --hairline:         rgba(22, 22, 22, 0.12);
   --hairline-strong:  rgba(22, 22, 22, 0.20);
 
+  /* ===== HOUSE OF OTARU ARCHIVAL TOKENS ===== */
+  --otaru-ink:           #0B1420;
+  --otaru-dusk:          #17293E;
+  --otaru-dusk-2:        #223B56;
+  --otaru-horizon:       #5C7A94;
+  --otaru-parchment:     #F4EFE2;
+  --otaru-parchment-dim: #CFC7B3;
+  --otaru-gold:          #D9BD83;
+  --otaru-gold-dim:      #A8905F;
+  --otaru-torii:         #A8462F;
+  --otaru-line:          rgba(244, 239, 226, 0.14);
+  --otaru-line-strong:   rgba(244, 239, 226, 0.28);
+  --tracking-label:      0.18em;
+  --ease-otaru:          cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast:       240ms;
+  --duration-base:       560ms;
+  --duration-slow:       900ms;
+  --space-section:       clamp(5rem, 10vw, 9rem);
+  --space-gutter:        clamp(1.25rem, 4vw, 3rem);
+
   /* Legacy alias mappings for backward compatibility */
   --madder:           #1F2A44; /* unified into indigo accent */
   --turmeric:         rgba(22, 22, 22, 0.65);
@@ -107,5 +127,8 @@
     --dur-normal:    0ms;
     --dur-slow:      0ms;
     --dur-cinematic: 0ms;
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
   }
 }

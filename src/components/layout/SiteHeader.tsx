@@ -70,7 +70,7 @@ export function SiteHeader() {
           <div className="flex-1 flex items-center justify-start">
             <nav className="hidden md:flex items-center gap-7 lg:gap-9" aria-label="Main Navigation">
               {navLinks.map((link) => {
-                const isActive = pathname.startsWith(link.href) && link.href !== '/';
+                const isActive = !link.href.includes('#') && (pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href)));
                 return (
                   <Link
                     key={link.label}
@@ -118,7 +118,7 @@ export function SiteHeader() {
           </div>
 
           {/* Right: Actions (Search, Profile, Cart, 2-Bar Menu) */}
-          <div className="flex-1 flex items-center justify-end gap-5 sm:gap-6 lg:gap-7 text-[#F4F0E8]">
+          <div className="flex-1 flex items-center justify-end gap-3.5 sm:gap-5 lg:gap-7 text-[#F4F0E8]">
             
             {/* Search */}
             <button

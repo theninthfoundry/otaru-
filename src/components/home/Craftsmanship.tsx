@@ -181,15 +181,6 @@ export function Craftsmanship() {
           </div>
         </RevealOnScroll>
       </div>
-
-      <style jsx>{`
-        .material-card:hover .swatch-overlay {
-          opacity: 1;
-        }
-        .material-card:hover {
-          transform: translateY(-4px);
-        }
-      `}</style>
     </section>
   );
 }

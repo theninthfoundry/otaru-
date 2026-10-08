@@ -24,12 +24,18 @@ export function NewDrops() {
     const item = PRODUCT_CATALOG[id];
     if (!item) return;
 
+    // Pick first in-stock size or default
+    const inStockSize =
+      item.sizes.find(([_, count]) => count > 0)?.[0] ||
+      item.sizes[0]?.[0] ||
+      'M';
+
     addToCart({
-      id: `${id}-M`,
+      id: `${id}-${inStockSize}`,
       name: item.name,
-      meta: item.material.split(',')[0] || '',
+      meta: item.material.split(',')[0]?.trim() || '',
       price: item.price,
-      size: item.sizes[0] ? item.sizes[0][0] : 'M',
+      size: inStockSize,
     });
 
     setAddedId(id);
@@ -75,6 +81,11 @@ export function NewDrops() {
             if (!item) return null;
             const isJustAdded = addedId === id;
 
+            const runParts = item.runQuantity.split(' ');
+            const runBadge = runParts.length >= 2 ? `${runParts[0]} ${runParts[1]}` : item.runQuantity;
+            const originCity = item.origin.split('·')[0]?.trim() || item.origin;
+            const materialSummary = item.material.split(',')[0]?.trim() || item.material;
+
             return (
               <RevealOnScroll key={id} staggerIndex={i}>
                 <div
@@ -85,67 +96,80 @@ export function NewDrops() {
                     position: 'relative',
                   }}
                 >
-                  <Link href={`/product/${id}`} className="block" style={{ textDecoration: 'none' }}>
-                    <div className="ph-frame" style={{ position: 'relative' }}>
+                  {/* Image Frame Container */}
+                  <div className="ph-frame" style={{ position: 'relative' }}>
+                    <Link
+                      href={`/product/${id}`}
+                      className="block"
+                      style={{ textDecoration: 'none' }}
+                      aria-label={`View ${item.name} (${item.objectNumber})`}
+                    >
                       <ScrollZoomImage intensity="subtle" direction="out-to-in">
                         <ImagePlaceholder ratio="portrait" label={`${item.objectNumber} — ${item.name}`} />
                       </ScrollZoomImage>
+                    </Link>
 
-                      {/* Quick Add Button */}
-                      <button
-                        type="button"
-                        className="quick-add"
-                        onClick={(e) => handleQuickAdd(e, id)}
-                        aria-label={`Add ${item.name} to archive`}
-                        title="Add to Your Archive"
-                      >
-                        {isJustAdded ? '✓' : '+'}
-                      </button>
+                    {/* Quick Add Button — outside anchor to eliminate DOM nesting violations */}
+                    <button
+                      type="button"
+                      className="quick-add"
+                      onClick={(e) => handleQuickAdd(e, id)}
+                      aria-label={`Add ${item.name} to archive bag`}
+                      title="Add to Your Archive"
+                    >
+                      {isJustAdded ? '✓' : '+'}
+                    </button>
 
-                      {/* Micro Provenance Tag */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: '0.8rem',
-                          left: '0.8rem',
-                          fontSize: '0.58rem',
-                          letterSpacing: '0.14em',
-                          textTransform: 'uppercase',
-                          color: 'var(--otaru-parchment)',
-                          backgroundColor: 'rgba(11,20,32,0.7)',
-                          backdropFilter: 'blur(4px)',
-                          padding: '0.2rem 0.5rem',
-                          border: '1px solid rgba(244,239,226,0.15)',
-                          zIndex: 3,
-                        }}
-                      >
-                        {item.runQuantity.split(' ')[0]} {item.runQuantity.split(' ')[1]}
-                      </div>
+                    {/* Micro Provenance Tag */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '0.8rem',
+                        left: '0.8rem',
+                        fontSize: '0.58rem',
+                        letterSpacing: '0.14em',
+                        textTransform: 'uppercase',
+                        color: 'var(--otaru-parchment)',
+                        backgroundColor: 'rgba(11,20,32,0.7)',
+                        backdropFilter: 'blur(4px)',
+                        padding: '0.2rem 0.5rem',
+                        border: '1px solid rgba(244,239,226,0.15)',
+                        zIndex: 3,
+                        pointerEvents: 'none',
+                      }}
+                    >
+                      {runBadge}
                     </div>
+                  </div>
 
-                    {/* Metadata Layer */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.9rem' }}>
-                      <span style={{ fontSize: '0.64rem', letterSpacing: '0.14em', color: 'var(--otaru-gold-dim)', textTransform: 'uppercase', fontFamily: 'monospace' }}>
-                        {item.objectNumber}
-                      </span>
-                      <span style={{ fontSize: '0.62rem', letterSpacing: '0.1em', color: 'var(--otaru-parchment-dim)', textTransform: 'uppercase' }}>
-                        {item.origin.split('·')[0]}
-                      </span>
-                    </div>
+                  {/* Metadata Layer */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.9rem' }}>
+                    <span style={{ fontSize: '0.64rem', letterSpacing: '0.14em', color: 'var(--otaru-gold-dim)', textTransform: 'uppercase', fontFamily: 'monospace' }}>
+                      {item.objectNumber}
+                    </span>
+                    <span style={{ fontSize: '0.62rem', letterSpacing: '0.1em', color: 'var(--otaru-parchment-dim)', textTransform: 'uppercase' }}>
+                      {originCity}
+                    </span>
+                  </div>
 
-                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', marginTop: '0.3rem', color: 'var(--otaru-parchment)', lineHeight: 1.2 }}>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', marginTop: '0.3rem', color: 'var(--otaru-parchment)', lineHeight: 1.2 }}>
+                    <Link
+                      href={`/product/${id}`}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                      className="hover:text-[var(--otaru-gold)] transition-colors"
+                    >
                       {item.name}
-                    </h3>
+                    </Link>
+                  </h3>
 
-                    <div style={{ fontSize: '0.82rem', color: 'var(--otaru-parchment-dim)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '0.4rem', borderTop: '1px solid var(--otaru-line)', paddingTop: '0.4rem' }}>
-                      <span style={{ fontSize: '0.75rem', maxWidth: '18ch', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {item.material.split(',')[0]}
-                      </span>
-                      <span style={{ color: 'var(--otaru-parchment)', fontWeight: 500 }}>
-                        {formatPrice(item.price)}
-                      </span>
-                    </div>
-                  </Link>
+                  <div style={{ fontSize: '0.82rem', color: 'var(--otaru-parchment-dim)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '0.4rem', borderTop: '1px solid var(--otaru-line)', paddingTop: '0.4rem' }}>
+                    <span style={{ fontSize: '0.75rem', maxWidth: '18ch', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {materialSummary}
+                    </span>
+                    <span style={{ color: 'var(--otaru-parchment)', fontWeight: 500 }}>
+                      {formatPrice(item.price)}
+                    </span>
+                  </div>
                 </div>
               </RevealOnScroll>
             );
@@ -161,39 +185,6 @@ export function NewDrops() {
           </Link>
         </RevealOnScroll>
       </div>
-
-      <style jsx>{`
-        .quick-add {
-          position: absolute;
-          right: 0.8rem;
-          bottom: 0.8rem;
-          z-index: 2;
-          width: 2.3rem;
-          height: 2.3rem;
-          border-radius: 50%;
-          background: var(--otaru-parchment);
-          color: var(--otaru-ink);
-          font-size: 1.15rem;
-          font-weight: 500;
-          display: grid;
-          place-items: center;
-          opacity: 0;
-          transform: translateY(6px);
-          transition: opacity var(--duration-fast) var(--ease-otaru),
-                      transform var(--duration-fast) var(--ease-otaru),
-                      background var(--duration-fast);
-          border: none;
-          cursor: pointer;
-        }
-        .artifact-card:hover .quick-add,
-        .quick-add:focus-visible {
-          opacity: 1;
-          transform: none;
-        }
-        .quick-add:hover {
-          background: var(--otaru-gold);
-        }
-      `}</style>
     </section>
   );
 }

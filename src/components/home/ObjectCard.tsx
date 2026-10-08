@@ -67,7 +67,7 @@ export function ObjectCard({ id, product, ratio = 'portrait' }: ObjectCardProps)
           {/* Bottom Hover Drawer */}
           <div className="absolute bottom-0 left-0 right-0 p-3.5 flex items-center justify-between z-10 bg-gradient-to-t from-[var(--ink)]/90 via-[var(--ink)]/60 to-transparent text-[var(--paper)] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--paper)]/80">
-              {product.origin.split('·')[0].trim()}
+              {product.origin.split('·')[0]?.trim() || product.origin}
             </span>
             <span className="font-mono text-[10px] tracking-[0.15em] uppercase text-[var(--paper)] flex items-center gap-1">
               <span>View Object</span>

@@ -277,24 +277,6 @@ export function DesignedArtifactGraphic({ id, label = '' }: GraphicProps) {
           印
         </div>
       </div>
-
-      <style jsx>{`
-        .designed-artifact-canvas {
-          transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
-        }
-        .designed-artifact-canvas:hover .emblem-diamond {
-          border-color: var(--otaru-gold);
-          transform: rotate(45deg) scale(1.1);
-          box-shadow: 0 0 16px rgba(217, 189, 131, 0.3);
-        }
-        .svg-vector-pulse {
-          animation: vectorPulse 6s ease-in-out infinite alternate;
-        }
-        @keyframes vectorPulse {
-          0% { opacity: 0.65; }
-          100% { opacity: 0.95; }
-        }
-      `}</style>
     </div>
   );
 }
