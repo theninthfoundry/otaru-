@@ -11,7 +11,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  cursor: auto;
+  cursor: auto !important;
 }
 
 body {
@@ -24,7 +24,22 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  cursor: auto;
+  cursor: auto !important;
+}
+
+/* Eradicate any custom cursor rings, follower dots, halos, or touch simulation layers */
+.custom-cursor,
+.cursor-dot,
+.cursor-ring,
+.cursor-follower,
+.archival-cursor,
+[data-cursor],
+[data-cursor-dot],
+[data-cursor-ring] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 /* ============================================================

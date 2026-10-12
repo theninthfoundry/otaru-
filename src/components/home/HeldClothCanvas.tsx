@@ -78,29 +78,19 @@ export function HeldClothCanvas({ className = '', scrollProgress = 0 }: HeldClot
         float weft = abs(sin(p.y * freq));
         float thread = (warp * 0.5 + weft * 0.5);
 
-        // Light point lerped to cursor (window light leaking through pores)
-        vec2 lightDelta = p - u_mouse;
-        // Correct aspect ratio for circular light
-        lightDelta.x *= u_resolution.x / u_resolution.y;
-        float dist = length(lightDelta);
-
-        // Soft radial glow (window sunbeam)
-        float glow = exp(-dist * 2.8);
-        float core = exp(-dist * 7.0);
-
-        // Indigo palette colors
-        vec3 deepIndigo   = vec3(0.063, 0.098, 0.165); // #10192A
-        vec3 midIndigo    = vec3(0.121, 0.165, 0.267); // #1F2A44
+        // Gentle diffuse ambient window daylight (no cursor light point or ring)
         vec3 windowLight  = vec3(0.937, 0.906, 0.847); // #EFEBE3 (linen glow)
         vec3 warmSunbeam  = vec3(0.965, 0.941, 0.886); // backlit beam
+        vec3 deepIndigo   = vec3(0.063, 0.098, 0.165); // #10192A
+        vec3 midIndigo    = vec3(0.121, 0.165, 0.267); // #1F2A44
 
         // Base cloth color with subtle organic slub variation
         float slub = sin(p.x * 45.0 + sin(p.y * 30.0)) * 0.04;
         vec3 cloth = mix(deepIndigo, midIndigo, (thread * 0.4 + slub));
 
-        // Light passing through thread interstices
+        // Light passing through thread interstices (even diffuse backlighting)
         float threadTranslucency = pow(1.0 - thread * 0.65, 2.0);
-        vec3 lightPassThrough = mix(windowLight, warmSunbeam, core) * glow * 1.45 * (0.4 + threadTranslucency * 0.6);
+        vec3 lightPassThrough = mix(windowLight, warmSunbeam, 0.35) * 0.22 * (0.4 + threadTranslucency * 0.6);
 
         // Compose final backlit pixel
         vec3 color = cloth + lightPassThrough;
