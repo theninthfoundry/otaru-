@@ -420,6 +420,14 @@ export function SiteFooter() {
             >
               <li>
                 <Link
+                  href="/cart"
+                  className="hover:text-[#F2E8D6] transition-colors inline-block focus:outline-none focus-visible:underline"
+                >
+                  Acquisition Tray &amp; Wishlist
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/account"
                   className="hover:text-[#F2E8D6] transition-colors inline-block focus:outline-none focus-visible:underline"
                 >

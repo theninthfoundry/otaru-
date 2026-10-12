@@ -186,7 +186,7 @@ export function CartDrawer() {
 
         {/* Footer Subtotal & Checkout CTA */}
         {items.length > 0 && (
-          <div className="p-6 border-t border-hairline bg-[var(--paper-2)]">
+          <div className="p-6 pb-[max(1.5rem,env(safe-area-inset-bottom,1.5rem))] border-t border-hairline bg-[var(--paper-2)]">
             <div className="flex justify-between items-baseline mb-1">
               <span className="font-mono text-xs uppercase tracking-wider text-[var(--ink-muted)]">Subtotal</span>
               <span className="font-display text-2xl text-[var(--ink)] font-normal">{formatPrice(subtotal)}</span>
@@ -197,9 +197,16 @@ export function CartDrawer() {
             <Link
               href="/checkout"
               onClick={closeCart}
-              className="block w-full py-4 text-center bg-[var(--indigo)] text-white text-xs font-mono uppercase tracking-widest hover:bg-[var(--indigo-hover)] transition-colors mb-3"
+              className="block w-full py-4 text-center bg-[var(--indigo)] text-white text-xs font-mono uppercase tracking-widest hover:bg-[var(--indigo-hover)] transition-colors mb-2"
             >
               Proceed to Secure Checkout →
+            </Link>
+            <Link
+              href="/cart"
+              onClick={closeCart}
+              className="block w-full py-2.5 text-center border border-[var(--ink)] text-[var(--ink)] text-[11px] font-mono uppercase tracking-wider hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors mb-3"
+            >
+              View Full Cart, GST Ledger & Wishlist →
             </Link>
             <p className="text-[10px] text-center text-[var(--ink-muted)] leading-tight">
               Direct studio dispatch from Hokkaido · Registered under lifetime repair ledger.

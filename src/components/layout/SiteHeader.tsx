@@ -222,6 +222,13 @@ export function SiteHeader() {
             </div>
 
             <div className="pt-6 border-t border-white/10 flex flex-wrap gap-6 text-xs font-mono uppercase tracking-[0.18em] text-[#F4F0E8]/60">
+              <Link
+                href="/cart"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="hover:text-[#F4F0E8] transition-colors"
+              >
+                Acquisition Bag ({itemCount})
+              </Link>
               {isAuthenticated ? (
                 <Link
                   href="/account"

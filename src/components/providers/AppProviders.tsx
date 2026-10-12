@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CartProvider } from '@/lib/cart';
+import { WishlistProvider } from '@/lib/wishlist';
 import { CurrencyProvider } from '@/lib/currency';
 import { ConciergeProvider } from '@/lib/concierge';
 import { AuthProvider } from '@/context/auth-context';
@@ -14,13 +15,15 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     <AuthProvider>
       <CurrencyProvider>
         <CartProvider>
-          <ConciergeProvider>
-            <ArchivePageTransition>
-              {children}
-            </ArchivePageTransition>
-            <CartDrawer />
-            <AuthModal />
-          </ConciergeProvider>
+          <WishlistProvider>
+            <ConciergeProvider>
+              <ArchivePageTransition>
+                {children}
+              </ArchivePageTransition>
+              <CartDrawer />
+              <AuthModal />
+            </ConciergeProvider>
+          </WishlistProvider>
         </CartProvider>
       </CurrencyProvider>
     </AuthProvider>

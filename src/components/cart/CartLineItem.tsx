@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useCart, CartLineItem as LineItemType } from '@/lib/cart';
+import { useWishlist } from '@/lib/wishlist';
 import { useCurrency } from '@/lib/currency';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 
@@ -11,6 +12,7 @@ interface CartLineItemProps {
 
 export function CartLineItem({ line }: CartLineItemProps) {
   const { updateQty, removeFromCart } = useCart();
+  const { moveCartToWishlist } = useWishlist();
   const { formatPrice } = useCurrency();
 
   return (
@@ -74,19 +76,37 @@ export function CartLineItem({ line }: CartLineItemProps) {
               +
             </button>
           </div>
-          <button
-            type="button"
-            className="cart-remove"
-            onClick={() => removeFromCart(line.id)}
-            style={{
-              fontSize: '0.7rem',
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-              color: 'var(--otaru-parchment-dim)',
-            }}
-          >
-            Remove
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <button
+              type="button"
+              onClick={() => moveCartToWishlist(line)}
+              style={{
+                fontSize: '0.7rem',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                color: 'var(--otaru-gold)',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              Save for later
+            </button>
+            <span style={{ color: 'var(--otaru-line-strong)', fontSize: '0.75rem' }}>|</span>
+            <button
+              type="button"
+              className="cart-remove"
+              onClick={() => removeFromCart(line.id)}
+              style={{
+                fontSize: '0.7rem',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                color: 'var(--otaru-parchment-dim)',
+              }}
+            >
+              Remove
+            </button>
+          </div>
         </div>
       </div>
     </div>
