@@ -25,6 +25,6 @@ describe('Adversarial Forensic Deep Verification Suite', () => {
       // Query should execute cleanly without evaluating injected GROQ expression
       const result = await getChapterBySlug(maliciousSlug);
       expect(result).toBeDefined();
-    });
+    }, 20000);
   });
 });

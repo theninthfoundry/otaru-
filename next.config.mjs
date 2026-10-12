@@ -26,6 +26,7 @@ try {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  devIndicators: false,
   env: {
     FEATURE_FULL_ARCHIVE: process.env.FEATURE_FULL_ARCHIVE || 'false',
     FEATURE_COMMERCE: process.env.FEATURE_COMMERCE || 'false',
