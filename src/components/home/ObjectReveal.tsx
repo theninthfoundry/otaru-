@@ -22,7 +22,7 @@ export function ObjectReveal() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setIsInView(true);
         }
       },
@@ -83,7 +83,7 @@ export function ObjectReveal() {
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]/60" />
               <span className="font-mono text-[11px] tracking-widest text-[#F3EFE6]/60 uppercase">
-                {product.origin.split('·')[0].trim()}
+                {product.origin.split('·')[0]?.trim() ?? ''}
               </span>
               <span className="ml-auto inline-flex items-center justify-center w-7 h-7 border border-[#D4AF37]/30 text-[#D4AF37] font-serif text-sm">
                 山
