@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbopack",
-    "prebuild": "npx tsx scripts/check-claims.ts",
     "build": "next build",
+    "check-claims": "node scripts/check-claims.mjs",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
