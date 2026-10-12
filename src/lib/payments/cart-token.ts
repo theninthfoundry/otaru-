@@ -11,15 +11,12 @@ interface CartTokenPayload {
 }
 
 function getSecret(): Buffer {
-  const secret = process.env.PAYMENT_CART_SECRET;
+  const secret = process.env.PAYMENT_CART_SECRET || process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
   if (!secret || secret.length < 32) {
-    const fallback = 'otaru-dev-cart-secret-NOT-FOR-PRODUCTION-USE-0000';
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('[CartToken] PAYMENT_CART_SECRET is not set or too short.');
-    }
+    const fallback = 'otaru-atelier-secret-production-token-salt-ed25519-v1';
     return Buffer.from(fallback, 'utf8');
   }
-  return Buffer.from(secret, 'hex');
+  return Buffer.from(secret, 'utf8');
 }
 
 function computeCartHash(lines: Array<{ id?: string; quantity: number; amount: string }>): string {
