@@ -96,7 +96,7 @@ export function ArchiveQuickView({ productId, product, onClose }: ArchiveQuickVi
           <div>
             <div className="flex items-baseline justify-between mb-2">
               <span className="font-mono text-xs text-[var(--ink-muted)] uppercase tracking-wider">
-                {product.origin.split('·')[0].trim()}
+                {product.origin.split('·')[0]?.trim() ?? ''}
               </span>
               <span className="font-mono text-lg font-medium text-[var(--ink)]">
                 {formatPrice(product.price)}
@@ -111,7 +111,7 @@ export function ArchiveQuickView({ productId, product, onClose }: ArchiveQuickVi
           <div className="border-t border-hairline pt-4 space-y-2 font-mono text-xs">
             <div className="flex justify-between py-1 border-b border-hairline/60">
               <span className="text-[var(--ink-muted)]">Material</span>
-              <span className="text-[var(--ink)] text-right max-w-[24ch] truncate">{product.material.split(',')[0]}</span>
+              <span className="text-[var(--ink)] text-right max-w-[24ch] truncate">{product.material.split(',')[0] ?? ''}</span>
             </div>
             <div className="flex justify-between py-1">
               <span className="text-[var(--ink-muted)]">Allocation</span>
