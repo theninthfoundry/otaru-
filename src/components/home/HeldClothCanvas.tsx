@@ -186,7 +186,7 @@ export function HeldClothCanvas({ className = '', scrollProgress = 0 }: HeldClot
 
     // Animation render loop
     let animId: number;
-    let startTime = performance.now();
+    const startTime = performance.now();
 
     const render = (time: number) => {
       animId = requestAnimationFrame(render);
