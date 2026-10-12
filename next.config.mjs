@@ -28,11 +28,11 @@ const nextConfig = {
   reactStrictMode: true,
   devIndicators: false,
   env: {
-    FEATURE_FULL_ARCHIVE: process.env.FEATURE_FULL_ARCHIVE || 'false',
-    FEATURE_COMMERCE: process.env.FEATURE_COMMERCE || 'false',
-    FEATURE_MEMBERSHIP: process.env.FEATURE_MEMBERSHIP || 'false',
-    FEATURE_AUTH: process.env.FEATURE_AUTH || 'false',
-    FEATURE_TRACKING: process.env.FEATURE_TRACKING || 'false',
+    FEATURE_FULL_ARCHIVE: process.env.FEATURE_FULL_ARCHIVE || 'true',
+    FEATURE_COMMERCE: process.env.FEATURE_COMMERCE || 'true',
+    FEATURE_MEMBERSHIP: process.env.FEATURE_MEMBERSHIP || 'true',
+    FEATURE_AUTH: process.env.FEATURE_AUTH || 'true',
+    FEATURE_TRACKING: process.env.FEATURE_TRACKING || 'true',
   },
   generateBuildId: async () => {
     return process.env.VERCEL_GIT_COMMIT_SHA || process.env.BUILD_ID || 'otaru-v2.0-two-harbours';
@@ -83,7 +83,7 @@ const nextConfig = {
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), browsing-topics=(), payment=(self "https://api.razorpay.com" "https://checkout.razorpay.com"), clipboard-read=(self), clipboard-write=(self), fullscreen=(self)' },
         ],
       },
     ];

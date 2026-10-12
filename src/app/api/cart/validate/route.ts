@@ -4,6 +4,8 @@ import { issueCartToken } from '@/lib/payments/cart-token';
 import { checkPaymentRateLimit } from '@/lib/payments/payment-rate-limiter';
 import { auditLog } from '@/lib/payments/audit-trail';
 import { logger } from '@/lib/security/logger';
+import { leasedInventoryEngine } from '@/lib/domain/inventory/lease-reservation-engine';
+import { tamperEvidentLedger } from '@/lib/security/tamper-evident-ledger';
 
 const FREE_SHIPPING_THRESHOLD_USD = 250;
 const STANDARD_SHIPPING_USD = 15;
@@ -210,6 +212,21 @@ export async function POST(request: Request) {
       cartToken = `mock-token-${cartOrderId}`;
     }
 
+    // Record Immutable Block in Cryptographic Hash-Chain Ledger
+    const ledgerBlock = tamperEvidentLedger.appendBlock(cartOrderId, 'CART_VALIDATED', {
+      serverSubtotal,
+      discountAmount,
+      taxableBase,
+      gstAmount,
+      shippingFee,
+      giftFee,
+      grandTotal,
+      couponCode: verifiedCoupon?.code || null,
+      stateMode,
+      lineCount: validatedLines.length,
+      clientIp: ip,
+    });
+
     return NextResponse.json({
       success: true,
       data: {
@@ -238,6 +255,8 @@ export async function POST(request: Request) {
         cartToken,
         verifiedAt: new Date().toISOString(),
         auditRef: cartOrderId,
+        ledgerHash: ledgerBlock.currentHash,
+        ledgerBlockIndex: ledgerBlock.index,
       },
     });
   } catch (err) {

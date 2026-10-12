@@ -43,24 +43,16 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 0c. Legacy Route Redirects
-  const redirects: Record<string, string> = {
-    '/archive': '/',
-    '/chapters': '/',
+  // 0c. Public Route Permission Invariants
+  // All archival, commerce, collection, and patron sanctuary routes are explicitly permitted.
+  // Legacy aliases are normalized seamlessly.
+  const routeNormalizations: Record<string, string> = {
     '/studio': '/story',
-    '/membership': '/',
-    '/profile': '/',
-    '/track-order': '/',
-    '/bag': '/',
-    '/sign-in': '/',
-    '/verify': '/',
-    '/account': '/',
-    '/wishlist': '/',
   };
   
-  if (redirects[pathname]) {
+  if (routeNormalizations[pathname]) {
     const redirectUrl = new URL(request.url);
-    redirectUrl.pathname = redirects[pathname];
+    redirectUrl.pathname = routeNormalizations[pathname];
     return NextResponse.redirect(redirectUrl, { status: 301 });
   }
 
@@ -160,8 +152,10 @@ export async function middleware(request: NextRequest) {
   response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), browsing-topics=()');
+  response.headers.set(
+    'Permissions-Policy',
+    'camera=(), microphone=(), geolocation=(), browsing-topics=(), payment=(self "https://api.razorpay.com" "https://checkout.razorpay.com"), clipboard-read=(self), clipboard-write=(self), fullscreen=(self)'
+  );
 
   const scriptSrc =
     "'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://connect.facebook.net https://app.posthog.com https://www.clarity.ms https://checkout.razorpay.com";

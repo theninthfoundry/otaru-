@@ -5,9 +5,12 @@ import { checkIdempotencyAsync, registerIdempotencyKey } from '@/lib/payments/id
 import { evaluateFraudRisk } from '@/lib/payments/fraud';
 import { issueCartToken } from '@/lib/payments/cart-token';
 import { issueNonce } from '@/lib/payments/nonce-store';
-import { addTransaction } from '@/lib/payments/ledger';
 import { auditLog } from '@/lib/payments/audit-trail';
 import { logger } from '@/lib/security/logger';
+import { idempotencyEngine } from '@/lib/domain/checkout/idempotency-engine';
+import { leasedInventoryEngine } from '@/lib/domain/inventory/lease-reservation-engine';
+import { outboxEventEngine } from '@/lib/domain/events/outbox-event-engine';
+import { tamperEvidentLedger } from '@/lib/security/tamper-evident-ledger';
 
 export async function POST(request: Request) {
   const ip =
@@ -152,23 +155,33 @@ export async function POST(request: Request) {
       }
     }
 
-    // Ledger record
-    addTransaction({
-      id: internalOrderId,
+    // 1. Immutable Block in Tamper-Evident Cryptographic Ledger
+    const ledgerBlock = tamperEvidentLedger.appendBlock(internalOrderId, 'ORDER_COMMITTED', {
       orderId: internalOrderId,
-      customerId: email,
-      customerName: `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 'Archival Collector',
+      customerEmail: email,
       amount: totalAmount,
+      subtotal,
+      gstAmount,
       currency: body.currency || 'USD',
-      method: 'RAZORPAY_INITIALIZE',
-      status: 'CREATED',
-      security: {
-        rateLimitPass: true,
-        csrfPass: true,
-        signatureVerified: true,
-      },
-      details: `Cart accession initiated for ${email}. Subtotal: $${subtotal}, GST: $${gstAmount}`,
+      lineCount: verifiedLines.length,
+      clientIp: ip,
+      fraudScore: fraud.score,
     });
+
+    // 2. Stage Transactional Outbox Event (Guaranteed At-Least-Once Delivery)
+    await outboxEventEngine.stageEvent('OrderCreated', internalOrderId, {
+      orderNumber: internalOrderId,
+      customerEmail: email,
+      totalMinor: Math.round(totalAmount * 100),
+      currency: body.currency || 'USD',
+      itemCount: verifiedLines.reduce((acc, curr) => acc + curr.quantity, 0),
+      ledgerHash: ledgerBlock.currentHash,
+    });
+
+    // 3. Commit/Reserve Inventory Leases for Verified Items
+    for (const item of verifiedLines) {
+      await leasedInventoryEngine.reserveLease(item.id, internalOrderId, item.quantity, 1800);
+    }
 
     auditLog({
       type: 'ORDER_CREATED',
@@ -176,6 +189,7 @@ export async function POST(request: Request) {
       details: `Atelier accession ledger order created for ${email}. Total: $${totalAmount}`,
       ip,
       email,
+      meta: { ledgerHash: ledgerBlock.currentHash },
     });
 
     const responsePayload = {
@@ -186,6 +200,8 @@ export async function POST(request: Request) {
       cartToken,
       amount: totalAmount,
       currency: body.currency || 'USD',
+      ledgerHash: ledgerBlock.currentHash,
+      ledgerIndex: ledgerBlock.index,
     };
 
     if (idempotencyKey) {
