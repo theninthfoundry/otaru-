@@ -1,25 +1,25 @@
 [
   {
-    "id": "order_MOCK_F46YI9F1O",
-    "orderId": "OTARU-REG-404679",
+    "id": "order_MOCK_KQ2N2R7AC",
+    "orderId": "OTARU-REG-368871",
     "customerId": "adversary@security-audit.org",
     "customerName": "Security Auditor",
     "amount": 480,
     "currency": "USD",
     "method": "Escrow Sandbox",
     "status": "CREATED",
-    "details": "Order created. Fraud score: 0 (PASS). Gateway: order_MOCK_F46YI9F1O",
+    "details": "Order created. Fraud score: 0 (PASS). Gateway: order_MOCK_KQ2N2R7AC",
     "security": {
       "rateLimitPass": true,
       "csrfPass": true,
       "signatureVerified": false
     },
-    "createdAt": "2026-09-03T16:27:14.754Z",
+    "createdAt": "2026-10-09T19:19:18.504Z",
     "history": [
       {
         "status": "CREATED",
-        "timestamp": "2026-09-03T16:27:14.754Z",
-        "details": "Order created. Fraud score: 0 (PASS). Gateway: order_MOCK_F46YI9F1O"
+        "timestamp": "2026-10-09T19:19:18.504Z",
+        "details": "Order created. Fraud score: 0 (PASS). Gateway: order_MOCK_KQ2N2R7AC"
       }
     ]
   },
@@ -38,11 +38,11 @@
       "csrfPass": true,
       "signatureVerified": false
     },
-    "createdAt": "2026-09-03T16:27:14.557Z",
+    "createdAt": "2026-10-09T19:19:18.440Z",
     "history": [
       {
         "status": "CREATED",
-        "timestamp": "2026-09-03T16:27:14.557Z",
+        "timestamp": "2026-10-09T19:19:18.440Z",
         "details": "Order Created"
       }
     ]
