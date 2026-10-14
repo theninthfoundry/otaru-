@@ -11,10 +11,19 @@ interface CartTokenPayload {
 }
 
 function getSecret(): Buffer {
-  const secret = process.env.PAYMENT_CART_SECRET || process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
+  const secret = process.env.PAYMENT_CART_SECRET;
   if (!secret || secret.length < 32) {
-    const fallback = 'otaru-atelier-secret-production-token-salt-ed25519-v1';
-    return Buffer.from(fallback, 'utf8');
+    if (process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true') {
+      throw new Error(
+        '[FATAL SECURITY INVARIANT]: PAYMENT_CART_SECRET must be configured with a strong secret (at least 32 characters or 64-character hex string) in production.'
+      );
+    }
+    const devFallback = 'otaru-dev-only-cart-secret-do-not-use-in-production-32b';
+    return Buffer.from(devFallback, 'utf8');
+  }
+
+  if (/^[0-9a-fA-F]{64}$/.test(secret)) {
+    return Buffer.from(secret, 'hex');
   }
   return Buffer.from(secret, 'utf8');
 }

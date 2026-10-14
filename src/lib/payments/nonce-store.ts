@@ -27,18 +27,14 @@ export async function consumeNonceAsync(nonce: string, orderId: string): Promise
   const key = `nonce:${nonce}`;
 
   try {
-    const raw = await redis.get(key);
-    if (!raw) return { ok: false, reason: 'NOT_FOUND' };
-
-    const entry = JSON.parse(raw);
-
-    if (entry.consumed) return { ok: false, reason: 'ALREADY_CONSUMED' };
-    if (entry.orderId !== orderId) return { ok: false, reason: 'ORDER_MISMATCH' };
-
-    // Atomic claim via delete or update
-    await redis.del(key);
-
-    return { ok: true, orderId: entry.orderId };
+    const claimResult = await redis.claimNonce(key, orderId);
+    if (claimResult === 'OK') {
+      return { ok: true, orderId };
+    }
+    if (claimResult === 'ORDER_MISMATCH') {
+      return { ok: false, reason: 'ORDER_MISMATCH' };
+    }
+    return { ok: false, reason: 'NOT_FOUND' };
   } catch {
     if (isProduction) {
       return { ok: false, reason: 'REDIS_FAULT' };

@@ -59,9 +59,15 @@ export async function middleware(request: NextRequest) {
   // 1. Admin Security Guard (/admin/* and /api/admin/*)
   if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
     const authHeader = request.headers.get('authorization');
+    const adminCookie =
+      request.cookies.get('otaru_admin_token')?.value ||
+      request.cookies.get('admin_token')?.value;
     const adminSecret = process.env.ADMIN_API_SECRET;
+    const isAuthorized =
+      Boolean(adminSecret) &&
+      (authHeader === `Bearer ${adminSecret}` || adminCookie === adminSecret);
 
-    if (isProduction && (!adminSecret || authHeader !== `Bearer ${adminSecret}`)) {
+    if (isProduction && !isAuthorized) {
       return new NextResponse(
         JSON.stringify({ error: 'Unauthorized administrative access rejected.', code: 'UNAUTHORIZED_ADMIN' }),
         {

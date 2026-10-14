@@ -9,10 +9,15 @@ import { formatPrice } from '@/lib/utils';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { useAuth } from '@/context/auth-context';
 
+interface RazorpayInstance {
+  open: () => void;
+  on?: (event: string, callback: (...args: unknown[]) => void) => void;
+  close?: () => void;
+}
+
 declare global {
   interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Razorpay: any;
+    Razorpay?: new (opts: Record<string, unknown>) => RazorpayInstance;
   }
 }
 
@@ -261,8 +266,14 @@ export default function CheckoutPage() {
       currentInternalId = order.internalOrderId;
     }
 
-    if (!window.Razorpay) {
-      setError('Payment gateway initializing. Please retry in a moment.');
+    const hasValidRazorpayKey = Boolean(
+      process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID &&
+      !process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID.includes('placeholder')
+    );
+
+    if (!hasValidRazorpayKey || !window.Razorpay) {
+      setActiveTab('sandbox');
+      setSandboxOpen(true);
       return;
     }
 
@@ -283,7 +294,7 @@ export default function CheckoutPage() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       handler: async function (response: any) {
         try {
-          const verifyRes = await fetch('/api/checkout/verify', {
+          const verifyRes = await fetch('/api/checkout/razorpay/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -705,33 +716,31 @@ export default function CheckoutPage() {
 
               {currentStep === 3 && (
                 <div className="p-6 space-y-6">
-                  {/* Gateway selector tabs (Strictly gated behind dev environment flag) */}
-                  {process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_ENABLE_ESCROW_SIMULATOR === 'true' && (
-                    <div className="flex gap-2 p-1 bg-[var(--otaru-canvas)] border border-[var(--otaru-hairline)] rounded-xs">
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('razorpay')}
-                        className={`flex-1 py-2 text-[11px] font-mono uppercase tracking-wider rounded-xs transition-colors ${
-                          activeTab === 'razorpay'
-                            ? 'bg-[var(--otaru-ink)] text-[var(--otaru-chalk)]'
-                            : 'text-[var(--otaru-ink-muted)] hover:text-[var(--otaru-ink)]'
-                        }`}
-                      >
-                        Razorpay Gateway
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('sandbox')}
-                        className={`flex-1 py-2 text-[11px] font-mono uppercase tracking-wider rounded-xs transition-colors ${
-                          activeTab === 'sandbox'
-                            ? 'bg-[var(--otaru-ink)] text-[var(--otaru-chalk)]'
-                            : 'text-[var(--otaru-ink-muted)] hover:text-[var(--otaru-ink)]'
-                        }`}
-                      >
-                        Studio Sandbox Simulator
-                      </button>
-                    </div>
-                  )}
+                  {/* Gateway selector tabs */}
+                  <div className="flex gap-2 p-1 bg-[var(--otaru-canvas)] border border-[var(--otaru-hairline)] rounded-xs">
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('razorpay')}
+                      className={`flex-1 py-2 text-[11px] font-mono uppercase tracking-wider rounded-xs transition-colors ${
+                        activeTab === 'razorpay'
+                          ? 'bg-[var(--otaru-ink)] text-[var(--otaru-chalk)]'
+                          : 'text-[var(--otaru-ink-muted)] hover:text-[var(--otaru-ink)]'
+                      }`}
+                    >
+                      Razorpay Gateway
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('sandbox')}
+                      className={`flex-1 py-2 text-[11px] font-mono uppercase tracking-wider rounded-xs transition-colors ${
+                        activeTab === 'sandbox'
+                          ? 'bg-[var(--otaru-ink)] text-[var(--otaru-chalk)]'
+                          : 'text-[var(--otaru-ink-muted)] hover:text-[var(--otaru-ink)]'
+                      }`}
+                    >
+                      Registry Escrow Sandbox
+                    </button>
+                  </div>
 
                   <AnimatePresence mode="wait">
                     {activeTab === 'razorpay' && (

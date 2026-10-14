@@ -45,8 +45,8 @@ describe('Phase 6 — Production Trust Boundary & Adversarial Suite', () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             cart: {
-              lines: [{ id: 'line_1', quantity: 1, cost: { totalAmount: { amount: '420.00', currencyCode: 'USD' } } }],
-              cost: { subtotalAmount: { amount: '420.00', currencyCode: 'USD' } },
+              lines: [{ id: '041-M', quantity: 1, cost: { totalAmount: { amount: '480.00', currencyCode: 'USD' } } }],
+              cost: { subtotalAmount: { amount: '480.00', currencyCode: 'USD' } },
             },
             customer: { email: 'adversary@test.com', firstName: 'John', lastName: 'Doe', address: '123 Test St', city: 'Otaru', zip: '12345' },
           }),
@@ -57,6 +57,35 @@ describe('Phase 6 — Production Trust Boundary & Adversarial Suite', () => {
       } finally {
         (process.env as Record<string, string | undefined>).NODE_ENV = originalEnv;
         if (originalKeySecret) process.env.RAZORPAY_KEY_SECRET = originalKeySecret;
+        if (originalCartSecret) process.env.PAYMENT_CART_SECRET = originalCartSecret;
+      }
+    });
+
+    it('rejects nonexistent catalog products in production mode with HTTP 400', async () => {
+      const originalEnv = process.env.NODE_ENV;
+      const originalCartSecret = process.env.PAYMENT_CART_SECRET;
+      try {
+        (process.env as Record<string, string | undefined>).NODE_ENV = 'production';
+        process.env.PAYMENT_CART_SECRET = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+
+        const mockReq = new Request('http://localhost/api/checkout/razorpay/order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            cart: {
+              lines: [{ id: 'nonexistent_jacket_999', quantity: 1, cost: { totalAmount: { amount: '999.00', currencyCode: 'USD' } } }],
+              cost: { subtotalAmount: { amount: '999.00', currencyCode: 'USD' } },
+            },
+            customer: { email: 'adversary@test.com', firstName: 'John', lastName: 'Doe', address: '123 Test St', city: 'Otaru', zip: '12345' },
+          }),
+        });
+
+        const res = await createOrderHandler(mockReq);
+        expect(res.status).toBe(400);
+        const data = await res.json();
+        expect(data.code).toBe('UNKNOWN_PRODUCT');
+      } finally {
+        (process.env as Record<string, string | undefined>).NODE_ENV = originalEnv;
         if (originalCartSecret) process.env.PAYMENT_CART_SECRET = originalCartSecret;
       }
     });

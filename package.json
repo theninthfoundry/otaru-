@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbopack",
-    "build": "next build",
+    "build": "node scripts/check-claims.mjs && next build",
     "check-claims": "node scripts/check-claims.mjs",
     "start": "next start",
     "lint": "next lint",

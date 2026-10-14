@@ -70,7 +70,13 @@ export async function POST(request: Request) {
       if (!item || typeof item.id !== 'string') continue;
       const baseId = item.id.split('-')[0] || item.id;
       const catalogItem = PRODUCT_CATALOG[baseId];
-      const verifiedPrice = catalogItem ? catalogItem.price : (Number(item.price) || 0);
+      if (!catalogItem && (process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true')) {
+        return NextResponse.json(
+          { error: `Item '${item.id}' could not be verified in product catalog.`, code: 'UNKNOWN_PRODUCT' },
+          { status: 400 }
+        );
+      }
+      const verifiedPrice = catalogItem ? catalogItem.price : 0;
       const verifiedQty = Math.max(1, Math.min(10, Math.floor(Number(item.qty) || 1)));
 
       const lineTotal = verifiedPrice * verifiedQty;
@@ -125,6 +131,7 @@ export async function POST(request: Request) {
     const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
     let razorpayOrderId = `order_${internalOrderId.toLowerCase()}`;
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true';
 
     if (keyId && keySecret) {
       try {
@@ -149,10 +156,26 @@ export async function POST(request: Request) {
         if (res.ok) {
           const rzData = await res.json();
           razorpayOrderId = rzData.id;
+        } else if (isProduction) {
+          return NextResponse.json(
+            { error: 'Payment gateway unavailable in production mode.', code: 'RAZORPAY_GATEWAY_UNAVAILABLE' },
+            { status: 503 }
+          );
         }
       } catch (err) {
         logger.warn('[Checkout] Razorpay API fallback to mock ledger order', { error: err });
+        if (isProduction) {
+          return NextResponse.json(
+            { error: 'Payment gateway unavailable in production mode.', code: 'RAZORPAY_GATEWAY_UNAVAILABLE' },
+            { status: 503 }
+          );
+        }
       }
+    } else if (isProduction) {
+      return NextResponse.json(
+        { error: 'Payment gateway credentials unconfigured in production.', code: 'RAZORPAY_GATEWAY_UNAVAILABLE' },
+        { status: 503 }
+      );
     }
 
     // 1. Immutable Block in Tamper-Evident Cryptographic Ledger
@@ -205,7 +228,7 @@ export async function POST(request: Request) {
     };
 
     if (idempotencyKey) {
-      await registerIdempotencyKey(idempotencyKey, email, responsePayload);
+      await registerIdempotencyKey(idempotencyKey, email, internalOrderId, responsePayload);
     }
 
     return NextResponse.json(responsePayload, { status: 200 });

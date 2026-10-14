@@ -51,16 +51,31 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const saved = localStorage.getItem('otaru_cart');
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Clear out old legacy development mock items if present
-        const isLegacyMock =
-          Array.isArray(parsed) &&
-          parsed.some((item) => item.id === '042-M' || item.name === 'Kiryū Wrap Trouser');
-
-        if (isLegacyMock) {
-          localStorage.removeItem('otaru_cart');
-          setItems([]);
-        } else if (Array.isArray(parsed)) {
-          setItems(parsed);
+        if (Array.isArray(parsed)) {
+          const validatedItems: CartLineItem[] = [];
+          for (const raw of parsed) {
+            if (
+              raw &&
+              typeof raw.id === 'string' &&
+              raw.id.trim() &&
+              typeof raw.name === 'string' &&
+              typeof raw.price === 'number' &&
+              raw.price >= 0 &&
+              typeof raw.qty === 'number' &&
+              Number.isInteger(raw.qty) &&
+              raw.qty >= 1
+            ) {
+              validatedItems.push({
+                id: raw.id.trim(),
+                name: raw.name.trim(),
+                meta: typeof raw.meta === 'string' ? raw.meta : '',
+                price: raw.price,
+                qty: Math.min(10, raw.qty),
+                size: typeof raw.size === 'string' ? raw.size : undefined,
+              });
+            }
+          }
+          setItems(validatedItems);
         }
       }
     } catch {
@@ -83,17 +98,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const toggleCart = () => setIsOpen((prev) => !prev);
 
   const addToCart = (newItem: Omit<CartLineItem, 'qty'> & { qty?: number }) => {
+    const addQty = Math.max(1, Math.min(10, Math.floor(newItem.qty ?? 1)));
     setItems((prev) => {
       const existing = prev.find((item) => item.id === newItem.id);
       let updated: CartLineItem[];
       if (existing) {
         updated = prev.map((item) =>
           item.id === newItem.id
-            ? { ...item, qty: item.qty + (newItem.qty ?? 1) }
+            ? { ...item, qty: Math.min(10, item.qty + addQty) }
             : item
         );
       } else {
-        updated = [...prev, { ...newItem, qty: newItem.qty ?? 1 }];
+        updated = [...prev, { ...newItem, qty: addQty }];
       }
       try {
         localStorage.setItem('otaru_cart', JSON.stringify(updated));
@@ -110,7 +126,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const updated = prev
         .map((item) => {
           if (item.id === id) {
-            const newQty = item.qty + delta;
+            const newQty = Math.min(10, item.qty + delta);
             return newQty > 0 ? { ...item, qty: newQty } : null;
           }
           return item;

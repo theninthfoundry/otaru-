@@ -4,6 +4,7 @@ import { trackKlaviyoEvent } from '@/lib/integrations/klaviyo';
 import { redis } from '@/lib/redis/client';
 import { storeInMemoryOtp } from '@/lib/auth/otp-store';
 import { dispatchMobileOtp, formatE164Phone, maskPhoneNumber } from '@/lib/auth/sms';
+import { logger } from '@/lib/security/logger';
 
 export async function POST(request: NextRequest) {
   try {
@@ -58,8 +59,14 @@ export async function POST(request: NextRequest) {
           { status: 429, headers: { 'Retry-After': '60' } }
         );
       }
-    } catch {
-      // Redis unavailable, allow gracefully
+    } catch (err) {
+      if (process.env.NODE_ENV === 'production') {
+        logger.error('[Auth OTP RateLimit] Production Redis error:', err);
+        return NextResponse.json(
+          { error: 'Authentication service temporarily unavailable. Please retry shortly.', code: 'SERVICE_UNAVAILABLE' },
+          { status: 503 }
+        );
+      }
     }
 
     // Generate secure 6-digit cryptographic OTP
@@ -70,13 +77,22 @@ export async function POST(request: NextRequest) {
     const otpKey = `otp:${canonicalDestination}`;
     try {
       await redis.set(otpKey, otp, ttlSeconds);
-    } catch {
+    } catch (err) {
+      if (process.env.NODE_ENV === 'production') {
+        logger.error('[Auth OTP Storage] Production Redis error:', err);
+        return NextResponse.json(
+          { error: 'Authentication service temporarily unavailable. Please retry shortly.', code: 'SERVICE_UNAVAILABLE' },
+          { status: 503 }
+        );
+      }
       storeInMemoryOtp(canonicalDestination, otp, ttlSeconds);
     }
-    // Sync memory fallback (and also with raw input if different)
-    storeInMemoryOtp(canonicalDestination, otp, ttlSeconds);
-    if (cleanInput !== canonicalDestination) {
-      storeInMemoryOtp(cleanInput, otp, ttlSeconds);
+    // Sync memory fallback (and also with raw input if different) for dev/test
+    if (process.env.NODE_ENV !== 'production') {
+      storeInMemoryOtp(canonicalDestination, otp, ttlSeconds);
+      if (cleanInput !== canonicalDestination) {
+        storeInMemoryOtp(cleanInput, otp, ttlSeconds);
+      }
     }
 
     // Dispatch OTP according to selected channel

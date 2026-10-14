@@ -30,14 +30,15 @@ async function run() {
   }
 
   if (hasErrors) {
-    console.warn('⚠️ Editorial placeholders detected. Deployment will proceed smoothly with fallback archival copy.');
+    console.error('❌ Build Guard Failed: Editorial placeholders detected. Please resolve placeholders before release.');
+    process.exit(1);
   } else {
     console.log('✅ Build Guard passed. Archive claims verified.');
+    process.exit(0);
   }
-  process.exit(0);
 }
 
 run().catch(err => {
-  console.warn('Non-blocking claim check warning:', err);
-  process.exit(0);
+  console.error('Build Guard execution error:', err);
+  process.exit(1);
 });

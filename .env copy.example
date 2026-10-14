@@ -1,0 +1,64 @@
+# ─────────────────────────────────────────────────────────────
+# Otaru environment. Copy to .env.local. NEVER commit real values.
+# Anything prefixed NEXT_PUBLIC_ is shipped to the browser — no secrets there.
+# ─────────────────────────────────────────────────────────────
+
+# PostgreSQL (Neon). DATABASE_URL = pooled (runtime), DIRECT_DATABASE_URL = direct (migrations)
+DATABASE_URL=postgresql://user:password@ep-xyz-pooler.region.neon.tech/neondb?sslmode=require
+DIRECT_DATABASE_URL=postgresql://user:password@ep-xyz.region.neon.tech/neondb?sslmode=require
+
+# Upstash Redis — rate limiting. Required in production when STRICT_PAYMENT_MODE=true.
+UPSTASH_REDIS_REST_URL=https://your-instance.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your_upstash_rest_token
+
+# Secrets (generate each with: openssl rand -hex 32)
+ADMIN_API_SECRET=
+PAYMENT_CART_SECRET=
+CRON_SECRET=
+
+# production: refuses rzp_test_ keys and refuses to run without the rate limiter
+STRICT_PAYMENT_MODE=true
+
+# Razorpay — use TEST keys locally and on preview deployments.
+NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_yourKeyId
+RAZORPAY_KEY_ID=rzp_test_yourKeyId
+RAZORPAY_KEY_SECRET=
+RAZORPAY_WEBHOOK_SECRET=
+
+# Checkout business rules (paise). Keep in sync with the cart's free-shipping progress bar.
+ORDER_HOLD_MINUTES=20
+SHIPPING_FLAT_PAISE=0
+FREE_SHIPPING_THRESHOLD_PAISE=0
+
+# Content-Security-Policy: report-only until /api/csp-report is quiet, then enforce
+CSP_MODE=report-only
+
+# Shopify (optional)
+SHOPIFY_STORE_DOMAIN=otaru.myshopify.com
+SHOPIFY_STOREFRONT_ACCESS_TOKEN=
+SHOPIFY_ADMIN_ACCESS_TOKEN=
+SHOPIFY_REVALIDATION_SECRET=
+
+# Sanity (optional)
+NEXT_PUBLIC_SANITY_PROJECT_ID=
+NEXT_PUBLIC_SANITY_DATASET=production
+SANITY_API_TOKEN=
+
+# Analytics (public IDs; also added to the CSP automatically when set)
+NEXT_PUBLIC_GA4_ID=
+NEXT_PUBLIC_POSTHOG_KEY=
+NEXT_PUBLIC_META_PIXEL_ID=
+
+# Shiprocket
+SHIPROCKET_API_TOKEN=
+SHIPROCKET_EMAIL=
+SHIPROCKET_PASSWORD=
+
+# Klaviyo & WhatsApp (Interakt)
+KLAVIYO_PRIVATE_KEY=
+NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY=
+INTERAKT_API_KEY=
+
+# App
+NEXT_PUBLIC_SITE_URL=https://otaru.in
+REVALIDATION_SECRET=

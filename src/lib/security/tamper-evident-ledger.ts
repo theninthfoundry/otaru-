@@ -84,6 +84,9 @@ class TamperEvidentLedger {
     payload: Record<string, unknown>
   ): LedgerBlock {
     const previousBlock = this.chain[this.chain.length - 1];
+    if (!previousBlock) {
+      throw new Error('Corrupted ledger: Genesis block is missing.');
+    }
     const index = previousBlock.index + 1;
     const timestamp = new Date().toISOString();
     const previousHash = previousBlock.currentHash;
@@ -117,6 +120,7 @@ class TamperEvidentLedger {
     for (let i = 1; i < this.chain.length; i++) {
       const current = this.chain[i];
       const previous = this.chain[i - 1];
+      if (!current || !previous) continue;
 
       // 1. Verify link to previous block
       if (current.previousHash !== previous.currentHash) {

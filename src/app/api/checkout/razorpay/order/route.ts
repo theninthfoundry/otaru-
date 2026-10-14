@@ -113,12 +113,33 @@ export async function POST(request: Request) {
 
 
     // Authoritative Server-Side Price Calculation (Zero-Trust Price Guard)
+    for (const line of cart.lines) {
+      const catalogPrice = resolveCatalogPrice(line);
+      if (catalogPrice === null || catalogPrice <= 0) {
+        if (isProduction) {
+          auditLog({
+            type: 'ORDER_BLOCKED',
+            details: `Order rejected: unverified catalog product/variant: ${line.id}`,
+            ip,
+            email,
+          });
+          return NextResponse.json(
+            {
+              error: `Unrecognized product or variant '${line.id}' cannot be purchased. Authoritative price required.`,
+              code: 'UNKNOWN_PRODUCT',
+            },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
     const subtotalCents = cart.lines.reduce((sum, line) => {
       const catalogPrice = resolveCatalogPrice(line);
       let unitPrice = catalogPrice !== null ? catalogPrice : 0;
 
-      // In non-production/test environments, allow mock line IDs if catalog lookup is empty
-      if (unitPrice === 0) {
+      // In strictly non-production/test environments, allow mock line IDs if catalog lookup is empty
+      if (unitPrice === 0 && !isProduction) {
         const clientAmount = parseFloat(line.cost?.totalAmount?.amount ?? '0');
         unitPrice = clientAmount / (line.quantity ?? 1);
       }

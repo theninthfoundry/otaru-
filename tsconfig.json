@@ -31,5 +31,5 @@
     "**/*.tsx",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "page.tsx", "signature.tsx", "sections.tsx"]
+  "exclude": ["node_modules", "page.tsx", "signature.tsx", "sections.tsx", "src copy", "docs"]
 }

@@ -1,0 +1,116 @@
+// Pin Prisma to 6.x for this schema (`npm i prisma@6 @prisma/client@6`).
+// Prisma 7 moved datasource URLs into prisma.config.ts — migrate deliberately, not by accident.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")        // pooled (Neon pgbouncer) — runtime
+  directUrl = env("DIRECT_DATABASE_URL") // direct — migrations
+}
+
+enum OrderStatus {
+  PENDING        // stock reserved, awaiting payment
+  PAID
+  FULFILLING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  EXPIRED        // reservation lapsed before payment
+  REFUND_PENDING // money captured but order cannot be fulfilled (late payment, stock gone)
+  REFUNDED
+}
+
+enum PaymentStatus {
+  FAILED
+  CAPTURED
+  REFUNDED
+}
+
+/// One row per purchasable size of an Artifact. Source of truth for price + stock at checkout.
+/// Sync from Shopify/Sanity/seed; the browser never supplies a price.
+model Variant {
+  id          String      @id @default(cuid())
+  sku         String      @unique
+  handle      String      // Artifact handle, e.g. the /artifact/[handle] slug
+  title       String
+  size        String
+  pricePaise  Int         // tax-inclusive MRP in paise
+  stockOnHand Int         @default(0)
+  reserved    Int         @default(0)
+  maxPerOrder Int         @default(2)
+  active      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  items       OrderItem[]
+
+  @@index([handle])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  number          String      @unique // human-readable, e.g. OTR-2610-K7Q2MX
+  status          OrderStatus @default(PENDING)
+  idempotencyKey  String      @unique
+  currency        String      @default("INR")
+  subtotalPaise   Int
+  shippingPaise   Int
+  totalPaise      Int
+  name            String
+  email           String
+  phone           String
+  shipping        Json
+  trackingToken   String      @unique // unguessable capability for guest order lookup (no IDOR on order number)
+  razorpayOrderId String?     @unique
+  expiresAt       DateTime
+  paidAt          DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+  payments        Payment[]
+
+  @@index([status, expiresAt])
+  @@index([email])
+}
+
+model OrderItem {
+  id             String  @id @default(cuid())
+  orderId        String
+  variantId      String
+  qty            Int
+  unitPricePaise Int
+  skuSnapshot    String
+  titleSnapshot  String
+  sizeSnapshot   String
+  order          Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variant        Variant @relation(fields: [variantId], references: [id])
+
+  @@index([orderId])
+  @@index([variantId])
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  orderId           String
+  razorpayPaymentId String        @unique
+  razorpayOrderId   String
+  amountPaise       Int
+  status            PaymentStatus
+  method            String?
+  failureReason     String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  order             Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+/// Webhook idempotency ledger: Razorpay delivers at-least-once.
+model WebhookEvent {
+  id          String    @id // x-razorpay-event-id (or sha256 of body if absent)
+  event       String
+  receivedAt  DateTime  @default(now())
+  processedAt DateTime?
+}

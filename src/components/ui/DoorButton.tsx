@@ -43,7 +43,7 @@ export function DoorButton({ onEnter, className = '', isSubmitting = false }: Do
           <>
             <span>{strings.ja.tadaima}</span>
             <span className="opacity-50">/</span>
-            <span>I'M HOME</span>
+            <span>I&apos;M HOME</span>
           </>
         )}
       </span>

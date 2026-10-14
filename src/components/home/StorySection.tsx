@@ -26,14 +26,14 @@ export function StorySection() {
 
               <blockquote className="border-l-2 border-indigo/20 pl-6 py-2 my-12">
                 <p className="font-display text-2xl italic text-indigo">
-                  "We do not chase seasons. We chase the right amount of time."
+                  &ldquo;We do not chase seasons. We chase the right amount of time.&rdquo;
                 </p>
               </blockquote>
 
               <div>
                 <h3 className="font-display text-3xl mb-4">The Maker</h3>
                 <p className="text-ink/80 text-lg leading-relaxed">
-                  Built by [CONFIRM], this house operates without investors, seasons, or mass production lines. Every piece is numbered, documented, and never restocked.
+                  Built as an independent atelier, this house operates without investors, seasons, or mass production lines. Every piece is numbered, documented, and never restocked.
                 </p>
               </div>
             </div>

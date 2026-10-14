@@ -117,6 +117,10 @@ export async function POST(request: Request) {
       });
     } catch (err) {
       logger.error('[Webhook Razorpay Error]:', err);
+      return NextResponse.json(
+        { error: 'Failed to persist webhook event. Retrying recommended.' },
+        { status: 500 }
+      );
     }
   }
 
