@@ -9,7 +9,7 @@ import { addTransaction } from '@/lib/payments/ledger';
 import { auditLog } from '@/lib/payments/audit-trail';
 import { logger } from '@/lib/security/logger';
 import { PRODUCT_CATALOG } from '@/lib/catalog';
-import { prisma } from '@/lib/db/prisma';
+import { prisma, isDatabaseConfigured } from '@/lib/db/prisma';
 
 function resolveCatalogPrice(line: { id?: string; merchandise?: { id?: string; product?: { id?: string } } }): number | null {
   const possibleIds = [
@@ -192,6 +192,24 @@ export async function POST(request: Request) {
 
     const nonce = issueNonce(internalOrderId);
 
+    // Production Data Integrity Gate: Refuse order creation if database is unconfigured
+    if (isProduction && !isDatabaseConfigured()) {
+      logger.error('[Order API SECURITY ALERT] Refusing order creation: DATABASE_URL is unconfigured in production.');
+      auditLog({
+        type: 'ORDER_BLOCKED',
+        details: `Order creation rejected: Database unconfigured in production. Email: ${email}`,
+        ip,
+        email,
+      });
+      return NextResponse.json(
+        {
+          error: 'Order persistence engine is currently unavailable. Please contact the atelier concierge.',
+          code: 'DATABASE_UNAVAILABLE',
+        },
+        { status: 503 }
+      );
+    }
+
     const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
 
@@ -278,7 +296,7 @@ export async function POST(request: Request) {
       },
     });
 
-    if (process.env.DATABASE_URL) {
+    if (isDatabaseConfigured()) {
       try {
         await prisma.order.create({
           data: {
@@ -314,7 +332,19 @@ export async function POST(request: Request) {
           },
         });
       } catch (dbErr) {
-        console.warn('[Prisma Order Create Warning]:', dbErr);
+        logger.error('[Order API CRITICAL] Prisma order persistence failed', {
+          error: dbErr,
+          orderId: internalOrderId,
+        });
+        if (isProduction) {
+          return NextResponse.json(
+            {
+              error: 'Failed to durably record order before payment initialization. Please retry.',
+              code: 'ORDER_PERSISTENCE_FAILED',
+            },
+            { status: 500 }
+          );
+        }
       }
     }
 
