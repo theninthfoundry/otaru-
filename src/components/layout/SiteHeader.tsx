@@ -68,7 +68,7 @@ export function SiteHeader() {
           
           {/* Left: Archival Categories */}
           <div className="flex-1 flex items-center justify-start">
-            <nav className="hidden md:flex items-center gap-7 lg:gap-9" aria-label="Main Navigation">
+            <nav className="hidden lg:flex items-center gap-6 xl:gap-8" aria-label="Main Navigation">
               {navLinks.map((link) => {
                 const isActive = !link.href.includes('#') && (pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href)));
                 return (
@@ -76,10 +76,10 @@ export function SiteHeader() {
                     key={link.label}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className={`font-mono text-[11px] lg:text-xs uppercase tracking-[0.24em] transition-colors ${
+                    className={`font-mono text-[11px] uppercase tracking-[0.22em] transition-colors ${
                       isActive
                         ? 'text-[#F4F0E8] font-medium'
-                        : 'text-[#F4F0E8]/80 hover:text-white'
+                        : 'text-[#F4F0E8]/75 hover:text-white'
                     }`}
                   >
                     {link.label}
@@ -88,14 +88,21 @@ export function SiteHeader() {
               })}
             </nav>
 
-            {/* Mobile Brand Tag */}
-            <div className="md:hidden">
+            {/* Mobile & Tablet Streamlined Links (Keeps Wordmark Uncrowded) */}
+            <div className="lg:hidden flex items-center gap-4 sm:gap-5">
               <Link
                 href="/#batch"
                 onClick={(e) => handleNavClick(e, '/#batch')}
-                className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#F4F0E8]/80 hover:text-white"
+                className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-[#F4F0E8]/85 hover:text-white"
               >
                 SHOP
+              </Link>
+              <Link
+                href="/archive"
+                onClick={(e) => handleNavClick(e, '/archive')}
+                className="hidden sm:inline-block font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-[#F4F0E8]/60 hover:text-white"
+              >
+                ARCHIVE
               </Link>
             </div>
           </div>
