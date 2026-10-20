@@ -20,7 +20,7 @@ export default function MembershipPage() {
             Three tiers. One standard of care.
           </h1>
           <p className="text-sm text-[var(--ink)]/70 leading-relaxed">
-            Membership gives you standing priority to archival batches prior to public release, custom commissions, and a lifetime repair commitment on every garment.
+            Membership gives you standing priority to archival batches prior to public release, custom commissions, and archival care registration for your garments.
           </p>
         </div>
 
@@ -42,7 +42,7 @@ export default function MembershipPage() {
               <ul className="font-mono text-xs text-[var(--ink-muted)] space-y-2.5 pt-4 border-t border-hairline/60">
                 <li>✓ 24hr priority batch release</li>
                 <li>✓ Digital journal access</li>
-                <li>✓ Lifetime repair registration</li>
+                <li>✓ Archival care registration</li>
               </ul>
             </div>
 
