@@ -56,16 +56,16 @@ export function CartCheckoutSection({
 
       if (res.ok && data.serviceable) {
         setDeliveryInfo(
-          `Serviceable Pincode ${clean} (${data.city || 'Regional Hub'}, ${data.state || 'Metro'}): ${data.estimatedDays || '2-3 Business Days'} transit via ${data.courierName || 'BlueDart / Shiprocket Express'}.`
+          `Serviceable Pincode ${clean} (${data.city || 'Regional Hub'}, ${data.state || 'Metro'}): ${data.estimatedDays || 'Standard transit'} via ${data.courierName || 'Insured Express Courier'}.`
         );
       } else {
         if (/^\d{6}$/.test(clean)) {
           setDeliveryInfo(
-            `Pincode ${clean}: Verified for insured courier air freight. Direct dispatch within 48h from Mumbai & Hokkaido hubs.`
+            `Pincode ${clean}: Verified for insured express air dispatch following atelier inspection.`
           );
         } else {
           setDeliveryInfo(
-            `International Postal Code "${clean}": Worldwide tracked air courier verified. Estimated delivery within 4–6 business days.`
+            `Postal Code "${clean}": Tracked air dispatch verified.`
           );
         }
       }
@@ -155,9 +155,9 @@ export function CartCheckoutSection({
           >
             <div className="flex justify-between items-center mb-1">
               <span>Priority Air</span>
-              <span className="text-[9px] text-[var(--gold)]">Yamato / DHL</span>
+              <span className="text-[9px] text-[var(--gold)]">Tracked Dispatch</span>
             </div>
-            <div className="text-[10px] text-[var(--ink-muted)]">24–48h Dispatch · White Glove</div>
+            <div className="text-[10px] text-[var(--ink-muted)]">Insured Freight · Signature Delivery</div>
           </button>
         </div>
       </div>
