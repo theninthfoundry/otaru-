@@ -4,7 +4,7 @@ export const drop01 = {
     earlyAccessStart: 'Active',
     liveStart: '2026-03-01',
     liveEnd: '2026-03-31',
-    shippingDate: 'Dispatches within 5-7 business days',
+    shippingDate: 'Dispatches following individual atelier inspection',
   },
   products: [
     {
