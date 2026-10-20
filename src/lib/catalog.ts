@@ -494,3 +494,33 @@ export const CHAPTERS_DATA = [
     blurb: 'The eleven jackets that started the archive. One never left the warehouse.'
   }
 ];
+
+export const SLUG_TO_ID: Record<string, string> = {
+  'yama-field-jacket': '041',
+  'atelier-jacket-01': '041',
+  'artifact-001-denim-jacket': '041',
+  'kiryu-wrap-trouser': '042',
+  'everyday-trouser-01': '042',
+  'biratori-overshirt': '043',
+  'everyday-overshirt-01': '043',
+  'omi-hemp-tote': '044',
+  'atelier-accessory-01': '044',
+  'otaru-deck-coat': '038',
+  'tsukiji-apron-shirt': '037',
+  'hakodate-watch-cap': '036',
+  'nemuro-wide-trouser': '035',
+  'rishiri-rain-shell': '034',
+  'wakkanai-muffler': '033',
+};
+
+export function resolveProductId(idOrSlug: string): string {
+  if (!idOrSlug) return '041';
+  const clean = idOrSlug.trim().toLowerCase();
+  return SLUG_TO_ID[clean] || clean;
+}
+
+export function getProduct(idOrSlug: string): Product | undefined {
+  const id = resolveProductId(idOrSlug);
+  return PRODUCT_CATALOG[id] || PRODUCT_CATALOG[idOrSlug];
+}
+
