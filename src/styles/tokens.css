@@ -1,59 +1,58 @@
 :root {
-  /* ===== PALETTE (Minimal, Tactile) ===== */
-  /* Undyed-linen paper range */
-  --paper:            #EFEBE3;
-  --paper-2:          #E6E1D8;
-  --paper-subtle:     #DED8CD;
+  /* ===== PALETTE (Tactile Luxury Monochrome with Kuroki Indigo Accent) ===== */
+  /* Warm unbleached paper surfaces */
+  --paper:            #F5F2EC;
+  --paper-2:          #ECE7DE;
+  --paper-subtle:     #E5DFC0;
 
-  /* Sumi ink (not pure #000) */
-  --ink:              #161616;
-  --ink-muted:        #44403B; /* 8.3:1 contrast against #EFEBE3, strictly >= 4.5:1 across all surfaces */
-  --ink-subtle:       rgba(22, 22, 22, 0.58);
+  /* Deep sumi ink (charcoal undertone, not pure #000) */
+  --ink:              #111110;
+  --ink-muted:        #353431;
+  --ink-subtle:       rgba(17, 17, 16, 0.58);
 
-  /* ONE Accent: Indigo (<5% of any screen) */
+  /* Signature Maison Accent: Kuroki Botanical Indigo (<5% of any viewport) */
   --indigo:           #1F2A44;
   --indigo-hover:     #293859;
   --indigo-active:    #161F33;
 
-  /* Mineral neutrals — restrained editorial warmth */
-  --gold:             #8B7355;
-  --gold-muted:       rgba(139, 115, 85, 0.6);
-  --stone-warm:       #A49787;
-  --mineral:          #6B6259;
+  /* Mineral neutrals — stone & raw fiber */
+  --stone:            #B6AEA1;
+  --stone-warm:       #C5BCB0;
+  --graphite:         #353431;
+  --white:            #FFFFFF;
 
-  /* Surfaces: Hairline 1px at 12% ink */
-  --hairline:         rgba(22, 22, 22, 0.12);
-  --hairline-strong:  rgba(22, 22, 22, 0.20);
+  /* Surfaces: Structural hairlines */
+  --hairline:         rgba(17, 17, 16, 0.12);
+  --hairline-strong:  rgba(17, 17, 16, 0.22);
 
-  /* ===== HOUSE OF OTARU ARCHIVAL TOKENS ===== */
-  --otaru-ink:           #0B1420;
-  --otaru-dusk:          #17293E;
-  --otaru-dusk-2:        #223B56;
-  --otaru-horizon:       #5C7A94;
-  --otaru-parchment:     #F4EFE2;
-  --otaru-parchment-dim: #CFC7B3;
-  --otaru-gold:          #D9BD83;
-  --otaru-gold-dim:      #A8905F;
-  --otaru-torii:         #A8462F;
-  --otaru-line:          rgba(244, 239, 226, 0.14);
-  --otaru-line-strong:   rgba(244, 239, 226, 0.28);
+  /* Status Colors */
+  --color-error:      #9E2A2B;
+  --color-success:    #2D5A27;
+
+  /* ===== BACKWARD COMPATIBILITY TOKENS ===== */
+  --otaru-ink:           #111110;
+  --otaru-dusk:          #1A2536;
+  --otaru-dusk-2:        #23334A;
+  --otaru-horizon:       #4A607A;
+  --otaru-parchment:     #F5F2EC;
+  --otaru-parchment-dim: #C7C0B3;
+  --otaru-gold:          #C4A265;
+  --otaru-gold-dim:      #9A7E4D;
+  --otaru-line:          rgba(245, 242, 236, 0.14);
+  --otaru-line-strong:   rgba(245, 242, 236, 0.28);
   --tracking-label:      0.18em;
   --ease-otaru:          cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-fast:       240ms;
-  --duration-base:       560ms;
-  --duration-slow:       900ms;
+  --duration-fast:       200ms;
+  --duration-base:       400ms;
+  --duration-slow:       750ms;
   --space-section:       clamp(5rem, 10vw, 9rem);
-  --space-gutter:        clamp(1.25rem, 4vw, 3rem);
+  --space-gutter:        clamp(1.25rem, 4vw, 3.5rem);
 
-  /* Legacy alias mappings for backward compatibility */
-  --madder:           #1F2A44; /* unified into indigo accent */
-  --turmeric:         rgba(22, 22, 22, 0.65);
-
-  /* Dark mode: Indigo-black */
-  --paper-dark:       #0B111B;
-  --paper-2-dark:     #121B2A;
-  --ink-dark:         #EAE5DC;
-  --hairline-dark:    rgba(234, 229, 220, 0.12);
+  /* Dark mode variants */
+  --paper-dark:       #0B0E12;
+  --paper-2-dark:     #12171F;
+  --ink-dark:         #F5F2EC;
+  --hairline-dark:    rgba(245, 242, 236, 0.12);
 
   /* ===== TYPOGRAPHY ===== */
   --font-display:     'Fraunces', 'Shippori Mincho', serif;
@@ -62,45 +61,56 @@
   --font-mono:        'DM Mono', monospace;
 
   /* ===== FLUID TYPE SCALE ===== */
-  --display-xl:   clamp(3rem, 8.5vw, 9.5rem);
-  --display-l:    clamp(2.5rem, 5.5vw, 5rem);
-  --h2:           clamp(1.75rem, 3vw, 2.75rem);
-  --body:         1.0625rem;
-  --caption:      0.75rem;
+  --display-xl:   clamp(2.75rem, 6.5vw, 6.25rem);
+  --display-l:    clamp(2.0rem, 4.5vw, 4.0rem);
+  --display-m:    clamp(1.5rem, 3.0vw, 2.5rem);
+  --h2:           clamp(1.5rem, 3.0vw, 2.5rem);
+  --body-l:       1.125rem;
+  --body:         1.000rem;
+  --body-s:       0.875rem;
+  --caption:      0.750rem;
+  --micro:        0.6875rem;
 
   --lh-display:   0.98;
   --lh-body:      1.65;
-  --measure:      62ch;
+  --measure:      60ch;
 
   /* ===== 4PX BASE SPACING SCALE ===== */
   --sp-1: 4px;    --sp-2: 8px;    --sp-3: 12px;
   --sp-4: 16px;   --sp-6: 24px;   --sp-8: 32px;
-  --sp-12: 48px;  --sp-18: 72px;  --sp-28: 112px;
-  --sp-42: 168px;
+  --sp-12: 48px;  --sp-16: 64px;  --sp-24: 96px;
+  --sp-36: 144px;
 
   /* ===== GRID & LAYOUT ===== */
   --grid-columns:  12;
   --grid-gutter:   24px;
   --grid-margin:   clamp(20px, 4vw, 64px);
   --grid-max:      1360px;
-  --section-pad:   clamp(96px, 14vw, 200px);
+  --section-pad:   clamp(5rem, 10vw, 9rem);
+
+  /* Aspect Ratios */
+  --ratio-portrait: 4 / 5;
+  --ratio-tall:     3 / 4;
+  --ratio-square:   1 / 1;
+  --ratio-wide:     16 / 9;
 
   /* ===== MOTION ===== */
-  --ease:          cubic-bezier(0.22, 1, 0.36, 1);
+  --ease:          cubic-bezier(0.16, 1, 0.3, 1);
   --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-settle:   cubic-bezier(0.33, 1, 0.68, 1);
-  --dur-fast:      150ms;
-  --dur-normal:    300ms;
-  --dur-slow:      600ms;
-  --dur-cinematic: 900ms;
+  --ease-settle:   cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-instant:   100ms;
+  --dur-fast:      200ms;
+  --dur-normal:    400ms;
+  --dur-slow:      750ms;
+  --dur-cinematic: 1200ms;
 
   /* ===== SHAPE & SURFACES ===== */
   --radius:        0px;
   --radius-input:  2px;
 
-  /* ONLY shadow allowed across entire system is the cart drawer and concierge panel */
-  --shadow-drawer: -12px 0 40px rgba(11, 17, 27, 0.22);
-  --shadow-panel:  0 -4px 40px rgba(11, 17, 27, 0.12);
+  /* Drawer shadow */
+  --shadow-drawer: -12px 0 40px rgba(17, 17, 16, 0.18);
+  --shadow-panel:  0 -4px 40px rgba(17, 17, 16, 0.10);
 }
 
 [data-theme="dark"],
@@ -108,10 +118,10 @@
   --paper:            var(--paper-dark);
   --paper-2:          var(--paper-2-dark);
   --ink:              var(--ink-dark);
-  --ink-muted:        rgba(234, 229, 220, 0.65);
-  --ink-subtle:       rgba(234, 229, 220, 0.40);
+  --ink-muted:        rgba(245, 242, 236, 0.65);
+  --ink-subtle:       rgba(245, 242, 236, 0.40);
   --hairline:         var(--hairline-dark);
-  --hairline-strong:  rgba(234, 229, 220, 0.22);
+  --hairline-strong:  rgba(245, 242, 236, 0.22);
 }
 
 @media (max-width: 767px) {
@@ -123,6 +133,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   :root {
+    --dur-instant:   0ms;
     --dur-fast:      0ms;
     --dur-normal:    0ms;
     --dur-slow:      0ms;

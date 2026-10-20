@@ -51,7 +51,6 @@ h1, .display-xl {
   line-height: var(--lh-display);
   font-weight: 400;
   letter-spacing: -0.02em;
-  text-wrap: balance;
   margin: 0;
 }
 
@@ -61,7 +60,6 @@ h2, .display-l {
   line-height: var(--lh-display);
   font-weight: 400;
   letter-spacing: -0.02em;
-  text-wrap: balance;
   margin: 0;
 }
 
@@ -71,8 +69,13 @@ h3, .h2 {
   line-height: 1.15;
   font-weight: 400;
   letter-spacing: -0.01em;
-  text-wrap: balance;
   margin: 0;
+}
+
+@supports (text-wrap: balance) {
+  h1, h2, h3, .display-xl, .display-l, .h2 {
+    text-wrap: balance;
+  }
 }
 
 p {
@@ -360,6 +363,7 @@ h1.section-title {
   font-family: var(--font-display);
   font-size: 0.75rem;
   color: var(--ink-muted);
+  -webkit-user-select: none;
   user-select: none;
 }
 

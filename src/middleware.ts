@@ -47,7 +47,7 @@ export async function middleware(request: NextRequest) {
   // All archival, commerce, collection, and patron sanctuary routes are explicitly permitted.
   // Legacy aliases are normalized seamlessly.
   const routeNormalizations: Record<string, string> = {
-    '/studio': '/story',
+    '/story': '/studio',
   };
   
   if (routeNormalizations[pathname]) {
