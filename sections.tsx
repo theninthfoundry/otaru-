@@ -1,2 +1,1 @@
-// Latent Studio foreign artifact — retired
-export {};
+export { default, OTARU_HTML_SOURCE } from './signature';
