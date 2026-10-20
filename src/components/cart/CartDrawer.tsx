@@ -192,7 +192,7 @@ export function CartDrawer() {
               <span className="font-display text-2xl text-[var(--ink)] font-normal">{formatPrice(subtotal)}</span>
             </div>
             <p className="font-mono text-[10px] text-[var(--ink-muted)] mb-4">
-              Taxes calculated at checkout · Free returns within 14 days
+              Taxes calculated at checkout · Atelier fit assistance supported
             </p>
             <Link
               href="/checkout"
@@ -209,7 +209,7 @@ export function CartDrawer() {
               View Full Cart, GST Ledger & Wishlist →
             </Link>
             <p className="text-[10px] text-center text-[var(--ink-muted)] leading-tight">
-              Direct studio dispatch from Hokkaido · Registered under lifetime repair ledger.
+              Insured atelier dispatch · Archival provenance registered.
             </p>
           </div>
         )}
