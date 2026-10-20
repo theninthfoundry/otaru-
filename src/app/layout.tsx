@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 import { Fraunces, Hanken_Grotesk, DM_Mono, Tiro_Devanagari_Hindi } from 'next/font/google';
-import { SiteHeader } from '@/components/layout/SiteHeader';
-import { SiteFooter } from '@/components/layout/SiteFooter';
 import '@/styles/globals.css';
 import { site } from '../../content/site';
 
@@ -47,6 +45,7 @@ export const metadata: Metadata = {
 };
 
 import { AppProviders } from '@/components/providers/AppProviders';
+import { SiteChrome } from '@/components/layout/SiteChrome';
 
 export default function RootLayout({
   children,
@@ -60,9 +59,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <AppProviders>
-          <SiteHeader />
-          <main id="main">{children}</main>
-          <SiteFooter />
+          <SiteChrome>{children}</SiteChrome>
         </AppProviders>
       </body>
     </html>
