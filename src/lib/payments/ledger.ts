@@ -158,23 +158,34 @@ export function addTransaction(tx: Omit<Transaction, 'createdAt' | 'history'> & 
 
   // Dual-write to Prisma DB asynchronously if configured
   if (process.env.DATABASE_URL) {
-    prisma.payment.upsert({
-      where: { gatewayOrderId: tx.id },
-      create: {
-        orderId: tx.orderId,
-        gateway: 'RAZORPAY',
-        gatewayOrderId: tx.id,
-        amountMinor: Math.round(tx.amount * 100),
-        currency: tx.currency,
-        status: tx.status,
-        details: tx.details,
-        signature: tx.security.signatureVerified ? 'VERIFIED' : null,
-      },
-      update: {
-        status: tx.status,
-        details: tx.details,
-      },
-    }).catch(err => console.warn('[Prisma Dual-Write Warning]:', err.message));
+    (async () => {
+      try {
+        const order = await prisma.order.findUnique({
+          where: { internalId: tx.orderId },
+        });
+        if (order) {
+          await prisma.payment.upsert({
+            where: { gatewayOrderId: tx.id },
+            create: {
+              orderId: order.id,
+              gateway: 'RAZORPAY',
+              gatewayOrderId: tx.id,
+              amountMinor: Math.round(tx.amount * 100),
+              currency: tx.currency,
+              status: tx.status,
+              details: tx.details,
+              signature: tx.security.signatureVerified ? 'VERIFIED' : null,
+            },
+            update: {
+              status: tx.status,
+              details: tx.details,
+            },
+          });
+        }
+      } catch (err: unknown) {
+        console.warn('[Prisma Dual-Write Warning]:', err instanceof Error ? err.message : String(err));
+      }
+    })();
   }
 
   return (existingIdx !== -1 && transactions[existingIdx]) ? transactions[existingIdx]! : newTx;
