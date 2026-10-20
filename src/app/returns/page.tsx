@@ -82,13 +82,13 @@ export default function ReturnsPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.4rem' }}>
           <span className="eyebrow" style={{ margin: 0 }}>Support & Care</span>
           <span style={{ fontSize: '0.62rem', letterSpacing: '0.18em', color: 'var(--otaru-gold-dim)', textTransform: 'uppercase', fontFamily: 'monospace' }}>
-            [ LIFETIME GUARANTEE ]
+            [ ATELIER STEWARDSHIP ]
           </span>
         </div>
 
-        <h1 className="section-title">Lifetime repair & returns</h1>
+        <h1 className="section-title">Care, repair &amp; exchanges</h1>
         <p className="section-lede">
-          We believe an acquisition from Otaru marks the beginning of a lifelong stewardship. Every garment is eligible for lifetime repair.
+          We believe an acquisition from Otaru marks the beginning of a lifelong relationship with the cloth. Garments are eligible for artisanal repair and maintenance consultation.
         </p>
 
         {/* Mode Selector Tabs */}
@@ -114,7 +114,7 @@ export default function ReturnsPage() {
               fontFamily: 'monospace',
             }}
           >
-            ✦ Free Lifetime Repair
+            ✦ Atelier Repair Intake
           </button>
           <button
             type="button"
