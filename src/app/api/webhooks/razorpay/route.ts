@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { prisma } from '@/lib/db/prisma';
+import { prisma, isDatabaseConfigured } from '@/lib/db/prisma';
 import { Prisma } from '@prisma/client';
 import { logger } from '@/lib/security/logger';
 
@@ -59,8 +59,19 @@ export async function POST(request: Request) {
   const eventId = payload.event_id || payload.payload?.payment?.entity?.id || `webhook_${Date.now()}`;
   const eventType = payload.event || 'payment.captured';
 
-  // 2. Atomic Persist inside PostgreSQL Transaction
-  if (process.env.DATABASE_URL) {
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true';
+
+  // 2. Production Resilience Gate: Refuse acknowledgment if database is unavailable
+  if (isProduction && !isDatabaseConfigured()) {
+    logger.error('[Webhook Razorpay Error] Database unconfigured in production. Webhook persistence refused.');
+    return NextResponse.json(
+      { error: 'Database service unavailable for webhook persistence. Retry requested.' },
+      { status: 503 }
+    );
+  }
+
+  // 3. Atomic Persist inside PostgreSQL Transaction
+  if (isDatabaseConfigured()) {
     try {
       await prisma.$transaction(async (tx) => {
         // Idempotent deduplication check
@@ -68,7 +79,10 @@ export async function POST(request: Request) {
           where: { eventId },
         });
 
-        if (existing) return;
+        if (existing) {
+          logger.info(`[Webhook Razorpay] Duplicate event ignored idempotently: ${eventId}`);
+          return;
+        }
 
         await tx.webhookEvent.create({
           data: {
@@ -94,24 +108,116 @@ export async function POST(request: Request) {
           const paymentEntity = payload.payload?.payment?.entity;
           const orderId = paymentEntity?.order_id;
           if (orderId) {
-            await tx.payment.updateMany({
+            const existingPayment = await tx.payment.findUnique({
               where: { gatewayOrderId: orderId },
-              data: {
-                status: 'CAPTURED',
-                gatewayPaymentId: paymentEntity?.id,
-                details: 'Payment captured via Razorpay webhook',
-              },
+              include: { order: true },
             });
-            await tx.order.updateMany({
-              where: {
-                payments: {
-                  some: { gatewayOrderId: orderId },
+
+            if (existingPayment) {
+              // 1. Idempotency Guard: already processed
+              if (existingPayment.status === 'CAPTURED') {
+                logger.info(`[Webhook Razorpay] Payment ${paymentEntity?.id} already marked CAPTURED. Idempotent return.`);
+                return;
+              }
+
+              // 2. Authoritative Amount Cross-Check
+              const webhookAmount = paymentEntity?.amount;
+              if (typeof webhookAmount === 'number' && webhookAmount !== existingPayment.amountMinor) {
+                logger.warn(`[Webhook Razorpay CRITICAL] AMOUNT_MISMATCH for payment ${paymentEntity?.id}. Expected: ${existingPayment.amountMinor}, Received: ${webhookAmount}`);
+                await tx.payment.update({
+                  where: { id: existingPayment.id },
+                  data: {
+                    status: 'FAILED',
+                    gatewayPaymentId: paymentEntity?.id,
+                    details: `CRITICAL AMOUNT MISMATCH: Webhook amount ${webhookAmount} does not match expected ${existingPayment.amountMinor}.`,
+                  },
+                });
+                await tx.paymentEvent.create({
+                  data: {
+                    paymentId: existingPayment.id,
+                    fromStatus: existingPayment.status,
+                    toStatus: 'FAILED',
+                    gatewayEventId: paymentEntity?.id,
+                    rawPayload: payload as Prisma.InputJsonValue,
+                  },
+                });
+                return;
+              }
+
+              await tx.payment.update({
+                where: { id: existingPayment.id },
+                data: {
+                  status: 'CAPTURED',
+                  gatewayPaymentId: paymentEntity?.id,
+                  details: 'Payment captured via Razorpay webhook',
                 },
-              },
-              data: {
-                status: 'PAID',
-              },
-            });
+              });
+
+              await tx.paymentEvent.create({
+                data: {
+                  paymentId: existingPayment.id,
+                  fromStatus: existingPayment.status,
+                  toStatus: 'CAPTURED',
+                  gatewayEventId: paymentEntity?.id,
+                  rawPayload: payload as Prisma.InputJsonValue,
+                },
+              });
+
+              await tx.order.update({
+                where: { id: existingPayment.orderId },
+                data: {
+                  status: 'PAID',
+                },
+              });
+            } else {
+              // 3. UNMATCHED PAYMENT ISOLATION (ZERO-FABRICATION PRINCIPLE)
+              // Webhook arrived for an order unknown to local database.
+              // We durably record payment so funds are tracked, but DO NOT mark PAID or fake cart items.
+              const amountMinor = paymentEntity?.amount ?? 0;
+              const currency = paymentEntity?.currency ?? 'INR';
+              const customerEmail = paymentEntity?.email || 'unmatched-payment@otaru.in';
+              const unmatchedInternalId = `OTARU-WH-UNMATCHED-${Date.now()}`;
+
+              const unmatchedOrder = await tx.order.create({
+                data: {
+                  internalId: unmatchedInternalId,
+                  customerEmail,
+                  customerName: 'UNMATCHED PAYMENT (WEBHOOK RECONCILIATION)',
+                  status: 'PAYMENT_PENDING', // NEVER mark PAID without verified cart items
+                  subtotalMinor: amountMinor,
+                  shippingMinor: 0,
+                  taxMinor: 0,
+                  totalMinor: amountMinor,
+                  currency,
+                  payments: {
+                    create: {
+                      gateway: 'RAZORPAY',
+                      gatewayOrderId: orderId,
+                      gatewayPaymentId: paymentEntity?.id,
+                      amountMinor,
+                      currency,
+                      status: 'CAPTURED',
+                      details: 'CRITICAL: Payment captured via Razorpay webhook without authoritative internal cart provenance. Held for manual concierge reconciliation. DO NOT DISPATCH.',
+                    },
+                  },
+                },
+              });
+
+              await tx.outboxEvent.create({
+                data: {
+                  eventId: `evt_wh_unmatched_${paymentEntity?.id || eventId}`,
+                  type: 'UnmatchedPaymentCaptured',
+                  payload: {
+                    orderId: unmatchedOrder.id,
+                    internalId: unmatchedInternalId,
+                    gatewayOrderId: orderId,
+                    gatewayPaymentId: paymentEntity?.id,
+                    requiresReconciliation: true,
+                  },
+                  status: 'PENDING',
+                },
+              });
+            }
           }
         }
       });
