@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Plate } from './Plate';
 import { Stamp } from './Stamp';
 
@@ -20,7 +21,7 @@ export function ProductPlate({ product }: ProductPlateProps) {
   const numberStr = product.objectNumber.replace(/[^0-9]/g, '');
   
   return (
-    <a href={`/product/${product.slug}`} className="group block">
+    <Link href={`/product/${product.slug}`} className="group block">
       <div className="relative">
         <Plate src={product.image} label={`ARTIFACT ${product.objectNumber}`} />
         
@@ -41,6 +42,6 @@ export function ProductPlate({ product }: ProductPlateProps) {
           <span>{product.material}</span>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
