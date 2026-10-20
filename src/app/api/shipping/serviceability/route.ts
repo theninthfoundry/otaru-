@@ -102,12 +102,12 @@ export async function GET(request: NextRequest) {
     pincode,
     city: regionInfo?.city || 'Metro Delivery Zone',
     state: regionInfo?.state || 'India',
-    courierName: regionInfo?.metro ? 'Bluedart Air Express' : 'Delhivery Premium Surface',
-    estimatedDays: regionInfo?.days || '3-5 Business Days',
+    courierName: regionInfo?.metro ? 'Insured Air Express' : 'Insured Surface Freight',
+    estimatedDays: regionInfo?.days || 'Standard transit',
     estimatedDeliveryDate: formattedDate,
     expressAvailable: true,
     freeShippingThreshold: 5000,
-    shippingFee: 0, // Complimentary white-glove shipping on archival acquisitions
-    provider: 'Otaru Archival Courier Network',
+    shippingFee: 0,
+    provider: 'Otaru Atelier Logistics',
   });
 }
