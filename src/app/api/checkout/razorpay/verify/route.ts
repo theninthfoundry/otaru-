@@ -8,7 +8,7 @@ import { auditLog } from '@/lib/payments/audit-trail';
 import { logger } from '@/lib/security/logger';
 import { sendOrderConfirmationWhatsApp } from '@/lib/integrations/interakt';
 import { trackKlaviyoEvent } from '@/lib/integrations/klaviyo';
-import { prisma } from '@/lib/db/prisma';
+import { prisma, isDatabaseConfigured } from '@/lib/db/prisma';
 
 export async function POST(request: Request) {
   const ip =
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, mock, nonce } = validation.data;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, mock, nonce, internalOrderId } = validation.data;
 
     // Strict Production Gate: Reject any mock payment attempt in Production
     if (isProduction && (mock || razorpay_signature === 'mock_signature_approved')) {
@@ -153,30 +153,292 @@ export async function POST(request: Request) {
         { signatureVerified: true },
       );
 
-      if (process.env.DATABASE_URL) {
+      // Production Data Integrity Gate: Refuse false success if database is unconfigured
+      if (isProduction && !isDatabaseConfigured()) {
+        logger.error('[Verify API CRITICAL ALERT] Payment captured on gateway, but database is unconfigured in production.', {
+          gatewayOrderId: razorpay_order_id,
+          gatewayPaymentId: razorpay_payment_id,
+        });
+        auditLog({
+          type: 'RECONCILIATION_REQUIRED',
+          details: `Payment CAPTURED on gateway but persistence unconfigured. Payment: ${razorpay_payment_id}`,
+          ref: razorpay_order_id,
+          meta: { paymentId: razorpay_payment_id, gatewayOrderId: razorpay_order_id, status: 'UNPERSISTED_PAYMENT' },
+        });
+        return NextResponse.json(
+          {
+            verified: false,
+            error: 'Payment was captured, but order confirmation persistence failed. Please retain your payment reference and contact the atelier concierge.',
+            code: 'PAYMENT_CAPTURED_PERSISTENCE_FAILED',
+            paymentId: razorpay_payment_id,
+            orderId: razorpay_order_id,
+          },
+          { status: 500 }
+        );
+      }
+
+      let isUnmatchedPayment = false;
+      let matchedInternalOrderId: string | null = null;
+      let amountMismatchDetected = false;
+
+      if (isDatabaseConfigured()) {
         try {
-          await prisma.payment.updateMany({
-            where: { gatewayOrderId: razorpay_order_id },
-            data: {
-              status: 'CAPTURED',
-              gatewayPaymentId: razorpay_payment_id,
-              signature: razorpay_signature,
-              details: `Payment captured. Signature verified.`,
-            },
-          });
-          await prisma.order.updateMany({
-            where: {
-              payments: {
-                some: { gatewayOrderId: razorpay_order_id },
-              },
-            },
-            data: {
-              status: 'PAID',
-            },
+          await prisma.$transaction(async (tx) => {
+            const existingPayment = await tx.payment.findUnique({
+              where: { gatewayOrderId: razorpay_order_id },
+              include: { order: true },
+            });
+
+            if (existingPayment) {
+              matchedInternalOrderId = existingPayment.order.internalId;
+
+              // 1. Idempotency Guard: Already captured payment
+              if (existingPayment.status === 'CAPTURED') {
+                logger.info(`[Verify API] Payment ${razorpay_payment_id} already marked CAPTURED. Idempotent acknowledgment.`);
+                return;
+              }
+
+              // 2. Authoritative Amount Cross-Check
+              if (validation.data.amount) {
+                const clientAmountMinor = Math.round(parseFloat(validation.data.amount) * 100);
+                if (clientAmountMinor !== existingPayment.amountMinor) {
+                  logger.warn(`[Verify API CRITICAL] AMOUNT_MISMATCH for payment ${razorpay_payment_id}. Expected: ${existingPayment.amountMinor}, Received: ${clientAmountMinor}`);
+                  amountMismatchDetected = true;
+                  await tx.payment.update({
+                    where: { id: existingPayment.id },
+                    data: {
+                      status: 'FAILED',
+                      gatewayPaymentId: razorpay_payment_id,
+                      signature: razorpay_signature,
+                      details: `CRITICAL AMOUNT MISMATCH: Gateway/client claimed ${clientAmountMinor}, expected ${existingPayment.amountMinor}.`,
+                    },
+                  });
+                  await tx.paymentEvent.create({
+                    data: {
+                      paymentId: existingPayment.id,
+                      fromStatus: existingPayment.status,
+                      toStatus: 'FAILED',
+                      gatewayEventId: razorpay_payment_id,
+                    },
+                  });
+                  return;
+                }
+              }
+
+              await tx.payment.update({
+                where: { id: existingPayment.id },
+                data: {
+                  status: 'CAPTURED',
+                  gatewayPaymentId: razorpay_payment_id,
+                  signature: razorpay_signature,
+                  details: 'Payment captured and HMAC signature verified.',
+                },
+              });
+
+              await tx.paymentEvent.create({
+                data: {
+                  paymentId: existingPayment.id,
+                  fromStatus: existingPayment.status,
+                  toStatus: 'CAPTURED',
+                  gatewayEventId: razorpay_payment_id,
+                },
+              });
+
+              await tx.order.update({
+                where: { id: existingPayment.orderId },
+                data: {
+                  status: 'PAID',
+                },
+              });
+
+              await tx.outboxEvent.create({
+                data: {
+                  eventId: `evt_pay_cap_${razorpay_payment_id}`,
+                  type: 'PaymentCaptured',
+                  payload: {
+                    orderId: existingPayment.orderId,
+                    internalId: existingPayment.order.internalId,
+                    gatewayOrderId: razorpay_order_id,
+                    gatewayPaymentId: razorpay_payment_id,
+                    amountMinor: existingPayment.amountMinor,
+                    currency: existingPayment.currency,
+                  },
+                  status: 'PENDING',
+                },
+              });
+            } else {
+              // 3. Fallback: Check if Order exists by internalOrderId
+              const existingOrder = internalOrderId
+                ? await tx.order.findUnique({ where: { internalId: internalOrderId } })
+                : null;
+
+              if (existingOrder) {
+                matchedInternalOrderId = existingOrder.internalId;
+
+                if (validation.data.amount) {
+                  const clientAmountMinor = Math.round(parseFloat(validation.data.amount) * 100);
+                  if (clientAmountMinor !== existingOrder.totalMinor) {
+                    logger.warn(`[Verify API CRITICAL] AMOUNT_MISMATCH for recovered order ${existingOrder.internalId}. Expected: ${existingOrder.totalMinor}, Received: ${clientAmountMinor}`);
+                    amountMismatchDetected = true;
+                    return;
+                  }
+                }
+
+                const newPayment = await tx.payment.create({
+                  data: {
+                    orderId: existingOrder.id,
+                    gateway: 'RAZORPAY',
+                    gatewayOrderId: razorpay_order_id,
+                    gatewayPaymentId: razorpay_payment_id,
+                    amountMinor: existingOrder.totalMinor,
+                    currency: existingOrder.currency,
+                    status: 'CAPTURED',
+                    signature: razorpay_signature,
+                    details: 'Payment created and captured during verification recovery workflow',
+                  },
+                });
+
+                await tx.paymentEvent.create({
+                  data: {
+                    paymentId: newPayment.id,
+                    fromStatus: 'CREATED',
+                    toStatus: 'CAPTURED',
+                    gatewayEventId: razorpay_payment_id,
+                  },
+                });
+
+                await tx.order.update({
+                  where: { id: existingOrder.id },
+                  data: { status: 'PAID' },
+                });
+
+                await tx.outboxEvent.create({
+                  data: {
+                    eventId: `evt_pay_cap_rec_${razorpay_payment_id}`,
+                    type: 'PaymentCaptured',
+                    payload: {
+                      orderId: existingOrder.id,
+                      internalId: existingOrder.internalId,
+                      gatewayOrderId: razorpay_order_id,
+                      gatewayPaymentId: razorpay_payment_id,
+                      amountMinor: existingOrder.totalMinor,
+                    },
+                    status: 'PENDING',
+                  },
+                });
+              } else {
+                // 4. UNMATCHED PAYMENT ISOLATION (ZERO-FABRICATION PRINCIPLE)
+                // When neither Order nor Payment exists, a valid HMAC proves money was paid,
+                // BUT DOES NOT establish what products, sizes or quantities were selected.
+                // We MUST NOT fabricate a fake 'PAID' order with empty items!
+                // Instead, record the payment in PAYMENT_PENDING container and flag for concierge.
+                isUnmatchedPayment = true;
+                const unmatchedInternalId = internalOrderId || `OTARU-UNMATCHED-${Date.now()}`;
+                matchedInternalOrderId = unmatchedInternalId;
+                const amountFloat = parseFloat(validation.data.amount || '0');
+                const amountMinor = Math.round(amountFloat * 100);
+
+                const unmatchedOrder = await tx.order.create({
+                  data: {
+                    internalId: unmatchedInternalId,
+                    customerEmail: validation.data.customerEmail || 'unmatched-payment@otaru.in',
+                    customerName: 'UNMATCHED PAYMENT (REQUIRES ATELIER RECONCILIATION)',
+                    status: 'PAYMENT_PENDING', // NEVER mark PAID without verified cart items
+                    subtotalMinor: amountMinor,
+                    shippingMinor: 0,
+                    taxMinor: 0,
+                    totalMinor: amountMinor,
+                    currency: 'INR',
+                    payments: {
+                      create: {
+                        gateway: 'RAZORPAY',
+                        gatewayOrderId: razorpay_order_id,
+                        gatewayPaymentId: razorpay_payment_id,
+                        amountMinor,
+                        currency: 'INR',
+                        status: 'CAPTURED',
+                        signature: razorpay_signature,
+                        details: 'CRITICAL: Captured payment could not be matched to an authoritative cart/order in database. Held for manual concierge reconciliation. DO NOT DISPATCH.',
+                      },
+                    },
+                  },
+                });
+
+                await tx.outboxEvent.create({
+                  data: {
+                    eventId: `evt_unmatched_pay_${razorpay_payment_id}`,
+                    type: 'UnmatchedPaymentCaptured',
+                    payload: {
+                      orderId: unmatchedOrder.id,
+                      internalId: unmatchedInternalId,
+                      gatewayOrderId: razorpay_order_id,
+                      gatewayPaymentId: razorpay_payment_id,
+                      requiresReconciliation: true,
+                    },
+                    status: 'PENDING',
+                  },
+                });
+              }
+            }
           });
         } catch (dbErr) {
-          console.warn('[Prisma Payment Update Warning]:', dbErr);
+          logger.error('[Verify API CRITICAL] Database transaction failed during payment capture verification', {
+            error: dbErr,
+            orderId: razorpay_order_id,
+            paymentId: razorpay_payment_id,
+          });
+          if (isProduction) {
+            return NextResponse.json(
+              {
+                verified: false,
+                error: 'Payment was captured, but persistence encountered an error. Your acquisition is safely logged for reconciliation.',
+                code: 'PERSISTENCE_TRANSACTION_FAILED',
+                paymentId: razorpay_payment_id,
+                orderId: razorpay_order_id,
+              },
+              { status: 500 }
+            );
+          }
         }
+      }
+
+      if (amountMismatchDetected) {
+        auditLog({
+          type: 'AMOUNT_MISMATCH_BLOCKED',
+          details: `Verification rejected due to amount mismatch for payment ${razorpay_payment_id}`,
+          ref: razorpay_order_id,
+          meta: { paymentId: razorpay_payment_id },
+        });
+        return NextResponse.json(
+          {
+            verified: false,
+            error: 'Payment verification failed: captured amount does not match authoritative order total.',
+            code: 'AMOUNT_MISMATCH',
+            paymentId: razorpay_payment_id,
+          },
+          { status: 400 }
+        );
+      }
+
+      if (isUnmatchedPayment) {
+        auditLog({
+          type: 'RECONCILIATION_REQUIRED',
+          details: `Captured payment ${razorpay_payment_id} unlinked from cart provenance. Staged for atelier concierge intake.`,
+          ref: razorpay_order_id,
+          meta: { paymentId: razorpay_payment_id, orderId: razorpay_order_id, internalId: matchedInternalOrderId },
+        });
+        return NextResponse.json(
+          {
+            verified: false,
+            requiresReconciliation: true,
+            error: 'Payment was received by gateway, but order item provenance requires concierge reconciliation. Your payment ID has been securely logged. The atelier team has been notified.',
+            code: 'PAYMENT_CAPTURED_UNMATCHED_ORDER',
+            paymentId: razorpay_payment_id,
+            orderId: razorpay_order_id,
+            internalOrderId: matchedInternalOrderId,
+          },
+          { status: 202 }
+        );
       }
 
       auditLog({
