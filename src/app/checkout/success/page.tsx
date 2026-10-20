@@ -85,7 +85,7 @@ function SuccessContent() {
               Save Provenance Record
             </span>
             <p className="text-xs text-white/70 mb-4 leading-relaxed">
-              Create a collector account to manage lifetime repair requests and view your owned archive catalogue.
+              Create a collector account to manage garment care &amp; repair requests and view your owned archive catalogue.
             </p>
             <form onSubmit={handleCreateAccount} className="flex gap-2">
               <input
