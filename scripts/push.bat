@@ -14,6 +14,9 @@ git diff --cached --quiet || git commit -m "fix(sanity): refine schema configura
 git add tsconfig.json
 git diff --cached --quiet || git commit -m "chore(types): update tsconfig inclusions for app router and signature files"
 
+git add next.config.mjs
+git diff --cached --quiet || git commit -m "chore(next): configure root rewrite to preview.html and set X-Frame-Options to SAMEORIGIN"
+
 :: 2. Brand & Legal Commitments Sanitization
 git add src/app/shipping-exchanges/page.tsx
 git diff --cached --quiet || git commit -m "feat(legal): sanitize dispatch timeline in shipping and exchanges documentation"

@@ -20,6 +20,7 @@ function Invoke-CommitStep([string]$files, [string]$msg) {
 Invoke-CommitStep 'AGENTS.md' 'chore(manifesto): align AGENTS.md with house of otaru editorial standard'
 Invoke-CommitStep 'sanity.config.ts' 'fix(sanity): refine schema configuration and studio dataset bindings'
 Invoke-CommitStep 'tsconfig.json' 'chore(types): update tsconfig inclusions for app router and signature files'
+Invoke-CommitStep 'next.config.mjs' 'chore(next): configure root rewrite to preview.html and set X-Frame-Options to SAMEORIGIN'
 
 # 2. Brand & Legal Commitments Sanitization
 Invoke-CommitStep 'src/app/shipping-exchanges/page.tsx' 'feat(legal): sanitize dispatch timeline in shipping and exchanges documentation'
