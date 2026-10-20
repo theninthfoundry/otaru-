@@ -48,7 +48,7 @@ export async function runPaymentReconciliation(): Promise<ReconciliationReport> 
   });
 
   for (const payment of capturedPayments) {
-    if (!payment.order || payment.order.status !== 'CONFIRMED') {
+    if (!payment.order || (payment.order.status !== 'CONFIRMED' && payment.order.status !== 'PAID')) {
       const mismatch: ReconciliationMismatch = {
         id: `recon_${payment.id}`,
         type: 'MISMATCH_CAPTURED_UNCONFIRMED',
@@ -66,9 +66,9 @@ export async function runPaymentReconciliation(): Promise<ReconciliationReport> 
     }
   }
 
-  // 2. Audit Confirmed Orders vs Paid Ledger
+  // 2. Audit Confirmed/Paid Orders vs Paid Ledger
   const confirmedOrders = await prisma.order.findMany({
-    where: { status: 'CONFIRMED' },
+    where: { status: { in: ['CONFIRMED', 'PAID'] } },
     include: { payments: true },
   });
 
