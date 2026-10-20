@@ -93,6 +93,7 @@ export const VerifyRequestSchema = z.object({
     z.string().regex(/^pay_MOCK_[A-Z0-9]+$/, 'Invalid mock payment ID.'),
   ]),
   razorpay_signature: RazorpaySignatureSchema,
+  internalOrderId: z.string().optional(),
   mock: z.boolean().optional().default(false),
   nonce: z.string().uuid('Nonce must be a valid UUID.').optional(),
   cartToken: z.string().min(10).optional(),
