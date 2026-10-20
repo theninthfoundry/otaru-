@@ -21,7 +21,14 @@ export function validateEnvMatrix(): EnvCheckViolation[] {
 
   // Check 2: Production mandatory secrets presence check
   if (process.env.NODE_ENV === 'production' || process.env.STRICT_ENV_CHECK === 'true') {
-    const requiredServerSecrets = ['DATABASE_URL', 'REDIS_URL', 'RAZORPAY_KEY_SECRET', 'ADMIN_API_SECRET'];
+    const requiredServerSecrets = [
+      'DATABASE_URL',
+      'REDIS_URL',
+      'RAZORPAY_KEY_SECRET',
+      'RAZORPAY_WEBHOOK_SECRET',
+      'NEXT_PUBLIC_RAZORPAY_KEY_ID',
+      'ADMIN_API_SECRET',
+    ];
     for (const secret of requiredServerSecrets) {
       if (!process.env[secret]) {
         violations.push({
@@ -30,6 +37,13 @@ export function validateEnvMatrix(): EnvCheckViolation[] {
           severity: 'CRITICAL',
         });
       }
+    }
+    if (!process.env.DIRECT_DATABASE_URL) {
+      violations.push({
+        variable: 'DIRECT_DATABASE_URL',
+        issue: 'DIRECT_DATABASE_URL is recommended for Prisma migrations under pooled database environments.',
+        severity: 'WARNING',
+      });
     }
   }
 
