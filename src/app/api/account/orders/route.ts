@@ -67,7 +67,9 @@ export async function GET(request: NextRequest) {
   const customerEmail = authEmail.trim().toLowerCase();
   let orders: CustomerOrder[] = [];
 
-  // 1. Fetch from Database if available
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true';
+
+  // 1. Fetch from Database
   if (process.env.DATABASE_URL) {
     try {
       const dbOrders = await prisma.order.findMany({
@@ -104,10 +106,15 @@ export async function GET(request: NextRequest) {
     } catch (err) {
       console.warn('[Orders DB Query Exception]:', err);
     }
+  } else if (isProduction) {
+    return NextResponse.json(
+      { error: 'Order history is temporarily unavailable. Persistence service unconfigured.', code: 'DATABASE_UNAVAILABLE' },
+      { status: 503 }
+    );
   }
 
-  // 2. Fetch from In-Memory Payment Ledger if DB returned no records
-  if (orders.length === 0) {
+  // 2. Local Development Only: Non-authoritative diagnostics ledger
+  if (orders.length === 0 && !isProduction) {
     const transactions = getTransactions();
     const matchingTx = transactions.filter(
       (t) => (t.customerId || '').toLowerCase() === customerEmail
@@ -129,7 +136,7 @@ export async function GET(request: NextRequest) {
           },
         ],
         trackingNumber: `AWB${tx.orderId.replace(/\D/g, '') || '84920'}`,
-        shipmentStatus: tx.status === 'CAPTURED' ? 'In Transit — Hokkaido Express' : 'Order Processing in Studio',
+        shipmentStatus: tx.status === 'CAPTURED' ? 'In Transit' : 'Order Processing in Atelier',
       }));
     }
   }
