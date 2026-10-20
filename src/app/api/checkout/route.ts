@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PRODUCT_CATALOG } from '@/lib/catalog';
+import { PRODUCT_CATALOG, resolveProductId } from '@/lib/catalog';
 import { checkPaymentRateLimit } from '@/lib/payments/payment-rate-limiter';
 import { checkIdempotencyAsync, registerIdempotencyKey } from '@/lib/payments/idempotency';
 import { evaluateFraudRisk } from '@/lib/payments/fraud';
@@ -11,6 +11,7 @@ import { idempotencyEngine } from '@/lib/domain/checkout/idempotency-engine';
 import { leasedInventoryEngine } from '@/lib/domain/inventory/lease-reservation-engine';
 import { outboxEventEngine } from '@/lib/domain/events/outbox-event-engine';
 import { tamperEvidentLedger } from '@/lib/security/tamper-evident-ledger';
+import { prisma, isDatabaseConfigured } from '@/lib/db/prisma';
 
 export async function POST(request: Request) {
   const ip =
@@ -68,8 +69,14 @@ export async function POST(request: Request) {
 
     for (const item of items) {
       if (!item || typeof item.id !== 'string') continue;
-      const baseId = item.id.split('-')[0] || item.id;
-      const catalogItem = PRODUCT_CATALOG[baseId];
+      const rawId = item.id.trim();
+      const parts = rawId.split('-');
+      const lastPart = parts[parts.length - 1];
+      const hasSizeSuffix = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'ONE', 'SIZE'].includes(lastPart.toUpperCase());
+      const baseId = hasSizeSuffix ? parts.slice(0, -1).join('-') : parts[0] || rawId;
+      const cleanId = resolveProductId(baseId);
+      const catalogItem = PRODUCT_CATALOG[cleanId] || PRODUCT_CATALOG[baseId];
+
       if (!catalogItem && (process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true')) {
         return NextResponse.json(
           { error: `Item '${item.id}' could not be verified in product catalog.`, code: 'UNKNOWN_PRODUCT' },
@@ -127,11 +134,30 @@ export async function POST(request: Request) {
       orderId: internalOrderId,
     });
 
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true';
+
+    // Production Data Integrity Gate: Refuse order creation if database is unconfigured
+    if (isProduction && !isDatabaseConfigured()) {
+      logger.error('[CheckoutAPI SECURITY ALERT] Refusing order creation: DATABASE_URL is unconfigured in production.');
+      auditLog({
+        type: 'ORDER_BLOCKED',
+        details: `Order creation rejected: Database unconfigured in production. Email: ${email}`,
+        ip,
+        email,
+      });
+      return NextResponse.json(
+        {
+          error: 'Order persistence engine is currently unavailable. Please contact the atelier concierge.',
+          code: 'DATABASE_UNAVAILABLE',
+        },
+        { status: 503 }
+      );
+    }
+
     // Check for Razorpay live keys
     const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
     let razorpayOrderId = `order_${internalOrderId.toLowerCase()}`;
-    const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true';
 
     if (keyId && keySecret) {
       try {
@@ -176,6 +202,60 @@ export async function POST(request: Request) {
         { error: 'Payment gateway credentials unconfigured in production.', code: 'RAZORPAY_GATEWAY_UNAVAILABLE' },
         { status: 503 }
       );
+    }
+
+    // Authoritative Durable Persistence in PostgreSQL
+    if (isDatabaseConfigured()) {
+      try {
+        await prisma.order.create({
+          data: {
+            internalId: internalOrderId,
+            customerEmail: email,
+            customerName: `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 'Archival Collector',
+            status: 'CREATED',
+            subtotalMinor: Math.round(subtotal * 100),
+            shippingMinor: Math.round(shipping * 100),
+            taxMinor: Math.round(gstAmount * 100),
+            totalMinor: Math.round(totalAmount * 100),
+            currency: body.currency === 'INR' ? 'INR' : 'USD',
+            items: {
+              create: verifiedLines.map((line) => {
+                const catalogItem = PRODUCT_CATALOG[resolveProductId(line.id)] || PRODUCT_CATALOG[line.id];
+                return {
+                  artifactHandle: line.id,
+                  quantity: line.quantity,
+                  unitPriceMinor: Math.round((catalogItem?.price ?? 0) * 100),
+                };
+              }),
+            },
+            payments: {
+              create: {
+                gateway: keyId && keySecret ? 'RAZORPAY' : 'MOCK',
+                gatewayOrderId: razorpayOrderId,
+                amountMinor: Math.round(totalAmount * 100),
+                currency: body.currency === 'INR' ? 'INR' : 'USD',
+                status: 'CREATED',
+                fraudScore: fraud.score,
+                details: `Order initialized. Gateway order: ${razorpayOrderId}`,
+              },
+            },
+          },
+        });
+      } catch (dbErr) {
+        logger.error('[CheckoutAPI CRITICAL] PostgreSQL order persistence failed', {
+          error: dbErr,
+          orderId: internalOrderId,
+        });
+        if (isProduction) {
+          return NextResponse.json(
+            {
+              error: 'Failed to durably record order before payment initialization. Please retry.',
+              code: 'ORDER_PERSISTENCE_FAILED',
+            },
+            { status: 500 }
+          );
+        }
+      }
     }
 
     // 1. Immutable Block in Tamper-Evident Cryptographic Ledger
