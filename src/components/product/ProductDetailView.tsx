@@ -6,7 +6,7 @@ import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { useCurrency } from '@/lib/currency';
 import { useCart } from '@/lib/cart';
 import { useSizeGuide } from '@/lib/size-guide';
-import { PRODUCT_CATALOG, CARE_SETS, Product } from '@/lib/catalog';
+import { PRODUCT_CATALOG, CARE_SETS, Product, getProduct, resolveProductId } from '@/lib/catalog';
 import { ObjectPassport } from './ObjectPassport';
 import { ObjectFitCalculator } from './ObjectFitCalculator';
 import { CraftProvenanceMap } from './CraftProvenanceMap';
@@ -26,7 +26,8 @@ interface ProductDetailViewProps {
  * full-screen Hotspot Inspection, and visual Craft Provenance map.
  */
 export function ProductDetailView({ productId }: ProductDetailViewProps) {
-  const product: Product | undefined = PRODUCT_CATALOG[productId];
+  const resolvedId = resolveProductId(productId);
+  const product: Product | undefined = getProduct(productId);
   const { formatPrice } = useCurrency();
   const { addToCart, openCart } = useCart();
   const { openSizeGuide } = useSizeGuide();
@@ -83,7 +84,7 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
     }
 
     addToCart({
-      id: `${productId}-${selectedSize}`,
+      id: `${resolvedId}-${selectedSize}`,
       name: product.name,
       meta: `${product.material.split(',')[0]} · Size ${selectedSize}`,
       price: product.price,
@@ -343,11 +344,11 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
             <div className="border border-hairline p-4 bg-[var(--paper-2)] space-y-3 text-xs font-sans">
               <div className="flex items-center gap-2 text-[var(--ink)]">
                 <span className="font-mono text-sm text-[var(--indigo)]">✦</span>
-                <span><strong>Lifetime Atelier Repair:</strong> Registered under studio repair ledger.</span>
+                <span><strong>Atelier Care &amp; Restoration:</strong> Archival serial registration upon acquisition.</span>
               </div>
               <div className="flex items-center gap-2 text-[var(--ink)]">
                 <span className="font-mono text-sm text-[var(--indigo)]">⟳</span>
-                <span><strong>Complimentary Dispatch:</strong> Direct from Hokkaido canal workshop.</span>
+                <span><strong>Insured Air Dispatch:</strong> Securely packaged following individual inspection.</span>
               </div>
 
               {/* Delivery Date Estimator */}
