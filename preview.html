@@ -332,6 +332,7 @@
       inset: 0;
       z-index: 100;
       background: rgba(7, 13, 20, 0.85);
+      -webkit-backdrop-filter: blur(8px);
       backdrop-filter: blur(8px);
       display: none;
       align-items: center;
@@ -346,13 +347,53 @@
       width: 90%;
       border: 1px solid rgba(21, 21, 21, 0.15);
     }
+    .batch-description {
+      color: rgba(21, 21, 21, 0.7);
+      max-width: 50ch;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .modal-title-mono {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .modal-close-button {
+      font-size: 1.25rem;
+    }
+    .modal-search-input {
+      width: 100%;
+      padding: 0.75rem;
+      background: transparent;
+      border: 1px solid rgba(21, 21, 21, 0.2);
+      font-family: var(--font-body);
+      font-size: 1rem;
+    }
+    .modal-escape-hint {
+      margin-top: 1rem;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: rgba(21, 21, 21, 0.5);
+    }
 
-    @media (max-width: 768px) {
-      header { padding: 1.25rem 1.5rem; }
+    @media (max-width: 1024px) {
+      header { padding: 1.25rem 2rem; }
       .nav-left { display: none; }
-      .hero-content { padding: 7rem 1.5rem 0 1.5rem; }
+      .hero-content { padding: 7rem 2rem 0 2rem; }
       .hero-tagline { display: none; }
-      .hero-footer { padding: 0 1.5rem 1.75rem 1.5rem; }
+      .hero-footer { padding: 0 2rem 1.75rem 2rem; }
+    }
+    @media (max-width: 640px) {
+      header { padding: 1rem 1.25rem; }
+      .hero-content { padding: 6.5rem 1.25rem 0 1.25rem; }
+      .hero-footer { padding: 0 1.25rem 1.5rem 1.25rem; }
     }
   </style>
 </head>
@@ -474,7 +515,7 @@
   <section id="batch" class="next-section">
     <div class="section-kicker">BATCH 01 · HAND-NUMBERED ALLOCATION</div>
     <h2 class="section-title">Current Batch.</h2>
-    <p style="color: rgba(21, 21, 21, 0.7); max-width: 50ch; line-height: 1.7; font-size: 1.05rem;">
+    <p class="batch-description">
       Four garments cut from raw indigo twill and botanical sukumo. Each piece is individually stamped, numbered, and never restocked once homed.
     </p>
   </section>
@@ -482,12 +523,12 @@
   <!-- Quick Interactive Modal (Cart / Search preview) -->
   <div id="searchModal" class="modal-overlay" onclick="closeSearch(event)">
     <div class="modal-box" onclick="event.stopPropagation()">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-        <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.2em; text-transform:uppercase;">SEARCH ARCHIVE</span>
-        <button onclick="closeSearch()" style="font-size:1.25rem;">✕</button>
+      <div class="modal-header">
+        <span class="modal-title-mono">SEARCH ARCHIVE</span>
+        <button onclick="closeSearch()" class="modal-close-button">✕</button>
       </div>
-      <input type="text" placeholder="Type artifact name or craft..." style="width:100%; padding:0.75rem; background:transparent; border:1px solid rgba(21,21,21,0.2); font-family:var(--font-body); font-size:1rem;" autofocus />
-      <p style="margin-top:1rem; font-family:var(--font-mono); font-size:11px; color:rgba(21,21,21,0.5);">Press ESC to dismiss</p>
+      <input type="text" placeholder="Type artifact name or craft..." class="modal-search-input" autofocus />
+      <p class="modal-escape-hint">Press ESC to dismiss</p>
     </div>
   </div>
 
