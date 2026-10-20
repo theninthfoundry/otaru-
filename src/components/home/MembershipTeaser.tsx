@@ -69,7 +69,7 @@ export function MembershipTeaser() {
               <h2 className="section-title" id="membership-heading">Three ways to keep the archive close.</h2>
             </div>
             <p className="section-lede" style={{ margin: 0 }}>
-              Join the collector circle for private seasonal releases, atelier fittings, and complimentary lifetime repairs.
+              Join the collector circle for private seasonal releases, atelier fittings, and garment restoration consultation.
             </p>
           </div>
         </RevealOnScroll>
