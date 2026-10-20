@@ -40,7 +40,7 @@ const DEFAULT_STAGES: TrackingStage[] = [
     date: '05 Oct, 04:20 Local',
     completed: false,
     active: true,
-    notes: 'Carrier Yamato Global / BlueDart Air linehaul. Pressurized garment hold.',
+    notes: 'Insured express air courier linehaul. Pressurized garment hold.',
   },
   {
     key: 'depot',
