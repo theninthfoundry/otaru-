@@ -397,7 +397,7 @@ export function SiteFooter() {
                   href="/shipping-exchanges"
                   className="hover:text-[#F2E8D6] transition-colors inline-block focus:outline-none focus-visible:underline"
                 >
-                  Lifetime Repairs
+                  Care &amp; Repairs
                 </Link>
               </li>
             </ul>
@@ -557,7 +557,30 @@ export function SiteFooter() {
         <div className="w-full border-t border-[rgba(222,210,188,0.22)] my-11 sm:my-14" />
 
         {/* ========================================================
-            05. LOWER METADATA ROW: Globe, Copyright, Coordinates & Invariants
+            05. LEGAL & COMPLIANCE LINKS
+            ======================================================== */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-6 border-b border-[rgba(222,210,188,0.12)] text-[11px] text-[#C7B9A0]/80">
+          <div className="flex flex-wrap items-center gap-5 sm:gap-7">
+            <Link href="/privacy" className="hover:text-[#F2E8D6] transition-colors focus:outline-none focus-visible:underline">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-[#F2E8D6] transition-colors focus:outline-none focus-visible:underline">
+              Terms of Service
+            </Link>
+            <Link href="/shipping-exchanges" className="hover:text-[#F2E8D6] transition-colors focus:outline-none focus-visible:underline">
+              Shipping &amp; Exchanges
+            </Link>
+            <Link href="/returns" className="hover:text-[#F2E8D6] transition-colors focus:outline-none focus-visible:underline">
+              Repairs &amp; Returns
+            </Link>
+          </div>
+          <div className="font-mono text-[10px] text-[#C7B9A0]/60 uppercase tracking-wider">
+            DPDP (INDIA) &amp; GLOBAL COMPLIANT
+          </div>
+        </div>
+
+        {/* ========================================================
+            06. LOWER METADATA ROW: Globe, Copyright, Coordinates & Invariants
             ======================================================== */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-[10px] sm:text-[10.5px] uppercase tracking-[0.2em] text-[#C7B9A0] font-sans">
           
