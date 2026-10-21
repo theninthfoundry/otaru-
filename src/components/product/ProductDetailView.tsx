@@ -96,12 +96,36 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
     setTimeout(() => setIsAdded(false), 2000);
   };
 
-  const handlePincodeCheck = (e: React.FormEvent) => {
+  const [isCheckingPincode, setIsCheckingPincode] = useState(false);
+  const [pincodeError, setPincodeError] = useState<string | null>(null);
+
+  const handlePincodeCheck = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (pincode.length >= 4) {
-      const d = new Date();
-      d.setDate(d.getDate() + 5);
-      setDeliveryDate(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' }));
+    const clean = pincode.trim();
+    if (!/^\d{6}$/.test(clean)) {
+      setPincodeError('Please enter a valid 6-digit postal code.');
+      setDeliveryDate(null);
+      return;
+    }
+    setIsCheckingPincode(true);
+    setPincodeError(null);
+    try {
+      const res = await fetch(`/api/shipping/serviceability?pincode=${encodeURIComponent(clean)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.serviceable) {
+          setDeliveryDate(`${data.estimatedDays || '4-5 business days'} via ${data.courierName || 'Insured Express Air'} (${data.city || 'Regional Hub'})`);
+        } else {
+          setPincodeError(data.reason || 'Pincode outside standard insured courier coverage.');
+          setDeliveryDate(null);
+        }
+      } else {
+        setDeliveryDate('3-5 business days following atelier inspection');
+      }
+    } catch {
+      setDeliveryDate('3-5 business days following atelier inspection');
+    } finally {
+      setIsCheckingPincode(false);
     }
   };
 
@@ -355,21 +379,31 @@ export function ProductDetailView({ productId }: ProductDetailViewProps) {
               <form onSubmit={handlePincodeCheck} className="pt-2 border-t border-hairline flex items-center gap-2">
                 <input
                   type="text"
+                  maxLength={6}
                   value={pincode}
-                  onChange={(e) => setPincode(e.target.value)}
-                  placeholder="Enter postal code for dispatch estimate"
+                  onChange={(e) => {
+                    setPincode(e.target.value);
+                    setPincodeError(null);
+                  }}
+                  placeholder="Enter 6-digit postal code"
                   className="bg-[var(--paper)] border border-hairline px-3 py-1.5 text-xs font-mono text-[var(--ink)] flex-1 focus:outline-none focus:border-[var(--indigo)]"
                 />
                 <button
                   type="submit"
-                  className="px-3 py-1.5 bg-[var(--paper)] border border-hairline font-mono text-[11px] uppercase hover:bg-[var(--paper-subtle)]"
+                  disabled={isCheckingPincode || !pincode.trim()}
+                  className="px-3 py-1.5 bg-[var(--paper)] border border-hairline font-mono text-[11px] uppercase hover:bg-[var(--paper-subtle)] disabled:opacity-50"
                 >
-                  Estimate
+                  {isCheckingPincode ? 'Querying…' : 'Estimate'}
                 </button>
               </form>
+              {pincodeError && (
+                <p className="text-[11px] font-mono text-red-600">
+                  ✕ {pincodeError}
+                </p>
+              )}
               {deliveryDate && (
                 <p className="text-[11px] font-mono text-[var(--indigo)]">
-                  ✓ Estimated arrival: <strong>{deliveryDate}</strong> (tracked express courier)
+                  ✓ Estimated dispatch: <strong>{deliveryDate}</strong>
                 </p>
               )}
             </div>
