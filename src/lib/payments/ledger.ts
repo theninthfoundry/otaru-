@@ -233,6 +233,26 @@ export function updateTransactionStatus(
   return tx;
 }
 
+export async function updateTransactionStatusAsync(
+  id: string,
+  status: Transaction['status'],
+  details: string,
+  securityUpdates?: Partial<LedgerSecurityInfo>
+): Promise<Transaction | null> {
+  const tx = updateTransactionStatus(id, status, details, securityUpdates);
+  if (process.env.DATABASE_URL) {
+    try {
+      await prisma.payment.updateMany({
+        where: { OR: [{ gatewayOrderId: id }, { orderId: id }] },
+        data: { status, details },
+      });
+    } catch (err: unknown) {
+      console.warn('[Prisma Update Warning]:', err instanceof Error ? err.message : String(err));
+    }
+  }
+  return tx;
+}
+
 export function getStats(): LedgerStats {
   const transactions = getTransactions();
   const successfulTx = transactions.filter(t => t.status === 'CAPTURED');
