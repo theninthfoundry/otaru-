@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     const report = await runPaymentReconciliation();
 
     auditLog({
-      type: 'ORDER_CREATED', // Record operational action
+      type: report.mismatchesFound > 0 ? 'RECONCILIATION_MISMATCH' : 'RECONCILIATION_REQUIRED',
       details: `Admin reconciliation scan completed. Status: ${report.status}. Mismatches: ${report.mismatchesFound}`,
       ip,
       meta: { status: report.status, mismatchesFound: report.mismatchesFound },
