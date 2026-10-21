@@ -2,8 +2,8 @@ export const drop01 = {
   dates: {
     waitlistOpen: 'Open',
     earlyAccessStart: 'Active',
-    liveStart: '2026-03-01',
-    liveEnd: '2026-03-31',
+    liveStart: '2026-10-01',
+    liveEnd: '2026-11-30',
     shippingDate: 'Dispatches following individual atelier inspection',
   },
   products: [
