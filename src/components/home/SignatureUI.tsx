@@ -11,7 +11,7 @@ export function SignatureUI() {
   return (
     <iframe
       src="/preview.html"
-      title="Otaru — Living Image Archive"
+      title="House of Otaru"
       style={{
         position: 'fixed',
         top: 0,

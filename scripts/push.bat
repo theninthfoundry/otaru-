@@ -124,8 +124,8 @@ git add docs/PAYMENT_RECOVERY_VERIFICATION.md
 git diff --cached --quiet || git commit -m "docs(audit): publish payment recovery integrity and zero-fabrication verification report"
 
 :: 9. Verbatim Living Image Archive UI Integration
-copy /y preview.html public\preview.html >nul
-copy /y preview.html public\index.html >nul
+copy /y public\preview.html preview.html >nul
+copy /y public\preview.html public\index.html >nul
 
 git add preview.html
 git diff --cached --quiet || git commit -m "feat(preview): deploy verbatim house of otaru living image archive prototype"

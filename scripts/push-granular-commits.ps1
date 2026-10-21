@@ -70,8 +70,8 @@ CommitStep 'docs/PRODUCTION_DATA_INTEGRITY_REPORT.md' 'docs(audit): document pro
 CommitStep 'docs/PAYMENT_RECOVERY_VERIFICATION.md' 'docs(audit): publish payment recovery integrity and zero-fabrication verification report'
 
 # 9. Verbatim Living Image Archive UI Integration
-Copy-Item -Path 'preview.html' -Destination 'public/preview.html' -Force
-Copy-Item -Path 'preview.html' -Destination 'public/index.html' -Force
+Copy-Item -Path 'public/preview.html' -Destination 'preview.html' -Force
+Copy-Item -Path 'public/preview.html' -Destination 'public/index.html' -Force
 CommitStep 'preview.html' 'feat(preview): deploy verbatim house of otaru living image archive prototype'
 CommitStep 'public/preview.html' 'feat(static): mirror standalone archive prototype to public preview asset'
 CommitStep 'public/index.html' 'feat(static): install standalone archive prototype as public index'
