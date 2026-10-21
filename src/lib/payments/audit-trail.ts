@@ -21,7 +21,8 @@ export type AuditEventType =
   | 'SCHEMA_VALIDATION_FAILED'
   | 'NONCE_CONSUMED'
   | 'NONCE_REPLAY_BLOCKED'
-  | 'RECONCILIATION_MISMATCH';
+  | 'RECONCILIATION_MISMATCH'
+  | 'RECONCILIATION_REQUIRED';
 
 export interface AuditEvent {
   seq: number;

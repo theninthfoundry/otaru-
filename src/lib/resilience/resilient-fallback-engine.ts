@@ -6,7 +6,7 @@
  * against 3rd-party latency spikes and upstream API degradations.
  */
 
-import { CircuitBreaker, getCircuitBreaker, CircuitState } from './circuit-breaker';
+import { getCircuitBreaker, CircuitState } from './circuit-breaker';
 
 export interface ServiceMetrics {
   serviceName: string;

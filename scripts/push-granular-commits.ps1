@@ -5,7 +5,7 @@ Write-Host '==========================================================' -Foregro
 Write-Host ' House of Otaru — 50-Commit Granular Push Pipeline' -ForegroundColor Cyan
 Write-Host '==========================================================' -ForegroundColor Cyan
 
-function Invoke-CommitStep([string]$files, [string]$msg) {
+function CommitStep([string]$files, [string]$msg) {
     git add $files
     $staged = git diff --cached --name-only
     if ($staged) {
@@ -17,72 +17,72 @@ function Invoke-CommitStep([string]$files, [string]$msg) {
 }
 
 # 1. Architectural Manifesto & Configuration
-Invoke-CommitStep 'AGENTS.md' 'chore(manifesto): align AGENTS.md with house of otaru editorial standard'
-Invoke-CommitStep 'sanity.config.ts' 'fix(sanity): refine schema configuration and studio dataset bindings'
-Invoke-CommitStep 'tsconfig.json' 'chore(types): update tsconfig inclusions for app router and signature files'
-Invoke-CommitStep 'next.config.mjs' 'chore(next): configure root rewrite to preview.html and set X-Frame-Options to SAMEORIGIN'
+CommitStep 'AGENTS.md' 'chore(manifesto): align AGENTS.md with house of otaru editorial standard'
+CommitStep 'sanity.config.ts' 'fix(sanity): refine schema configuration and studio dataset bindings'
+CommitStep 'tsconfig.json' 'chore(types): update tsconfig inclusions for app router and signature files'
+CommitStep 'next.config.mjs' 'chore(next): configure root rewrite to preview.html and set X-Frame-Options to SAMEORIGIN'
 
 # 2. Brand & Legal Commitments Sanitization
-Invoke-CommitStep 'src/app/shipping-exchanges/page.tsx' 'feat(legal): sanitize dispatch timeline in shipping and exchanges documentation'
-Invoke-CommitStep 'src/app/returns/page.tsx' 'feat(legal): restructure return policy around fit assistance and atelier care'
-Invoke-CommitStep 'src/app/terms/page.tsx' 'feat(terms): remove unconfirmed corporate jurisdiction from terms of service'
-Invoke-CommitStep 'src/app/privacy/page.tsx' 'feat(privacy): sanitize DPO claims and clarify customer contact channels'
-Invoke-CommitStep 'src/app/membership/page.tsx' 'refactor(membership): align archival registration with verified atelier services'
-Invoke-CommitStep 'src/app/checkout/success/page.tsx' 'fix(checkout): sanitize success screen repair copy to care consultation'
-Invoke-CommitStep 'content/drop01.ts' 'feat(content): update drop 01 batch dispatch notes to atelier inspection SLA'
-Invoke-CommitStep 'src/components/product/ProductDetailView.tsx' 'refactor(product): synchronize PDP craftsmanship inspection with realistic SLA'
+CommitStep 'src/app/shipping-exchanges/page.tsx' 'feat(legal): sanitize dispatch timeline in shipping and exchanges documentation'
+CommitStep 'src/app/returns/page.tsx' 'feat(legal): restructure return policy around fit assistance and atelier care'
+CommitStep 'src/app/terms/page.tsx' 'feat(terms): remove unconfirmed corporate jurisdiction from terms of service'
+CommitStep 'src/app/privacy/page.tsx' 'feat(privacy): sanitize DPO claims and clarify customer contact channels'
+CommitStep 'src/app/membership/page.tsx' 'refactor(membership): align archival registration with verified atelier services'
+CommitStep 'src/app/checkout/success/page.tsx' 'fix(checkout): sanitize success screen repair copy to care consultation'
+CommitStep 'content/drop01.ts' 'feat(content): update drop 01 batch dispatch notes to atelier inspection SLA'
+CommitStep 'src/components/product/ProductDetailView.tsx' 'refactor(product): synchronize PDP craftsmanship inspection with realistic SLA'
 
 # 3. Cart & Navigation Refinement
-Invoke-CommitStep 'src/components/cart/CartCheckoutSection.tsx' 'refactor(cart): remove unverified courier transit indicators from cart checkout'
-Invoke-CommitStep 'src/components/cart/CartDrawer.tsx' 'fix(cart): reconcile return window copy across drawer and cart ledger'
-Invoke-CommitStep 'src/components/home/MembershipTeaser.tsx' 'refactor(home): update membership teaser to archival consultation language'
-Invoke-CommitStep 'src/components/layout/SiteFooter.tsx' 'refactor(footer): rename lifetime repairs to care and repairs in site footer'
-Invoke-CommitStep 'src/components/layout/SiteHeader.tsx' 'fix(layout): resolve 768px-1024px tablet navigation collision in site header'
+CommitStep 'src/components/cart/CartCheckoutSection.tsx' 'refactor(cart): remove unverified courier transit indicators from cart checkout'
+CommitStep 'src/components/cart/CartDrawer.tsx' 'fix(cart): reconcile return window copy across drawer and cart ledger'
+CommitStep 'src/components/home/MembershipTeaser.tsx' 'refactor(home): update membership teaser to archival consultation language'
+CommitStep 'src/components/layout/SiteFooter.tsx' 'refactor(footer): rename lifetime repairs to care and repairs in site footer'
+CommitStep 'src/components/layout/SiteHeader.tsx' 'fix(layout): resolve 768px-1024px tablet navigation collision in site header'
 
 # 4. Core Persistence & Schema Hardening
-Invoke-CommitStep 'src/lib/db/prisma.ts' 'feat(db): export isDatabaseConfigured helper in prisma client singleton'
-Invoke-CommitStep 'src/lib/payments/schemas.ts' 'feat(schemas): add internalOrderId to payment verify request validation schema'
-Invoke-CommitStep 'src/lib/payments/ledger.ts' 'fix(ledger): resolve order uuid before upserting payment in ledger dual-write'
-Invoke-CommitStep 'src/lib/payments/reconciliation.ts' 'feat(reconciliation): support both paid and confirmed order states in cross-audit'
-Invoke-CommitStep 'src/lib/testing/env-matrix-checker.ts' 'feat(env): expand production secret validation in environment matrix checker'
-Invoke-CommitStep 'src/app/api/account/orders/route.ts' 'fix(account): eliminate in-memory ledger fallback in production account orders'
+CommitStep 'src/lib/db/prisma.ts' 'feat(db): export isDatabaseConfigured helper in prisma client singleton'
+CommitStep 'src/lib/payments/schemas.ts' 'feat(schemas): add internalOrderId to payment verify request validation schema'
+CommitStep 'src/lib/payments/ledger.ts' 'fix(ledger): resolve order uuid before upserting payment in ledger dual-write'
+CommitStep 'src/lib/payments/reconciliation.ts' 'feat(reconciliation): support both paid and confirmed order states in cross-audit'
+CommitStep 'src/lib/testing/env-matrix-checker.ts' 'feat(env): expand production secret validation in environment matrix checker'
+CommitStep 'src/app/api/account/orders/route.ts' 'fix(account): eliminate in-memory ledger fallback in production account orders'
 
 # 5. Order Creation & Authoritative Catalog Persistence
-Invoke-CommitStep 'src/app/api/checkout/route.ts' 'feat(checkout): enforce production database availability gate on order creation'
-Invoke-CommitStep 'src/app/api/checkout/razorpay/order/route.ts' 'feat(razorpay-order): add database readiness check to razorpay order route'
+CommitStep 'src/app/api/checkout/route.ts' 'feat(checkout): enforce production database availability gate on order creation'
+CommitStep 'src/app/api/checkout/razorpay/order/route.ts' 'feat(razorpay-order): add database readiness check to razorpay order route'
 
 # 6. Payment Verification & Orphan Payment Containment
-Invoke-CommitStep 'src/app/api/checkout/razorpay/verify/route.ts' 'feat(verify): enforce database configuration barrier in payment verify route'
-Invoke-CommitStep 'src/app/api/webhooks/razorpay/route.ts' 'feat(webhooks): enforce 503 retry status when database is unconfigured in prod'
+CommitStep 'src/app/api/checkout/razorpay/verify/route.ts' 'feat(verify): enforce database configuration barrier in payment verify route'
+CommitStep 'src/app/api/webhooks/razorpay/route.ts' 'feat(webhooks): enforce 503 retry status when database is unconfigured in prod'
 
 # 7. Verification Test Suites
-Invoke-CommitStep 'src/__tests__/production-data-integrity.test.ts' 'test(integrity): add regression suite for database gates and price authority'
-Invoke-CommitStep 'src/__tests__/payment-recovery-adversarial.test.ts' 'test(recovery): add adversarial tests for orphan payments and amount mismatches'
+CommitStep 'src/__tests__/production-data-integrity.test.ts' 'test(integrity): add regression suite for database gates and price authority'
+CommitStep 'src/__tests__/payment-recovery-adversarial.test.ts' 'test(recovery): add adversarial tests for orphan payments and amount mismatches'
 
 # 8. Governance & Audit Reports
-Invoke-CommitStep 'docs/OWNER_DECISIONS_REQUIRED.md' 'docs(governance): record the 5 owner commercial policy decisions required'
-Invoke-CommitStep 'docs/RELEASE_HARDENING_REPORT.md' 'docs(audit): publish release hardening and business policy audit report'
-Invoke-CommitStep 'docs/PRODUCTION_DATA_INTEGRITY_REPORT.md' 'docs(audit): document production data integrity and payment lifecycle analysis'
-Invoke-CommitStep 'docs/PAYMENT_RECOVERY_VERIFICATION.md' 'docs(audit): publish payment recovery integrity and zero-fabrication verification report'
+CommitStep 'docs/OWNER_DECISIONS_REQUIRED.md' 'docs(governance): record the 5 owner commercial policy decisions required'
+CommitStep 'docs/RELEASE_HARDENING_REPORT.md' 'docs(audit): publish release hardening and business policy audit report'
+CommitStep 'docs/PRODUCTION_DATA_INTEGRITY_REPORT.md' 'docs(audit): document production data integrity and payment lifecycle analysis'
+CommitStep 'docs/PAYMENT_RECOVERY_VERIFICATION.md' 'docs(audit): publish payment recovery integrity and zero-fabrication verification report'
 
 # 9. Verbatim Living Image Archive UI Integration
 Copy-Item -Path 'preview.html' -Destination 'public/preview.html' -Force
 Copy-Item -Path 'preview.html' -Destination 'public/index.html' -Force
-Invoke-CommitStep 'preview.html' 'feat(preview): deploy verbatim house of otaru living image archive prototype'
-Invoke-CommitStep 'public/preview.html' 'feat(static): mirror standalone archive prototype to public preview asset'
-Invoke-CommitStep 'public/index.html' 'feat(static): install standalone archive prototype as public index'
-Invoke-CommitStep 'signature.tsx' 'feat(signature): declare verbatim html archive source constant and root component'
-Invoke-CommitStep 'src/components/home/SignatureUI.tsx' 'feat(components): implement isolated signature ui iframe wrapper for native script execution'
-Invoke-CommitStep 'src/components/layout/SiteChrome.tsx' 'feat(layout): introduce site chrome layout controller to avoid duplicate chrome'
-Invoke-CommitStep 'src/app/layout.tsx' 'refactor(layout): integrate site chrome controller into root layout'
-Invoke-CommitStep 'src/app/page.tsx' 'feat(home): mount signature living archive on next.js homepage entry point'
-Invoke-CommitStep 'page.tsx' 'refactor(root): align root page re-export with signature living archive'
-Invoke-CommitStep 'sections.tsx' 'refactor(root): align root sections re-export with signature living archive'
+CommitStep 'preview.html' 'feat(preview): deploy verbatim house of otaru living image archive prototype'
+CommitStep 'public/preview.html' 'feat(static): mirror standalone archive prototype to public preview asset'
+CommitStep 'public/index.html' 'feat(static): install standalone archive prototype as public index'
+CommitStep 'signature.tsx' 'feat(signature): declare verbatim html archive source constant and root component'
+CommitStep 'src/components/home/SignatureUI.tsx' 'feat(components): implement isolated signature ui iframe wrapper for native script execution'
+CommitStep 'src/components/layout/SiteChrome.tsx' 'feat(layout): introduce site chrome layout controller to avoid duplicate chrome'
+CommitStep 'src/app/layout.tsx' 'refactor(layout): integrate site chrome controller into root layout'
+CommitStep 'src/app/page.tsx' 'feat(home): mount signature living archive on next.js homepage entry point'
+CommitStep 'page.tsx' 'refactor(root): align root page re-export with signature living archive'
+CommitStep 'sections.tsx' 'refactor(root): align root sections re-export with signature living archive'
 
 # 10. Final Working Tree Consolidation
-Invoke-CommitStep 'scripts/push-granular-commits.ps1' 'chore(pipeline): update granular commit and push pipeline scripts'
-Invoke-CommitStep 'scripts/push-all-50-commits.ps1' 'chore(pipeline): update complete granular commit scripts'
-Invoke-CommitStep 'scripts/push.bat' 'chore(pipeline): provide one-click runner for commit pipeline'
+CommitStep 'scripts/push-granular-commits.ps1' 'chore(pipeline): update granular commit and push pipeline scripts'
+CommitStep 'scripts/push-all-50-commits.ps1' 'chore(pipeline): update complete granular commit scripts'
+CommitStep 'scripts/push.bat' 'chore(pipeline): provide one-click runner for commit pipeline'
 
 git add -A
 $remaining = git diff --cached --name-only

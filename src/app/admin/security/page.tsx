@@ -35,6 +35,7 @@ const EVENT_CONFIG: Record<AuditEventType, { icon: string; color: string; bg: st
   NONCE_CONSUMED:           { icon: '◈', color: 'text-teal-400',   bg: 'bg-teal-950/20 border-teal-900/30',       threat: false },
   NONCE_REPLAY_BLOCKED:     { icon: '⊘', color: 'text-red-400',    bg: 'bg-red-950/40 border-red-900/50',         threat: true },
   RECONCILIATION_MISMATCH:  { icon: '⚖️', color: 'text-amber-400',  bg: 'bg-amber-950/40 border-amber-900/50',    threat: true },
+  RECONCILIATION_REQUIRED:  { icon: '⚠️', color: 'text-rose-400',   bg: 'bg-rose-950/40 border-rose-900/50',      threat: true },
 };
 
 function ThreatBadge({ type }: { type: AuditEventType }) {
