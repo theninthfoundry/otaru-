@@ -8,6 +8,7 @@ import { ConciergeProvider } from '@/lib/concierge';
 import { AuthProvider } from '@/context/auth-context';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { CartDrawer } from '@/components/cart/CartDrawer';
+import { CookieConsent } from '@/components/consent/CookieConsent';
 import { ArchivePageTransition } from '@/components/ui/ArchivePageTransition';
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
@@ -22,6 +23,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
               </ArchivePageTransition>
               <CartDrawer />
               <AuthModal />
+              <CookieConsent />
             </ConciergeProvider>
           </WishlistProvider>
         </CartProvider>
