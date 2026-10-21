@@ -4,8 +4,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useConcierge } from '@/lib/concierge';
 import { subscribeToNewsletter } from '@/actions/newsletter';
-import { HouseOfOtaruWordmark } from '@/components/ui/HouseOfOtaruWordmark';
 import { FooterAtmosphereArt } from '@/components/ui/FooterAtmosphereArt';
+import { StitchedWordmark } from '@/components/ui/StitchedWordmark';
+import { SeigaihaBand } from '@/components/ui/SeigaihaBand';
+import { openConsentPreferences } from '@/lib/consent/consent';
 
 /**
  * Converts a calendar year into classical Roman numeral notation
@@ -74,6 +76,7 @@ export function SiteFooter() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [consent, setConsent] = useState(false);
 
   const handleNewsletterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -83,14 +86,21 @@ export function SiteFooter() {
       return;
     }
 
+    if (!consent) {
+      setStatus('error');
+      setErrorMessage('Please tick the box to agree to receive emails.');
+      return;
+    }
+
     setStatus('loading');
     setErrorMessage('');
 
     try {
-      const res = await subscribeToNewsletter(email);
+      const res = await subscribeToNewsletter(email, consent);
       if (res.success) {
         setStatus('success');
         setEmail('');
+        setConsent(false);
       } else {
         setStatus('error');
         setErrorMessage(res.error || 'Could not subscribe. Please try again.');
@@ -108,6 +118,7 @@ export function SiteFooter() {
     >
       {/* Visual Material Textures & Perimeter Artwork */}
       <FooterAtmosphereArt />
+      <SeigaihaBand className="absolute inset-x-0 top-0 h-[30px] text-[#D9BD83]/[0.14] [mask-image:linear-gradient(90deg,transparent,#000_15%,#000_85%,transparent)]" />
 
       {/* Main Content Stage */}
       <div className="relative z-10 w-full max-w-[1560px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-20">
@@ -124,8 +135,8 @@ export function SiteFooter() {
               className="inline-block group focus:outline-none focus-visible:ring-1 focus-visible:ring-[#F2E8D6]"
               aria-label="House of Otaru Homepage"
             >
-              <HouseOfOtaruWordmark
-                className="w-[330px] sm:w-[420px] lg:w-[520px] xl:w-[600px] max-w-full text-[#F2E8D6] group-hover:opacity-95 transition-opacity"
+              <StitchedWordmark
+                className="w-[300px] sm:w-[380px] lg:w-[480px] xl:w-[560px] max-w-full text-[#F2E8D6] group-hover:opacity-95 transition-opacity"
               />
             </Link>
 
@@ -176,7 +187,7 @@ export function SiteFooter() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Your email address"
                   disabled={status === 'loading'}
-                  className="w-full bg-transparent text-xs sm:text-[13px] text-[#F2E8D6] placeholder:text-[#C7B9A0]/50 outline-none pr-2 font-sans"
+                  className="w-full bg-transparent text-xs sm:text-[13px] text-[#F2E8D6] placeholder:text-[#C7B9A0]/75 outline-none pr-2 font-sans"
                   autoComplete="email"
                   spellCheck="false"
                 />
@@ -225,6 +236,19 @@ export function SiteFooter() {
                 </button>
               </form>
 
+              <label className="mt-3 flex items-start gap-2.5 text-[11.5px] leading-snug text-[#D8CBB2] cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-[#D9BD83]"
+                />
+                <span>
+                  I agree to receive emails from House of Otaru and have read the{' '}
+                  <Link href="/privacy" className="underline underline-offset-2 hover:text-[#F2E8D6]">privacy policy</Link>. I can unsubscribe at any time.
+                </span>
+              </label>
+
               {/* Status feedback message */}
               {status === 'success' && (
                 <p className="mt-2 text-[11px] font-mono text-[#D9BD83] tracking-wide animate-in fade-in">
@@ -269,6 +293,7 @@ export function SiteFooter() {
             </span>
             <h3 className="font-sans text-[11px] uppercase tracking-[0.22em] font-semibold text-[#F2E8D6] mb-4">
               THE ARCHIVE
+              <span lang="ja" title="kiroku" className="ml-2 font-normal tracking-[0.18em] text-[#D9BD83]/85">記録</span>
             </h3>
             <ul className="space-y-2.5 text-xs sm:text-[13px] text-[#C7B9A0]">
               <li>
@@ -316,6 +341,7 @@ export function SiteFooter() {
             </span>
             <h3 className="font-sans text-[11px] uppercase tracking-[0.22em] font-semibold text-[#F2E8D6] mb-4">
               CHAPTERS
+              <span lang="ja" title="shō" className="ml-2 font-normal tracking-[0.18em] text-[#D9BD83]/85">章</span>
             </h3>
             <ul
               className="space-y-2.5 text-xs sm:text-[13px] text-[#C7B9A0] font-display italic font-light"
@@ -366,6 +392,7 @@ export function SiteFooter() {
             </span>
             <h3 className="font-sans text-[11px] uppercase tracking-[0.22em] font-semibold text-[#F2E8D6] mb-4">
               STUDIO &amp; CRAFT
+              <span lang="ja" title="kōbō" className="ml-2 font-normal tracking-[0.18em] text-[#D9BD83]/85">工房</span>
             </h3>
             <ul className="space-y-2.5 text-xs sm:text-[13px] text-[#C7B9A0]">
               <li>
@@ -413,6 +440,7 @@ export function SiteFooter() {
             </span>
             <h3 className="font-sans text-[11px] uppercase tracking-[0.22em] font-semibold text-[#F2E8D6] mb-4">
               CONCIERGE
+              <span lang="ja" title="annai" className="ml-2 font-normal tracking-[0.18em] text-[#D9BD83]/85">案内</span>
             </h3>
             <ul
               className="space-y-2.5 text-xs sm:text-[13px] text-[#C7B9A0] font-display italic font-light"
@@ -539,6 +567,7 @@ export function SiteFooter() {
             >
               <p>Different places.</p>
               <p>Same sky.</p>
+              <p lang="ja" className="mt-1 not-italic tracking-[0.3em] text-[#D9BD83]/80">同じ空</p>
             </div>
 
             {/* Tiny Four-Point Archival Star */}
@@ -559,24 +588,28 @@ export function SiteFooter() {
         {/* ========================================================
             05. LEGAL & COMPLIANCE LINKS
             ======================================================== */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-6 border-b border-[rgba(222,210,188,0.12)] text-[11px] text-[#C7B9A0]/80">
-          <div className="flex flex-wrap items-center gap-5 sm:gap-7">
-            <Link href="/privacy" className="hover:text-[#F2E8D6] transition-colors focus:outline-none focus-visible:underline">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="hover:text-[#F2E8D6] transition-colors focus:outline-none focus-visible:underline">
-              Terms of Service
-            </Link>
-            <Link href="/shipping-exchanges" className="hover:text-[#F2E8D6] transition-colors focus:outline-none focus-visible:underline">
-              Shipping &amp; Exchanges
-            </Link>
-            <Link href="/returns" className="hover:text-[#F2E8D6] transition-colors focus:outline-none focus-visible:underline">
-              Repairs &amp; Returns
-            </Link>
-          </div>
-          <div className="font-mono text-[10px] text-[#C7B9A0]/60 uppercase tracking-wider">
-            DPDP (INDIA) &amp; GLOBAL COMPLIANT
-          </div>
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-6 border-b border-[rgba(222,210,188,0.12)] text-[11px] text-[#D8CBB2]">
+          <nav aria-label="Legal and policies" className="flex flex-wrap items-center gap-x-5 gap-y-2 sm:gap-x-6">
+            {([
+              ['/privacy', 'Privacy'],
+              ['/terms', 'Terms'],
+              ['/shipping-exchanges', 'Shipping'],
+              ['/returns', 'Returns & Repairs'],
+              ['/refunds', 'Refunds'],
+              ['/cancellation', 'Cancellation'],
+              ['/cookies', 'Cookies'],
+              ['/accessibility', 'Accessibility'],
+              ['/grievance', 'Grievances'],
+              ['/contact', 'Contact'],
+            ] as const).map(([href, label]) => (
+              <Link key={href} href={href} className="hover:text-[#F2E8D6] transition-colors focus:outline-none focus-visible:underline">
+                {label}
+              </Link>
+            ))}
+            <button type="button" onClick={openConsentPreferences} className="hover:text-[#F2E8D6] transition-colors cursor-pointer focus:outline-none focus-visible:underline">
+              Cookie preferences
+            </button>
+          </nav>
         </div>
 
         {/* ========================================================
