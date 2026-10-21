@@ -83,7 +83,15 @@ CommitStep 'src/app/page.tsx' 'feat(home): mount signature living archive on nex
 CommitStep 'page.tsx' 'refactor(root): align root page re-export with signature living archive'
 CommitStep 'sections.tsx' 'refactor(root): align root sections re-export with signature living archive'
 
-# 10. Final Working Tree Consolidation
+# 10. Production Security Hardening & CI Release Gates (OT-001 through OT-016)
+CommitStep '.env copy.example next.config copy.mjs vercel copy.json' 'security(credentials): sanitize and neutralize duplicate copy configuration files'
+CommitStep 'next.config.mjs' 'refactor(router): remove root preview rewrite and configure single canonical homepage'
+CommitStep 'src/lib/security/csrf.ts src/middleware.ts' 'security(headers): enforce strict canonical origin CSRF and harmonize X-Frame-Options to SAMEORIGIN'
+CommitStep 'src/app/api/ready/route.ts' 'security(readiness): sanitize public readiness probe to protect internal infrastructure details'
+CommitStep 'src/app/api/residents/route.ts src/lib/env.ts' 'feat(reliability): enforce fail-closed invariants and eliminate fake sequences'
+CommitStep '.github/workflows/ci.yml' 'ci(github): add automated typecheck, lint, test and build gate workflow'
+
+# 11. Final Working Tree Consolidation
 CommitStep 'scripts/push-granular-commits.ps1' 'chore(pipeline): update granular commit and push pipeline scripts'
 CommitStep 'scripts/push-all-50-commits.ps1' 'chore(pipeline): update complete granular commit scripts'
 CommitStep 'scripts/push.bat' 'chore(pipeline): provide one-click runner for commit pipeline'

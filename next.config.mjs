@@ -29,22 +29,13 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'picsum.photos',
-      },
-      {
-        protocol: 'https',
         hostname: 'images.unsplash.com',
       },
     ],
   },
   async rewrites() {
     return {
-      beforeFiles: [
-        {
-          source: '/',
-          destination: '/preview.html',
-        },
-      ],
+      beforeFiles: [],
       afterFiles: [],
       fallback: [],
     };

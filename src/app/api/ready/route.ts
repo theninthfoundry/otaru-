@@ -10,8 +10,12 @@ export const dynamic = 'force-dynamic';
  * Answers: Can this deployment actually serve production commerce traffic?
  * Checks: PostgreSQL, Redis coordination, Product Catalog, and Security Secrets.
  */
-export async function GET() {
+export async function GET(request: Request) {
   const isProduction = process.env.NODE_ENV === 'production';
+  const authHeader = request.headers.get('authorization') || '';
+  const adminSecret = process.env.ADMIN_API_SECRET;
+  const isAuthorizedAdmin = Boolean(adminSecret && authHeader.replace(/^Bearer\s+/i, '') === adminSecret);
+
   const checks: {
     status: 'READY' | 'DEGRADED' | 'NOT_READY';
     database: string;
@@ -35,14 +39,14 @@ export async function GET() {
     try {
       await prisma.$queryRaw`SELECT 1`;
       checks.database = 'connected';
-    } catch (err) {
-      checks.database = `error: ${err instanceof Error ? err.message : 'connection_failed'}`;
+    } catch {
+      checks.database = 'connection_failed';
       canServeTraffic = false;
     }
   } else {
     // In strict production mode, missing database is blocking
     if (isProduction) {
-      checks.database = 'missing_DATABASE_URL';
+      checks.database = 'unconfigured';
       canServeTraffic = false;
     } else {
       checks.database = 'unconfigured_local_mode';
@@ -53,9 +57,9 @@ export async function GET() {
   try {
     await redis.get('ready:probe');
     checks.redis = 'connected';
-  } catch (err) {
+  } catch {
     if (isProduction) {
-      checks.redis = `error: ${err instanceof Error ? err.message : 'redis_unreachable'}`;
+      checks.redis = 'redis_unreachable';
       canServeTraffic = false;
     } else {
       checks.redis = 'fallback_memory_mode';
@@ -79,14 +83,19 @@ export async function GET() {
     if (!process.env.RAZORPAY_KEY_SECRET) missing.push('RAZORPAY_KEY_SECRET');
 
     if (missing.length > 0) {
-      checks.secrets = `missing: ${missing.join(', ')}`;
+      checks.secrets = isAuthorizedAdmin ? `missing: ${missing.join(', ')}` : 'incomplete_configuration';
       canServeTraffic = false;
     }
   }
 
   checks.status = canServeTraffic ? 'READY' : 'NOT_READY';
 
-  return NextResponse.json(checks, {
+  // Public callers receive opaque status without sensitive environment details
+  const responsePayload = isAuthorizedAdmin
+    ? checks
+    : { status: checks.status, timestamp: checks.timestamp };
+
+  return NextResponse.json(responsePayload, {
     status: canServeTraffic ? 200 : 503,
     headers: {
       'Cache-Control': 'no-store, max-age=0',

@@ -156,7 +156,7 @@ export async function middleware(request: NextRequest) {
 
   response.headers.set('X-DNS-Prefetch-Control', 'on');
   response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
-  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-Frame-Options', 'SAMEORIGIN');
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set(
     'Permissions-Policy',
@@ -166,17 +166,19 @@ export async function middleware(request: NextRequest) {
   const scriptSrc =
     "'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://connect.facebook.net https://app.posthog.com https://www.clarity.ms https://checkout.razorpay.com";
 
+  const devConnectHosts = !isProduction ? " ws: wss: http://localhost:* http://127.0.0.1:*" : "";
+
   const csp = [
     "default-src 'self'",
     `script-src ${scriptSrc}`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "img-src 'self' data: blob: https://images.unsplash.com https://picsum.photos https://cdn.shopify.com https://cdn.sanity.io https://c.bing.com https://*.clarity.ms",
+    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://c.bing.com https://*.clarity.ms",
     "font-src 'self' https://fonts.gstatic.com",
-    "connect-src 'self' ws: wss: http://localhost:* http://127.0.0.1:* https://*.shopify.com https://*.sanity.io https://www.google-analytics.com https://app.posthog.com https://apiv2.shiprocket.in https://*.clarity.ms https://api.razorpay.com",
+    `connect-src 'self'${devConnectHosts} https://*.shopify.com https://*.sanity.io https://www.google-analytics.com https://app.posthog.com https://apiv2.shiprocket.in https://*.clarity.ms https://api.razorpay.com`,
     "frame-src 'self' https://checkout.shopify.com https://api.razorpay.com https://*.razorpay.com",
     "object-src 'none'",
     "base-uri 'self'",
-    "frame-ancestors 'none'",
+    "frame-ancestors 'self'",
   ].join('; ');
 
   response.headers.set('Content-Security-Policy', csp);

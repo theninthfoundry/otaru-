@@ -30,5 +30,28 @@ export function verifyCsrf(request: NextRequest): boolean {
     return false;
   }
 
-  return sourceHost === host || sourceHost.endsWith(`.${host}`);
+  // Canonical allowed hostnames
+  const allowedHosts = new Set([
+    host,
+    'otaru.in',
+    'www.otaru.in',
+    'localhost:3000',
+    '127.0.0.1:3000',
+  ]);
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (siteUrl) {
+    try {
+      allowedHosts.add(new URL(siteUrl).host);
+    } catch {
+      // Ignore malformed env
+    }
+  }
+
+  // Exact matching for Vercel preview environments
+  if (sourceHost.endsWith('.vercel.app') && host.endsWith('.vercel.app')) {
+    return sourceHost === host;
+  }
+
+  return allowedHosts.has(sourceHost) && sourceHost === host;
 }

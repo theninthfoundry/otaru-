@@ -28,6 +28,9 @@ export function validateEnv(): Env {
 
   if (!result.success) {
     console.error('[Environment Validation Failed]:', result.error.format());
+    if (process.env.NODE_ENV === 'production' && process.env.STRICT_PAYMENT_MODE === 'true') {
+      throw new Error(`[Otaru Critical Environment Error]: Production mode cannot start with invalid environment variables: ${JSON.stringify(result.error.format())}`);
+    }
     return process.env as unknown as Env;
   }
 

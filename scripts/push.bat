@@ -157,7 +157,25 @@ git diff --cached --quiet || git commit -m "refactor(root): align root page re-e
 git add sections.tsx
 git diff --cached --quiet || git commit -m "refactor(root): align root sections re-export with signature living archive"
 
-:: 10. Final Working Tree Consolidation
+:: 10. Production Security Hardening & CI Release Gates (OT-001 through OT-016)
+git add .env\ copy.example next.config\ copy.mjs vercel\ copy.json
+git diff --cached --quiet || git commit -m "security(credentials): sanitize and neutralize duplicate copy configuration files"
+
+git add next.config.mjs
+git diff --cached --quiet || git commit -m "refactor(router): remove root preview rewrite and configure single canonical homepage"
+
+git add src/lib/security/csrf.ts src/middleware.ts
+git diff --cached --quiet || git commit -m "security(headers): enforce strict canonical origin CSRF and harmonize X-Frame-Options to SAMEORIGIN"
+
+git add src/app/api/ready/route.ts
+git diff --cached --quiet || git commit -m "security(readiness): sanitize public readiness probe to protect internal infrastructure details"
+
+git add src/app/api/residents/route.ts src/lib/env.ts
+git diff --cached --quiet || git commit -m "feat(reliability): enforce fail-closed invariants and eliminate fake sequences"
+
+git add .github/workflows/ci.yml
+git diff --cached --quiet || git commit -m "ci(github): add automated typecheck, lint, test and build gate workflow"
+
 git add scripts/push-granular-commits.ps1 scripts/push-all-50-commits.ps1 scripts/push.bat
 git diff --cached --quiet || git commit -m "chore(pipeline): update granular commit and push pipeline scripts"
 

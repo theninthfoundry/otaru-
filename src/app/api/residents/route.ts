@@ -29,10 +29,21 @@ export async function POST(request: Request) {
       timestamp: new Date().toISOString(),
     });
 
-    // If PostgreSQL database is available, record lead
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_PAYMENT_MODE === 'true';
+
+    // Strict Production Gate: Do not report success if database persistence is unavailable
+    if (isProduction && !process.env.DATABASE_URL) {
+      logger.error('[Archival Circle Waitlist] Refusing registration: DATABASE_URL is not configured in production.');
+      return NextResponse.json(
+        { success: false, error: 'Registration service is temporarily unavailable. Please try again shortly.', code: 'PERSISTENCE_UNAVAILABLE' },
+        { status: 503 }
+      );
+    }
+
+    let persistedLeadId: string | null = null;
     if (process.env.DATABASE_URL) {
       try {
-        await prisma.newsletterLead.upsert({
+        const lead = await prisma.newsletterLead.upsert({
           where: { email: email.toLowerCase().trim() },
           update: { source },
           create: {
@@ -41,17 +52,23 @@ export async function POST(request: Request) {
             status: 'SUBSCRIBED',
           },
         });
+        persistedLeadId = lead.id;
       } catch (dbErr) {
-        // Fallback gracefully without breaking user experience
-        logger.warn('[Waitlist DB Fallback] Stored in memory ledger', { error: dbErr });
+        logger.error('[Waitlist DB Failure] Failed to persist collector lead:', dbErr);
+        if (isProduction) {
+          return NextResponse.json(
+            { success: false, error: 'Failed to record reservation. Please try again shortly.', code: 'PERSISTENCE_FAILED' },
+            { status: 503 }
+          );
+        }
       }
     }
 
     return NextResponse.json(
       {
         success: true,
-        message: 'Your email has been assigned priority dispatch notification.',
-        sequence: Math.floor(Math.random() * 200) + 100,
+        message: 'Your email has been registered for archival priority dispatch notification.',
+        registrationId: persistedLeadId || 'DEV-SANDBOX-RECORD',
       },
       { status: 200 }
     );
