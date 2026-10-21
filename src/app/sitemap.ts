@@ -16,6 +16,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/studio`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/track-order`, changeFrequency: 'monthly', priority: 0.4 },
     { url: `${BASE_URL}/returns`, changeFrequency: 'yearly', priority: 0.4 },
+    ...['privacy', 'terms', 'shipping-exchanges', 'size-guide', 'refunds', 'cancellation', 'cookies', 'accessibility', 'grievance', 'contact'].map((p) => ({
+      url: `${BASE_URL}/${p}`,
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    })),
   ];
 
   const artifactPages: MetadataRoute.Sitemap = [];
