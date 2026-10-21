@@ -17,7 +17,7 @@ function cn(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-const EVENT_CONFIG: Record<AuditEventType, { icon: string; color: string; bg: string; threat: boolean }> = {
+const EVENT_CONFIG: Record<string, { icon: string; color: string; bg: string; threat: boolean }> = {
   ORDER_CREATED:            { icon: '✦', color: 'text-emerald-400', bg: 'bg-emerald-950/30 border-emerald-900/50', threat: false },
   ORDER_BLOCKED:            { icon: '⊘', color: 'text-red-400',     bg: 'bg-red-950/40 border-red-900/50',         threat: true },
   PAYMENT_VERIFIED:         { icon: '✓', color: 'text-emerald-300', bg: 'bg-emerald-950/20 border-emerald-900/30', threat: false },
