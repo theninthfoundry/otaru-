@@ -74,6 +74,18 @@ git diff --cached --quiet || git commit -m "feat(reconciliation): support both p
 git add src/lib/testing/env-matrix-checker.ts
 git diff --cached --quiet || git commit -m "feat(env): expand production secret validation in environment matrix checker"
 
+git add src/lib/payments/audit-trail.ts
+git diff --cached --quiet || git commit -m "fix(audit): expand AuditEventType with reconciliation and mismatch event invariants"
+
+git add src/app/admin/security/page.tsx
+git diff --cached --quiet || git commit -m "feat(security): register audit badge variants for reconciliation and mismatch events"
+
+git add src/lib/resilience/resilient-fallback-engine.ts
+git diff --cached --quiet || git commit -m "refactor(resilience): prune unused circuit breaker import from fallback engine"
+
+git add src/lib/domain/events/outbox-event-engine.ts
+git diff --cached --quiet || git commit -m "refactor(outbox): prune unused domain event type import from outbox engine"
+
 git add src/app/api/account/orders/route.ts
 git diff --cached --quiet || git commit -m "fix(account): eliminate in-memory ledger fallback in production account orders"
 

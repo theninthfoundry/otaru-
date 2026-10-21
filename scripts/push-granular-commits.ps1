@@ -45,6 +45,10 @@ CommitStep 'src/lib/payments/schemas.ts' 'feat(schemas): add internalOrderId to 
 CommitStep 'src/lib/payments/ledger.ts' 'fix(ledger): resolve order uuid before upserting payment in ledger dual-write'
 CommitStep 'src/lib/payments/reconciliation.ts' 'feat(reconciliation): support both paid and confirmed order states in cross-audit'
 CommitStep 'src/lib/testing/env-matrix-checker.ts' 'feat(env): expand production secret validation in environment matrix checker'
+CommitStep 'src/lib/payments/audit-trail.ts' 'fix(audit): expand AuditEventType with reconciliation and mismatch event invariants'
+CommitStep 'src/app/admin/security/page.tsx' 'feat(security): register audit badge variants for reconciliation and mismatch events'
+CommitStep 'src/lib/resilience/resilient-fallback-engine.ts' 'refactor(resilience): prune unused circuit breaker import from fallback engine'
+CommitStep 'src/lib/domain/events/outbox-event-engine.ts' 'refactor(outbox): prune unused domain event type import from outbox engine'
 CommitStep 'src/app/api/account/orders/route.ts' 'fix(account): eliminate in-memory ledger fallback in production account orders'
 
 # 5. Order Creation & Authoritative Catalog Persistence
