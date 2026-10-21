@@ -6,7 +6,10 @@ interface NewsletterResult {
 }
 
 /** Registers an email with Klaviyo. Requires KLAVIYO_PRIVATE_KEY. */
-export async function subscribeNewsletterAction(email: string): Promise<NewsletterResult> {
+export async function subscribeNewsletterAction(email: string, consent: boolean): Promise<NewsletterResult> {
+  if (consent !== true) {
+    return { success: false, error: 'Please tick the consent box to subscribe.' };
+  }
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return { success: false, error: 'Enter a valid email address.' };
   }

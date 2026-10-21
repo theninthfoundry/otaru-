@@ -3,7 +3,7 @@ import { subscribeToNewsletter } from '@/actions/newsletter';
 
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json();
+    const { email, consent } = (await request.json()) as { email?: string; consent?: boolean };
 
     if (!email) {
       return NextResponse.json(
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = await subscribeToNewsletter(email);
+    const result = await subscribeToNewsletter(email, consent === true);
 
     if (!result.success) {
       return NextResponse.json(
