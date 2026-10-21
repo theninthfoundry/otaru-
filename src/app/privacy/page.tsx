@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Privacy Policy | House of Otaru',
-  description: 'Digital Personal Data Protection Act (DPDP) 2023 compliance and privacy invariants of House of Otaru.',
+  description: 'How House of Otaru collects, uses and protects personal data.',
 };
 
 export default function PrivacyPage() {
@@ -20,7 +20,7 @@ export default function PrivacyPage() {
             Privacy Policy & Data Sovereignty
           </h1>
           <p className="font-mono text-xs text-[var(--ink-muted)] uppercase tracking-wider">
-            Effective Date: October 2026 · DPDP Act (2023) Compliant
+            Effective Date: October 2026 · Prepared with the DPDP Act, 2023 in view
           </p>
         </div>
 
