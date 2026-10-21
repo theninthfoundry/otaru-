@@ -17,9 +17,6 @@ const nextConfig = {
       `otaru-${Date.now()}`
     );
   },
-  experimental: {
-    webpackBuildWorker: false,
-  },
   images: {
     remotePatterns: [
       {
