@@ -4,6 +4,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 import { useEffect, type ReactNode } from 'react';
 import { trackPageView } from './events';
+import { useConsent } from '@/lib/consent/consent';
 
 const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID;
 const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
@@ -17,15 +18,16 @@ interface AnalyticsProviderProps {
 export function AnalyticsProvider({ children, nonce }: AnalyticsProviderProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const consent = useConsent();
 
   useEffect(() => {
     const url = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
-    trackPageView(url);
-  }, [pathname, searchParams]);
+    if (consent.analytics || consent.marketing) trackPageView(url);
+  }, [pathname, searchParams, consent.analytics, consent.marketing]);
 
   return (
     <>
-      {GA4_ID && (
+      {consent.analytics && GA4_ID && (
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}
@@ -45,7 +47,7 @@ export function AnalyticsProvider({ children, nonce }: AnalyticsProviderProps) {
         </>
       )}
 
-      {META_PIXEL_ID && (
+      {consent.marketing && META_PIXEL_ID && (
         <Script id="meta-pixel-init" strategy="afterInteractive" nonce={nonce}>
           {`
             !function(f,b,e,v,n,t,s)
@@ -62,7 +64,7 @@ export function AnalyticsProvider({ children, nonce }: AnalyticsProviderProps) {
         </Script>
       )}
 
-      {CLARITY_ID && (
+      {consent.analytics && CLARITY_ID && (
         <Script id="clarity-init" strategy="afterInteractive" nonce={nonce}>
           {`
             (function(c,l,a,r,i,t,y){
