@@ -7,7 +7,7 @@
  * Events are written transactionally to an append-only outbox and pumped asynchronously.
  */
 
-import { DomainEventType, AnyDomainEvent } from './domain-events';
+import { DomainEventType } from './domain-events';
 
 export type OutboxStatus = 'PENDING' | 'PROCESSING' | 'DISPATCHED' | 'FAILED';
 

@@ -22,7 +22,8 @@ export type AuditEventType =
   | 'NONCE_CONSUMED'
   | 'NONCE_REPLAY_BLOCKED'
   | 'RECONCILIATION_MISMATCH'
-  | 'RECONCILIATION_REQUIRED';
+  | 'RECONCILIATION_REQUIRED'
+  | 'AMOUNT_MISMATCH_BLOCKED';
 
 export interface AuditEvent {
   seq: number;
