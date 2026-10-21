@@ -91,7 +91,15 @@ CommitStep 'src/app/api/ready/route.ts' 'security(readiness): sanitize public re
 CommitStep 'src/app/api/residents/route.ts src/lib/env.ts' 'feat(reliability): enforce fail-closed invariants and eliminate fake sequences'
 CommitStep '.github/workflows/ci.yml' 'ci(github): add automated typecheck, lint, test and build gate workflow'
 
-# 11. Final Working Tree Consolidation
+# 11. Resilience, Async Ledger, Outbox Processing & Studio Hardening
+CommitStep 'src/app/admin/studio/[[...tool]]/page.tsx' 'fix(studio): provide graceful configuration fallback when sanity project id is unset'
+CommitStep 'src/lib/payments/ledger.ts' 'feat(ledger): introduce updateTransactionStatusAsync for resilient serverless settlement'
+CommitStep 'src/app/api/admin/reconcile/route.ts' 'fix(reconcile): record authentic reconciliation audit events without placeholder creation'
+CommitStep 'src/app/api/admin/outbox/process/route.ts vercel.json' 'feat(outbox): add authenticated outbox processing worker route and cron job'
+CommitStep 'src/components/product/ProductDetailView.tsx' 'fix(pdp): wire delivery estimator to serviceability api with 6-digit pin validation'
+CommitStep 'content/drop01.ts' 'feat(content): synchronize drop 01 live availability to autumn 2026'
+
+# 12. Final Working Tree Consolidation
 CommitStep 'scripts/push-granular-commits.ps1' 'chore(pipeline): update granular commit and push pipeline scripts'
 CommitStep 'scripts/push-all-50-commits.ps1' 'chore(pipeline): update complete granular commit scripts'
 CommitStep 'scripts/push.bat' 'chore(pipeline): provide one-click runner for commit pipeline'

@@ -176,6 +176,26 @@ git diff --cached --quiet || git commit -m "feat(reliability): enforce fail-clos
 git add .github/workflows/ci.yml
 git diff --cached --quiet || git commit -m "ci(github): add automated typecheck, lint, test and build gate workflow"
 
+:: 11. Resilience, Async Ledger, Outbox Processing & Studio Hardening
+git add src/app/admin/studio/[[...tool]]/page.tsx
+git diff --cached --quiet || git commit -m "fix(studio): provide graceful configuration fallback when sanity project id is unset"
+
+git add src/lib/payments/ledger.ts
+git diff --cached --quiet || git commit -m "feat(ledger): introduce updateTransactionStatusAsync for resilient serverless settlement"
+
+git add src/app/api/admin/reconcile/route.ts
+git diff --cached --quiet || git commit -m "fix(reconcile): record authentic reconciliation audit events without placeholder creation"
+
+git add src/app/api/admin/outbox/process/route.ts vercel.json
+git diff --cached --quiet || git commit -m "feat(outbox): add authenticated outbox processing worker route and cron job"
+
+git add src/components/product/ProductDetailView.tsx
+git diff --cached --quiet || git commit -m "fix(pdp): wire delivery estimator to serviceability api with 6-digit pin validation"
+
+git add content/drop01.ts
+git diff --cached --quiet || git commit -m "feat(content): synchronize drop 01 live availability to autumn 2026"
+
+:: 12. Pipeline Scripts Consolidation
 git add scripts/push-granular-commits.ps1 scripts/push-all-50-commits.ps1 scripts/push.bat
 git diff --cached --quiet || git commit -m "chore(pipeline): update granular commit and push pipeline scripts"
 
