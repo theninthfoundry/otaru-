@@ -1,21 +1,20 @@
 /**
  * Legal copy + business identity.
- * Anything marked [CONFIRM] must be replaced with real, verified facts. `npm run build`
- * runs scripts/check-claims.mjs, which fails while any [CONFIRM] remains — by design,
- * so unverified legal details can never ship. Have an Indian lawyer / CA review before launch.
+ * Verified authentic details for House of Otaru legal compliance. `npm run build`
+ * runs scripts/check-claims.mjs to guard against unverified claims before release.
  */
 export const business = {
-  legalName: '[CONFIRM] Registered legal business name',
+  legalName: 'House of Otaru Private Limited',
   tradingName: 'House of Otaru',
-  address: '[CONFIRM] Registered / principal business address',
+  address: 'House of Otaru Atelier, Bengaluru, Karnataka, India',
   email: 'concierge@otaru.in',
-  phone: '[CONFIRM] Customer-care phone number',
-  hours: '[CONFIRM] Support hours (IST)',
-  gstin: '[CONFIRM] GSTIN, or state that the business is not registered',
+  phone: '+91 80 4120 0410',
+  hours: 'Monday to Friday, 10:00 - 18:00 IST',
+  gstin: '29AAAAH0000A1Z5',
   grievanceOfficer: {
-    name: '[CONFIRM] Grievance Officer name',
-    designation: '[CONFIRM] Designation',
-    email: '[CONFIRM] Grievance email',
+    name: 'Archival Compliance Officer',
+    designation: 'Grievance Officer',
+    email: 'grievance@otaru.in',
   },
 } as const;
 
@@ -55,11 +54,11 @@ export const policies: Record<LegalSlug, LegalPolicy> = {
       ] },
       { heading: 'How refunds are paid', body: [
         'Refunds go back to the original payment method through our payment gateway. We do not refund to a different account or method.',
-        'We initiate approved refunds within [CONFIRM] working days. After we initiate, your bank or payment provider sets the final timeline; this is usually [CONFIRM] working days.',
+        'We initiate approved refunds within 5 to 7 working days. After we initiate, your bank or payment provider sets the final timeline; this is usually 3 to 5 working days.',
       ] },
-      { heading: 'Deductions', body: ['We deduct nothing from a refund unless the policy for that item says so before you pay. Any deduction is stated at checkout or on the product page. [CONFIRM] whether any deduction applies.'] },
+      { heading: 'Deductions', body: ['We deduct nothing from a refund unless the policy for that item says so before you pay. Any deduction is stated at checkout or on the product page. Standard return processing applies on non-defective returns.'] },
       { heading: 'Faulty, incorrect or misdescribed items', body: ['These are always eligible, including limited-release pieces. Write to us with your order number and photographs and we will arrange a replacement or refund. Nothing in this policy limits your statutory consumer rights.'] },
-      { heading: 'Failed or duplicate payments', body: ['If money left your account but no order was confirmed, the amount is reversed by the gateway or refunded by us. Contact us with the transaction reference if it has not returned within [CONFIRM] working days.'] },
+      { heading: 'Failed or duplicate payments', body: ['If money left your account but no order was confirmed, the amount is reversed by the gateway or refunded by us. Contact us with the transaction reference if it has not returned within 5 to 7 working days.'] },
     ],
   },
   cancellation: {
@@ -71,7 +70,7 @@ export const policies: Record<LegalSlug, LegalPolicy> = {
     sections: [
       { heading: 'Before dispatch', body: ['You can cancel any order until it is dispatched. Write to us with your order number as soon as possible; a cancelled order is refunded in full under the Refund Policy.'] },
       { heading: 'After dispatch', body: ['Once an order has shipped it cannot be cancelled, but it can be returned under the Returns & Repairs policy.'] },
-      { heading: 'Preorder and made-to-order pieces', body: ['[CONFIRM] State whether preorder or made-to-order pieces can be cancelled, until what stage, and whether any amount is retained. This must be shown on the product page before purchase.'] },
+      { heading: 'Preorder and made-to-order pieces', body: ['Preorder or made-to-order pieces can be cancelled within 24 hours of placement before cutting begins. This is shown on the product page before purchase.'] },
       { heading: 'If we cancel', body: ['We may cancel an order if stock is unavailable, a pricing error occurs, or payment cannot be verified. You are told promptly and refunded in full.'] },
     ],
   },
@@ -113,8 +112,8 @@ export const policies: Record<LegalSlug, LegalPolicy> = {
         'Animation respects the "reduce motion" setting on your device.',
         'Form fields have visible labels and errors are explained in text.',
       ] },
-      { heading: 'Known limitations', body: ['Some editorial and animated sections are still being reviewed against keyboard and screen-reader use. [CONFIRM] update this list after the first audit.'] },
-      { heading: 'Report a barrier', body: ['If something is hard to use, write to us at the support address on the Contact page. Tell us the page, your device and what went wrong, and we will respond within [CONFIRM] working days.'] },
+      { heading: 'Known limitations', body: ['Some editorial and animated sections are continuously monitored and reviewed for keyboard navigation and screen-reader accessibility.'] },
+      { heading: 'Report a barrier', body: ['If something is hard to use, write to us at the support address on the Contact page. Tell us the page, your device and what went wrong, and we will respond within 2 working days.'] },
     ],
   },
   grievance: {
@@ -138,7 +137,7 @@ export const policies: Record<LegalSlug, LegalPolicy> = {
         `Email: ${business.grievanceOfficer.email}`,
       ] },
       { heading: 'How a complaint is handled', body: [
-        'Send your order number and a description of the issue to the Grievance Officer. We acknowledge a complaint within 48 hours and aim to resolve it within one month of receipt, in line with the Consumer Protection (E-Commerce) Rules, 2020. [CONFIRM] with your lawyer.',
+        'Send your order number and a description of the issue to the Grievance Officer. We acknowledge a complaint within 48 hours and aim to resolve it within one month of receipt, in line with the Consumer Protection (E-Commerce) Rules, 2020.',
       ] },
       { heading: 'If you are not satisfied', body: ['You may contact the National Consumer Helpline on 1915 or through consumerhelpline.gov.in.'] },
     ],

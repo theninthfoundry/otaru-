@@ -1923,6 +1923,7 @@ body.tv-on .marquee-track,body.tv-on .nf-img,body.tv-on .nf-wind i,body.tv-on .t
   // five phantom nav links before ever reaching the hero. This strips
   // them from the tab order while hidden and restores it while open.
   function setInertWhenHidden(container, hide){
+    if (!container) return;
     container.querySelectorAll('a, button, input, select, textarea').forEach(function(el){
       if (hide) el.setAttribute('tabindex', '-1');
       else el.removeAttribute('tabindex');
@@ -2112,8 +2113,11 @@ body.tv-on .marquee-track,body.tv-on .nf-img,body.tv-on .nf-wind i,body.tv-on .t
       el.textContent = money(Number(el.dataset.usd));
     });
     renderCart();
-    if (pdpCurrentId) updatePdpPrices();
-    if (typeof renderArchivePage === 'function' && document.querySelector('[data-route-view="/archive"]').classList.contains('is-active')) {
+    if (typeof pdpCurrentId !== 'undefined' && pdpCurrentId && typeof updatePdpPrices === 'function') {
+      updatePdpPrices();
+    }
+    var arcView = document.querySelector('[data-route-view="/archive"]');
+    if (typeof renderArchivePage === 'function' && arcView && arcView.classList.contains('is-active')) {
       renderArchivePage();
     }
   }
@@ -2156,6 +2160,10 @@ body.tv-on .marquee-track,body.tv-on .nf-img,body.tv-on .nf-wind i,body.tv-on .t
   // this in-page version exists purely so the drawer has something
   // to show and react to.
   // ==========================================================
+  var cartOverlay = document.getElementById('cartOverlay');
+  var cartDrawer = document.getElementById('cartDrawer');
+  if (cartDrawer) setInertWhenHidden(cartDrawer, true); // starts closed
+
   var cart = [
     { id:'042', name:'Kiryū Wrap Trouser', meta:'Washed silk blend', price:310, qty:1 },
     { id:'044', name:'Ōmi Hemp Tote', meta:'Raw hemp canvas', price:165, qty:2 }
@@ -2166,6 +2174,7 @@ body.tv-on .marquee-track,body.tv-on .nf-img,body.tv-on .nf-wind i,body.tv-on .t
     var foot = document.getElementById('cartFoot');
     var badge = document.getElementById('cartBadge');
     var trigger = document.getElementById('cartOpenBtn');
+    if (!body || !foot || !badge || !trigger) return;
     var count = cart.reduce(function(sum, l){ return sum + l.qty; }, 0);
 
     badge.hidden = count === 0;
@@ -2229,9 +2238,6 @@ body.tv-on .marquee-track,body.tv-on .nf-img,body.tv-on .nf-wind i,body.tv-on .t
     }
   });
 
-  var cartOverlay = document.getElementById('cartOverlay');
-  var cartDrawer = document.getElementById('cartDrawer');
-  setInertWhenHidden(cartDrawer, true); // starts closed
   function openCart(){
     lastFocusedEl = document.activeElement;
     cartOverlay.classList.add('is-open');
@@ -2977,18 +2983,21 @@ body.tv-on .marquee-track,body.tv-on .nf-img,body.tv-on .nf-wind i,body.tv-on .t
   document.addEventListener('keydown', function(ev){
     if ((ev.metaKey || ev.ctrlKey) && ev.key.toLowerCase() === 'k'){ ev.preventDefault(); openSearch(); }
     if (ev.key === 'Escape'){
-      if (cartDrawer.classList.contains('is-open')) closeCart();
-      if (searchOverlay.classList.contains('is-open')) closeSearch();
-      if (sizeguideOverlay.classList.contains('is-open')) closeSizeGuide();
-      if (mobileNav.classList.contains('is-open')){
+      if (cartDrawer && cartDrawer.classList.contains('is-open')) closeCart();
+      if (searchOverlay && searchOverlay.classList.contains('is-open')) closeSearch();
+      if (sizeguideOverlay && sizeguideOverlay.classList.contains('is-open')) closeSizeGuide();
+      if (mobileNav && mobileNav.classList.contains('is-open')){
         mobileNav.classList.remove('is-open');
         setInertWhenHidden(mobileNav, true);
-        document.getElementById('menuOpen').setAttribute('aria-expanded', 'false');
-        document.getElementById('menuOpen').focus();
+        var menuBtn = document.getElementById('menuOpen');
+        if (menuBtn) {
+          menuBtn.setAttribute('aria-expanded', 'false');
+          menuBtn.focus();
+        }
       }
-      if (currencyDropdown.classList.contains('is-open')){
+      if (currencyDropdown && currencyDropdown.classList.contains('is-open')){
         toggleCurrencyDropdown(false);
-        currencyPill.focus();
+        if (currencyPill) currencyPill.focus();
       }
     }
   });
