@@ -3,11 +3,7 @@
   "crons": [
     {
       "path": "/api/admin/outbox/process",
-      "schedule": "*/15 * * * *"
-    },
-    {
-      "path": "/api/ready",
-      "schedule": "0 * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }
