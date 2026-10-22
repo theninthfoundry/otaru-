@@ -35,7 +35,19 @@ const nextConfig = {
   },
   async rewrites() {
     return {
-      beforeFiles: [],
+      beforeFiles: [
+        { source: '/', destination: '/preview.html' },
+        { source: '/archive', destination: '/preview.html' },
+        { source: '/lookbook', destination: '/preview.html' },
+        { source: '/chapters', destination: '/preview.html' },
+        { source: '/journal', destination: '/preview.html' },
+        { source: '/studio', destination: '/preview.html' },
+        { source: '/product', destination: '/preview.html' },
+        { source: '/cart', destination: '/preview.html' },
+        { source: '/checkout', destination: '/preview.html' },
+        { source: '/profile', destination: '/preview.html' },
+        { source: '/sign-in', destination: '/preview.html' },
+      ],
       afterFiles: [],
       fallback: [],
     };

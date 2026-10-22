@@ -2003,6 +2003,11 @@ body.tv-on .marquee-track,body.tv-on .nf-img,body.tv-on .nf-wind i,body.tv-on .t
   // these are separate Next.js routes (/, /sign-in, /profile, /archive/[slug])
   function goRoute(route){
     currentRoute = route;
+    try {
+      if (history.pushState && location.pathname !== route && location.pathname !== '/preview.html' && location.pathname !== '/index.html'){
+        history.pushState(null, '', route);
+      }
+    } catch (e) {}
     document.querySelectorAll('[data-route-view]').forEach(function(v){
       v.classList.remove('is-shown');
       v.classList.toggle('is-active', v.dataset.routeView === route);
@@ -3267,7 +3272,20 @@ body.tv-on .marquee-track,body.tv-on .nf-img,body.tv-on .nf-wind i,body.tv-on .t
     var t = document.createElement('div'); t.className = 'toast'; t.textContent = 'Lives in the Next.js app at ' + href;
     document.body.appendChild(t); setTimeout(function(){ t.remove(); }, 2400);
   });
-  if (location.hash === '#404') goRoute('/404');
+  var initialPath = location.pathname;
+  if (initialPath && initialPath !== '/' && initialPath !== '/preview.html' && initialPath !== '/index.html') {
+    goRoute(initialPath);
+  } else if (location.hash && location.hash.startsWith('#/')) {
+    goRoute(location.hash.substring(1));
+  } else if (location.hash === '#404') {
+    goRoute('/404');
+  }
+  window.addEventListener('popstate', function(){
+    var p = location.pathname;
+    if (p && p !== currentRoute){
+      goRoute(p === '/preview.html' || p === '/index.html' ? '/' : p);
+    }
+  });
   // countdown stays hidden until a real, confirmed release date is set
   var DROP_CONFIRMED = false;
   if (!DROP_CONFIRMED) document.querySelector('.drop-ring').style.display = 'none';
