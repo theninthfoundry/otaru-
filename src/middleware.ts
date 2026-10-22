@@ -158,6 +158,10 @@ export async function middleware(request: NextRequest) {
   response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
   response.headers.set('X-Frame-Options', 'SAMEORIGIN');
   response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
+  response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
+  response.headers.set('X-XSS-Protection', '0');
   response.headers.set(
     'Permissions-Policy',
     'camera=(), microphone=(), geolocation=(), browsing-topics=(), payment=(self "https://api.razorpay.com" "https://checkout.razorpay.com"), clipboard-read=(self), clipboard-write=(self), fullscreen=(self)'
@@ -173,12 +177,15 @@ export async function middleware(request: NextRequest) {
     `script-src ${scriptSrc}`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: blob: https://images.unsplash.com https://cdn.shopify.com https://cdn.sanity.io https://c.bing.com https://*.clarity.ms",
-    "font-src 'self' https://fonts.gstatic.com",
+    "font-src 'self' https://fonts.gstatic.com data:",
+    "media-src 'self' blob: data:",
     `connect-src 'self'${devConnectHosts} https://*.shopify.com https://*.sanity.io https://www.google-analytics.com https://app.posthog.com https://apiv2.shiprocket.in https://*.clarity.ms https://api.razorpay.com`,
     "frame-src 'self' https://checkout.shopify.com https://api.razorpay.com https://*.razorpay.com",
     "object-src 'none'",
     "base-uri 'self'",
+    "form-action 'self'",
     "frame-ancestors 'self'",
+    ...(isProduction ? ["upgrade-insecure-requests"] : []),
   ].join('; ');
 
   response.headers.set('Content-Security-Policy', csp);
